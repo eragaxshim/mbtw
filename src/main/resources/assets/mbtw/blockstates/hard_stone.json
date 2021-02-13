@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "break_level=0": { "model": "mbtw:block/hard_stone" },
+    "break_level=1": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=2": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=3": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=4": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=5": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=6": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=7": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=8": { "model": "mbtw:block/hard_stone_b1" },
+    "break_level=9": { "model": "mbtw:block/hard_stone_b9" }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "mbtw:block/hard_coal_ore"
+  }
+}

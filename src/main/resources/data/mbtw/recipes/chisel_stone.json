@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mbtw:loose_stone"
+    }
+  ],
+  "result": {
+    "item": "mbtw:chisel_stone"
+  }
+}

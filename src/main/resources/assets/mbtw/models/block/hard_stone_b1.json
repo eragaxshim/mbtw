@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "mbtw:block/stone_b1_s0"
+    "all": "mbtw:block/hard_stone_b1"
   }
 }
