@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -30,50 +31,53 @@ public class MultiBreakBlock extends InterceptBreakBlock {
         this.itemDrop = itemDrop;
     }
 
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-        int i = state.get(BREAK_LEVEL);
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, Item handItem)
+    {
+        int b = state.get(BREAK_LEVEL);
 
         int brokenDelta = 0;
 
-        if (player.getMainHandStack().getItem() instanceof MiningToolItem)
+        int newBroken = b;
+        if (handItem instanceof MiningToolItem)
         {
-            MiningToolItem handItem = (MiningToolItem) player.getMainHandStack().getItem();
-            int miningEffect = getMiningEffect(handItem);
-            if (handItem instanceof PickaxeItem)
+            MiningToolItem toolItem = (MiningToolItem) handItem;
+            int miningEffect = getMiningEffect(toolItem);
+            if (toolItem instanceof PickaxeItem)
             {
                 brokenDelta = miningEffect * 3 + 1;
             }
-            else if (handItem instanceof ChiselItem)
+            else if (toolItem instanceof ChiselItem)
             {
                 brokenDelta = miningEffect + 1;
             }
 
-            if (miningEffect <= 1 && breakingPoint - i < brokenDelta)
+            if (miningEffect <= 1 && breakingPoint - b < brokenDelta)
             {
-                brokenDelta = breakingPoint - i;
+                brokenDelta = breakingPoint - b;
             }
             // 3 = full block in one go; 2 = 2 times, no block; 1 = slow stones, less ore, 0 = cannot get last broken
+
+            newBroken = b + brokenDelta;
+            if (newBroken >= breakingPoint && b == 0)
+            {
+                Block.dropStack(world, pos, new ItemStack(blockDrop));
+            }
+            else {
+                int count = Math.max(Math.min(breakingPoint - b - 1, Math.max(brokenDelta - 1, 1)), 0);
+                Block.dropStack(world, pos, new ItemStack(itemDrop, count));
+            }
         }
 
-        int newBroken = i + brokenDelta;
-
         if (newBroken <= breakingPoint){
-            world.setBlockState(pos, state.with(BREAK_LEVEL, newBroken), 2);
+            return state.with(BREAK_LEVEL, newBroken);
         }
         else
         {
-            world.setBlockState(pos, state.with(BROKEN, true), 2);
-        }
-        if (newBroken >= breakingPoint && i == 0)
-        {
-            Block.dropStack(world, pos, new ItemStack(blockDrop));
-        }
-        else {
-            int count = Math.max(Math.min(breakingPoint - i - 1, Math.max(brokenDelta - 1, 1)), 0);
-            Block.dropStack(world, pos, new ItemStack(itemDrop, count));
+            return state.with(BROKEN, true);
         }
     }
+
+
 
     public int getMiningEffect(MiningToolItem handItem)
     {

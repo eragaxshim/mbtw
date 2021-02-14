@@ -37,15 +37,14 @@ public class StratifiedOreBlock extends InterceptBreakBlock {
         this.pileDrop = pileDrop;
     }
 
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-
-        if (player.getMainHandStack().getItem() instanceof MiningToolItem)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, Item handItem)
+    {
+        if (handItem instanceof MiningToolItem)
         {
-            MiningToolItem handItem = (MiningToolItem) player.getMainHandStack().getItem();
-            int miningEffect = sourceBlock.getMiningEffect(handItem);
+            MiningToolItem toolItem = (MiningToolItem) handItem;
+            int miningEffect = sourceBlock.getMiningEffect(toolItem);
 
-            if (handItem instanceof ChiselItem)
+            if (toolItem instanceof ChiselItem)
             {
                 if (miningEffect >= 2)
                 {
@@ -58,7 +57,7 @@ public class StratifiedOreBlock extends InterceptBreakBlock {
                     }
                 }
             }
-            else if (handItem instanceof PickaxeItem)
+            else if (toolItem instanceof PickaxeItem)
             {
                 if (miningEffect >= 1)
                 {
@@ -77,8 +76,6 @@ public class StratifiedOreBlock extends InterceptBreakBlock {
 
 
         }
-        replace(state, sourceBlock.getDefaultState(), world, pos, 2);
-        BlockState newBlockState = world.getBlockState(pos);
-        newBlockState.getBlock().onBreak(world, pos, newBlockState, player);
+        return sourceBlock.processBreakAttempt(world, pos, sourceBlock.getDefaultState(), handItem);
     }
 }

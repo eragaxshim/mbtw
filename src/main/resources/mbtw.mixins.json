@@ -4,7 +4,9 @@
   "package": "mbtw.mbtw.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MbtwMixin"
+    "GenerationStepStratifierMixin",
+    "InterceptBreakBlockMixin",
+    "ReplaceUndergroundOreFeatureMixin"
   ],
   "client": [
   ],

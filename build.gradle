@@ -96,3 +96,7 @@ publishing {
         // mavenLocal()
     }
 }
+
+loom {
+    accessWidener "src/main/resources/mbtw.accesswidener"
+}
