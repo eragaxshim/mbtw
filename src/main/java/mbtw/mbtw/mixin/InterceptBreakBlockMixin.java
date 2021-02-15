@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
@@ -44,7 +45,7 @@ public abstract class InterceptBreakBlockMixin {
         {
             ServerWorld world = this.world;
             ServerPlayerEntity player = this.player;
-            Item handItem = player.getMainHandStack().getItem();
+            ItemStack handStack = player.getMainHandStack();
             boolean isInterceptBlock = block instanceof InterceptBreakBlock;
             boolean isStone = false;
             if (!isInterceptBlock && block == Blocks.STONE) {
@@ -55,11 +56,10 @@ public abstract class InterceptBreakBlockMixin {
             {
                 BlockState newState;
                 if (isInterceptBlock) {
-                    newState = ((InterceptBreakBlock) block).processBreakAttempt(world, pos, state, handItem);
+                    newState = ((InterceptBreakBlock) block).processBreakAttempt(world, pos, state, handStack);
                 }
                 else {
-                    System.out.println("broke stone");
-                    newState = ((InterceptBreakBlock) Mbtw.MBTW_STONE).processBreakAttempt(world, pos, Mbtw.MBTW_STONE.getDefaultState(), handItem);
+                    newState = ((InterceptBreakBlock) Mbtw.MBTW_STONE).processBreakAttempt(world, pos, Mbtw.MBTW_STONE.getDefaultState(), handStack);
                 }
 
                 Block.replace(state, newState, world, pos, 2);

@@ -76,6 +76,6 @@ publishing {
     }
 }
 
-loom {
+minecraft {
     accessWidener "src/main/resources/mbtw.accesswidener"
 }

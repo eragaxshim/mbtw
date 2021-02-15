@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "pattern": [
+    "###",
+    "###",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "mbtw:loose_stone"
+    }
+  },
+  "result": {
+    "item": "mbtw:loose_cobblestone"
+  }
+}

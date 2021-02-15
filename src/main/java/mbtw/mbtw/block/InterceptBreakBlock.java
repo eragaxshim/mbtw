@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.state.StateManager;
@@ -19,7 +20,7 @@ public class InterceptBreakBlock extends Block {
         setDefaultState(getStateManager().getDefaultState().with(BROKEN, false));
     }
 
-    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, Item handItem)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
     {
         return this.getDefaultState();
     }

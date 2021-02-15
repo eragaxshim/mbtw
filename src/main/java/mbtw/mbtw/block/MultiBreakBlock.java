@@ -2,17 +2,28 @@ package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.mixin.ExplosionAccessMixin;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.predicate.NumberRange;
+import net.minecraft.predicate.item.EnchantmentPredicate;
+import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+
+import java.util.Map;
+import java.util.Random;
 
 public class MultiBreakBlock extends InterceptBreakBlock {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 9);
@@ -31,11 +42,11 @@ public class MultiBreakBlock extends InterceptBreakBlock {
         this.itemDrop = itemDrop;
     }
 
-    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, Item handItem)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
     {
         int b = state.get(BREAK_LEVEL);
-
         int brokenDelta = 0;
+        Item handItem = handStack.getItem();
 
         int newBroken = b;
         if (handItem instanceof MiningToolItem)
@@ -44,6 +55,12 @@ public class MultiBreakBlock extends InterceptBreakBlock {
             int miningEffect = getMiningEffect(toolItem);
             if (toolItem instanceof PickaxeItem)
             {
+                Map<Enchantment, Integer> ei = EnchantmentHelper.get(handStack);
+                if (ei.containsKey(Enchantments.SILK_TOUCH))
+                {
+                    return state.with(BROKEN, true);
+                }
+
                 brokenDelta = miningEffect * 3 + 1;
             }
             else if (toolItem instanceof ChiselItem)
@@ -76,8 +93,6 @@ public class MultiBreakBlock extends InterceptBreakBlock {
             return state.with(BROKEN, true);
         }
     }
-
-
 
     public int getMiningEffect(MiningToolItem handItem)
     {

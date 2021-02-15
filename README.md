@@ -8,6 +8,6 @@ Recently, FlowerChild posted a [community message](http://www.sargunster.com/btw
 
 This will again be a total overhaul, meaning compatibility with other mods that change base aspects of the game will remain unlikely.
 
-Thank you to FlowerChild for his amazing work on an amazing mod. 
+Thank you to FlowerChild for his amazing work on an amazing mod. [Minecraft Forums Link](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/1272992-better-than-wolves-total-conversion)
 
 Right now mbtw is in early Alpha, meaning there are practically no useful features. It will take a while before things like mechanical power will be added, as I might not even know how to implement those things. My first focus is the early game Hardcore mechanics, starting with stratification and ore processing.

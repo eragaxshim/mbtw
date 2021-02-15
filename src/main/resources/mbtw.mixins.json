@@ -4,9 +4,11 @@
   "package": "mbtw.mbtw.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ExplosionDecayMixin",
     "GenerationStepStratifierMixin",
     "InterceptBreakBlockMixin",
-    "ReplaceUndergroundOreFeatureMixin"
+    "ReplaceUndergroundOreFeatureMixin",
+    "SurvivesExplosionMixin"
   ],
   "client": [
   ],

@@ -18,6 +18,7 @@ import net.minecraft.block.*;
 import net.minecraft.item.*;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.condition.LootConditionManager;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.sound.BlockSoundGroup;
@@ -44,6 +45,7 @@ import java.nio.file.Path;
 public class Mbtw implements ModInitializer {
     public static int DEEP_STONE_MAX = 25;
     public static int HARD_STONE_MAX = 45;
+    public static int MAX_STONE_DROPS = 8;
 
     public static final Material MBTW_HARD_STRATIFIED = (new Material.Builder(MaterialColor.STONE)).build();
     public static final Material MBTW_DEEP_STRATIFIED = (new Material.Builder(MaterialColor.STONE)).build();
@@ -53,15 +55,15 @@ public class Mbtw implements ModInitializer {
     public static final Item MBTW_IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
     public static final Item MBTW_COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
-    public static final Block MBTW_LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(1.0f));
-    public static final Block MBTW_STONE = new MultiBreakBlock(FabricBlockSettings.of(Material.STONE).strength(1.5f), 9, 0, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
+    public static final Block MBTW_LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(0.7f));
+    public static final Block MBTW_STONE = new MultiBreakBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F), 9, 0, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
     public static final Block MBTW_HARD_STONE = new MultiBreakBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.0f), 9, 1, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
     public static final Block MBTW_DEEP_STONE = new MultiBreakBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(2.5f), 9, 2, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
 
     public static final Block MBTW_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (MultiBreakBlock) MBTW_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
     public static final Block MBTW_HARD_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.5f), (MultiBreakBlock) MBTW_HARD_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
     public static final Block MBTW_DEEP_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(3.0f), (MultiBreakBlock) MBTW_DEEP_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (MultiBreakBlock) MBTW_STONE, MBTW_COAL_DUST_PILE, Items.COAL);
+    public static final Block MBTW_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (MultiBreakBlock) MBTW_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
     public static final Block MBTW_HARD_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.5f), (MultiBreakBlock) MBTW_HARD_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
     public static final Block MBTW_DEEP_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(3.0f), (MultiBreakBlock) MBTW_DEEP_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
 
@@ -69,6 +71,7 @@ public class Mbtw implements ModInitializer {
     public static final Item MBTW_GRAVEL_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
     public static final Block MBTW_GRAVEL_SLAB = new FallingSlabBlock(-8356741, FabricBlockSettings.of(Material.SOIL, MaterialColor.DIRT).strength(0.5f).sounds(BlockSoundGroup.GRAVEL));
+    public static final Block MBTW_LOOSE_COBBLESTONE_SLAB = new FallingSlabBlock(MaterialColor.STONE.color, FabricBlockSettings.of(Material.STONE).strength(0.7f).sounds(BlockSoundGroup.STONE));
 
     public static final Item MBTW_CHISEL_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
     public static final Item MBTW_POINTY_STICK = new ChiselItem(10, 1, -2.8F, ToolMaterials.WOOD, new FabricItemSettings().group(ItemGroup.TOOLS));
@@ -118,6 +121,8 @@ public class Mbtw implements ModInitializer {
 
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "gravel_slab"), MBTW_GRAVEL_SLAB);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "gravel_slab"), new BlockItem(MBTW_GRAVEL_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "loose_cobblestone_slab"), MBTW_LOOSE_COBBLESTONE_SLAB);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "loose_cobblestone_slab"), new BlockItem(MBTW_LOOSE_COBBLESTONE_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
         Registry.register(Registry.ITEM, new Identifier("mbtw", "chisel_stone"), MBTW_CHISEL_STONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "pointy_stick"), MBTW_POINTY_STICK);
@@ -129,10 +134,5 @@ public class Mbtw implements ModInitializer {
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier("mbtw", "ore_iron_hard"), ORE_IRON_HARD);
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier("mbtw", "ore_iron_deep"), ORE_IRON_DEEP);
 
-        LootTableLoadingCallback.EVENT.register((((resourceManager, manager, id, supplier, setter) -> {
-            if (STONE_LOOT_TABLE_ID.equals(id)) {
-                setter.set(LootTable.EMPTY);
-            }
-        })));
     }
 }

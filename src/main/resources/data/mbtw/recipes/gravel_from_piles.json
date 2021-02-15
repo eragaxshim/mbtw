@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "pattern": [
+    "###",
+    "###",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "mbtw:gravel_pile"
+    }
+  },
+  "result": {
+    "item": "minecraft:gravel"
+  }
+}

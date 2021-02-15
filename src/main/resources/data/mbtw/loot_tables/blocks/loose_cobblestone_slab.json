@@ -7,7 +7,7 @@
         {
           "condition": "minecraft:match_tool",
           "predicate": {
-            "tag": "mbtw:shovels"
+            "tag": "mbtw:pickaxes"
           }
         }
       ],
@@ -20,7 +20,7 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "mbtw:gravel_slab",
+                  "block": "mbtw:loose_cobblestone_slab",
                   "properties": {
                     "type": "double"
                   }
@@ -29,7 +29,7 @@
               "count": 2
             }
           ],
-          "name": "mbtw:gravel_slab"
+          "name": "mbtw:loose_cobblestone_slab"
         }
       ]
     },
@@ -41,7 +41,7 @@
           "term": {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "tag": "mbtw:shovels"
+              "tag": "mbtw:pickaxes"
             }
           }
         }
@@ -63,7 +63,7 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "mbtw:gravel_slab",
+                  "block": "mbtw:loose_cobblestone_slab",
                   "properties": {
                     "type": "double"
                   }
@@ -79,7 +79,7 @@
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "mbtw:gravel_pile"
+          "name": "mbtw:loose_stone"
         }
       ]
     }

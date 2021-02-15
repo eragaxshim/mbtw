@@ -1,0 +1,57 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "enchantments": [
+                      {
+                        "enchantment": "minecraft:silk_touch",
+                        "levels": {
+                          "min": 1
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "mbtw:hard_stone",
+                  "properties": {
+                    "break_level": 0
+                  }
+                }
+              ],
+              "name": "mbtw:hard_stone"
+            },
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:survives_explosion"
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "mbtw:hard_stone",
+                  "properties": {
+                    "break_level": 0
+                  }
+                }
+              ],
+              "name": "mbtw:loose_cobblestone"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
