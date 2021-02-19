@@ -1,15 +1,31 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "pattern": [
-    "###",
-    "###",
-    "##"
-  ],
-  "key": {
-    "#": {
+  "ingredients": [
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
+      "item": "mbtw:gravel_pile"
+    },
+    {
       "item": "mbtw:gravel_pile"
     }
-  },
+  ],
   "result": {
     "item": "minecraft:gravel"
   }

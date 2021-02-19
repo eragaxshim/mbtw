@@ -1,15 +1,34 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "pattern": [
-    "###",
-    "###",
-    "##"
-  ],
-  "key": {
-    "#": {
+  "ingredients": [
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
+      "item": "mbtw:loose_stone"
+    },
+    {
       "item": "mbtw:loose_stone"
     }
-  },
+  ],
   "result": {
     "item": "mbtw:loose_cobblestone"
   }

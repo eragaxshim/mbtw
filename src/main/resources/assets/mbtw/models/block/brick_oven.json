@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "mbtw:block/brick_oven_top",
+    "front": "mbtw:block/brick_oven_front",
+    "side": "mbtw:block/brick_oven_side"
+  }
+}

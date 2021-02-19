@@ -1,9 +1,10 @@
 package mbtw.mbtw;
 
-import mbtw.mbtw.block.FallingSlabBlock;
-import mbtw.mbtw.block.MultiBreakBlock;
-import mbtw.mbtw.block.StratifiedOreBlock;
+import mbtw.mbtw.block.*;
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.mixin.LitStateInvoker;
+import mbtw.mbtw.recipe.BrickOvenRecipe;
+import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModification;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -11,16 +12,20 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.api.tag.FabricItemTags;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.*;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.condition.LootConditionManager;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.recipe.*;
 import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.structure.rule.BlockMatchRuleTest;
 import net.minecraft.structure.rule.RuleTest;
@@ -76,6 +81,15 @@ public class Mbtw implements ModInitializer {
     public static final Item MBTW_CHISEL_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
     public static final Item MBTW_POINTY_STICK = new ChiselItem(10, 1, -2.8F, ToolMaterials.WOOD, new FabricItemSettings().group(ItemGroup.TOOLS));
 
+    public static final Block BRICK_OVEN = new BrickOvenBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).requiresTool().strength(2.0F, 6.0F).luminance((LitStateInvoker.invokeCreateLightLevelFromBlockState(13))));
+    public static BlockEntityType<BrickOvenBlockEntity> BRICK_OVEN_ENTITY;
+    public static final RecipeType<BrickOvenRecipe> BRICK_SMELTING = new RecipeType<BrickOvenRecipe>() {
+        @Override
+        public String toString() {return "brick_smelting";}
+    };
+    public static final RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER = new CookingRecipeSerializer(BrickOvenRecipe::new, 100);
+    public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier("mbtw", "brick_oven"), BrickOvenScreenHandler::new);
+
     public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(MBTW_HARD_STONE);
     public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(MBTW_DEEP_STONE);
     public static final ConfiguredFeature<?, ?> ORE_COAL = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, MBTW_COAL_ORE.getDefaultState(), 17)).rangeOf(128)).spreadHorizontally()).repeat(13);
@@ -87,7 +101,7 @@ public class Mbtw implements ModInitializer {
 
 
 
-    private static final Identifier STONE_LOOT_TABLE_ID = new Identifier("minecraft", "blocks/stone");
+
 
     @Override
     public void onInitialize() {
@@ -126,6 +140,13 @@ public class Mbtw implements ModInitializer {
 
         Registry.register(Registry.ITEM, new Identifier("mbtw", "chisel_stone"), MBTW_CHISEL_STONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "pointy_stick"), MBTW_POINTY_STICK);
+
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "brick_oven"), BRICK_OVEN);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "brick_oven"), new BlockItem(BRICK_OVEN, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        BRICK_OVEN_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mbtw", "brick_oven"), BlockEntityType.Builder.create(BrickOvenBlockEntity::new, BRICK_OVEN).build(null));
+
+        Registry.register(Registry.RECIPE_TYPE, new Identifier("mbtw", "brick_smelting"), BRICK_SMELTING);
+        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier("mbtw", "brick_smelting"), BRICK_SMELTING_SERIALIZER);
 
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier("mbtw", "ore_coal"), ORE_COAL);
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier("mbtw", "ore_coal_hard"), ORE_COAL_HARD);

@@ -23,6 +23,10 @@ dependencies {
     // You may need to force-disable transitiveness on them.
 }
 
+minecraft {
+    accessWidener "src/main/resources/mbtw.accesswidener"
+}
+
 processResources {
     inputs.property "version", project.version
 
@@ -74,8 +78,4 @@ publishing {
         // uncomment to publish to the local maven
         // mavenLocal()
     }
-}
-
-minecraft {
-    accessWidener "src/main/resources/mbtw.accesswidener"
 }

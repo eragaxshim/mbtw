@@ -1,0 +1,9 @@
+{
+  "type": "mbtw:brick_smelting",
+  "ingredient": {
+    "item": "mbtw:iron_ore_chunk"
+  },
+  "result": "minecraft:iron_nugget",
+  "experience": 0.7,
+  "cookingtime": 2000
+}

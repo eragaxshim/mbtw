@@ -11,6 +11,8 @@
   "block.mbtw.deep_iron_ore": "Deep Iron Ore",
   "block.mbtw.gravel_slab": "Gravel Slab",
   "block.mbtw.loose_cobblestone_slab": "Loose Cobblestone Slab",
+  "block.mbtw.brick_oven": "Brick Oven",
+  "container.mbtw.brick_oven": "Brick Oven",
   "item.mbtw.loose_stone": "Loose Stone",
   "item.mbtw.gravel_pile": "Pile of Gravel",
   "item.mbtw.iron_ore_pile": "Pile of Iron Ore",

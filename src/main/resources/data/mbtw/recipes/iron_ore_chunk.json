@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mbtw:iron_ore_pile"
+    },
+    {
+      "item": "mbtw:iron_ore_pile"
+    }
+  ],
+  "result": {
+    "item": "mbtw:iron_ore_chunk"
+  }
+}
