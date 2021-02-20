@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mbtw:coal_dust_pile"
+    },
+    {
+      "item": "mbtw:coal_dust_pile"
+    }
+  ],
+  "result": {
+    "item": "minecraft:coal"
+  }
+}

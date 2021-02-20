@@ -1,0 +1,8 @@
+{
+  "parent": "mbtw:block/brick",
+  "textures": {
+    "side_long": "minecraft:block/clay",
+    "top": "minecraft:block/clay",
+    "side": "minecraft:block/clay"
+  }
+}

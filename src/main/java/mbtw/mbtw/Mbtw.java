@@ -60,6 +60,8 @@ public class Mbtw implements ModInitializer {
     public static final Item MBTW_IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
     public static final Item MBTW_COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
+    public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.ORGANIC_PRODUCT).strength(0.2F).sounds(BlockSoundGroup.GRAVEL));
+
     public static final Block MBTW_LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(0.7f));
     public static final Block MBTW_STONE = new MultiBreakBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F), 9, 0, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
     public static final Block MBTW_HARD_STONE = new MultiBreakBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.0f), 9, 1, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
@@ -105,6 +107,15 @@ public class Mbtw implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "loose_stone"), MBTW_LOOSE_STONE);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_ore_pile"), MBTW_IRON_ORE_PILE);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_ore_chunk"), MBTW_IRON_ORE_CHUNK);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "coal_dust_pile"), MBTW_COAL_DUST_PILE);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "gravel_pile"), MBTW_GRAVEL_PILE);
+
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "clay_brick"), CLAY_BRICK);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "clay_brick"), new BlockItem(CLAY_BRICK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "loose_cobblestone"), MBTW_LOOSE_COBBLESTONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "loose_cobblestone"), new BlockItem(MBTW_LOOSE_COBBLESTONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "stone"), MBTW_STONE);
@@ -113,11 +124,7 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier("mbtw", "hard_stone"), new BlockItem(MBTW_HARD_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "deep_stone"), MBTW_DEEP_STONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "deep_stone"), new BlockItem(MBTW_DEEP_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "loose_stone"), MBTW_LOOSE_STONE);
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_ore_pile"), MBTW_IRON_ORE_PILE);
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_ore_chunk"), MBTW_IRON_ORE_CHUNK);
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "coal_dust_pile"), MBTW_COAL_DUST_PILE);
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "gravel_pile"), MBTW_GRAVEL_PILE);
+
 
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "iron_ore"), MBTW_IRON_ORE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_ore"), new BlockItem(MBTW_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
