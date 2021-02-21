@@ -1,5 +1,13 @@
 {
   "variants": {
-    "": { "model": "mbtw:block/clay_brick" }
+    "bake_progress=0": { "model": "mbtw:block/clay_brick" },
+    "bake_progress=1": { "model": "mbtw:block/clay_brick_b1" },
+    "bake_progress=2": { "model": "mbtw:block/clay_brick_b2" },
+    "bake_progress=3": { "model": "mbtw:block/clay_brick_b3" },
+    "bake_progress=4": { "model": "mbtw:block/clay_brick_b4" },
+    "bake_progress=5": { "model": "mbtw:block/clay_brick_b5" },
+    "bake_progress=6": { "model": "mbtw:block/clay_brick_b6" },
+    "bake_progress=7": { "model": "mbtw:block/clay_brick_b7" },
+    "bake_progress=8": { "model": "mbtw:block/clay_brick_baked" }
   }
 }

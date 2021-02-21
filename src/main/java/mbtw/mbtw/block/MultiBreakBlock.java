@@ -34,8 +34,7 @@ public class MultiBreakBlock extends InterceptBreakBlock {
 
     public MultiBreakBlock(FabricBlockSettings settings, int breakingPoint, int stratification, Block blockDrop, Item itemDrop) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BREAK_LEVEL, 0));
-        setDefaultState(getStateManager().getDefaultState().with(BROKEN, false));
+        setDefaultState(getStateManager().getDefaultState().with(BREAK_LEVEL, 0).with(BROKEN, false));
         this.breakingPoint = breakingPoint;
         this.stratification = stratification;
         this.blockDrop = blockDrop;

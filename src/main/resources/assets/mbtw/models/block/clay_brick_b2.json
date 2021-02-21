@@ -1,0 +1,45 @@
+{
+  "parent": "mbtw:block/brick_jmx",
+  "textures": {
+    "side": "minecraft:block/clay",
+    "top": "minecraft:block/clay",
+    "side_long": "minecraft:block/clay"
+  },
+  "jmx": {
+    "textures": {
+      "jmx_tex_particle": "minecraft:block/clay",
+      "layered_textures": [
+        {
+          "jmx_tex_side_long": "minecraft:block/clay",
+          "jmx_tex_side": "minecraft:block/clay",
+          "jmx_tex_top": "minecraft:block/clay"
+        },
+        {
+          "jmx_tex_side_long": "mbtw:block/break_overlay_2b",
+          "jmx_tex_side": "mbtw:block/break_overlay_2b",
+          "jmx_tex_top": "mbtw:block/break_overlay_2b"
+        }
+      ]
+    },
+    "materials": {
+      "jmx_mat_side_long": {
+        "layers": [
+          { "layer": "solid" },
+          { "layer": "translucent" }
+        ]
+      },
+      "jmx_mat_side": {
+        "layers": [
+          { "layer": "solid" },
+          { "layer": "translucent" }
+        ]
+      },
+      "jmx_mat_top": {
+        "layers": [
+          { "layer": "solid" },
+          { "layer": "translucent"}
+        ]
+      }
+    }
+  }
+}
