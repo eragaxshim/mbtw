@@ -1,4 +1,4 @@
-package mbtw.mbtw.block;
+package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
