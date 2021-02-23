@@ -10,7 +10,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -22,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -47,7 +50,7 @@ public class BrickBlock extends Block implements Waterloggable, BlockEntityProvi
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         long time = world.getTimeOfDay();
-        if (state.get(BAKE_PROGRESS) != 8 && (time < 12500 || time > 23500) && world.isSkyVisible(pos) && !world.isRaining()) {
+        if (state.get(BAKE_PROGRESS) != 8 && (time < 12500 || time > 23500) && world.isSkyVisible(pos) && !world.isRaining() && !state.get(WATERLOGGED)) {
             for(int i = 0; i < random.nextInt(2) + 2; ++i) {
                 world.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + 0.5D + (random.nextFloat() - 0.5), (double)pos.getY() + 0.5D  + (random.nextFloat() - 0.5), (double)pos.getZ() + 0.5D + (random.nextFloat() - 0.5), (double)((random.nextFloat() - 0.5F) / 9.0F), (double)(random.nextFloat() / 6.0F), (double)((random.nextFloat() - 0.5) / 9.0F));
             }
@@ -69,6 +72,10 @@ public class BrickBlock extends Block implements Waterloggable, BlockEntityProvi
 
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return sideCoversSmallSquare(world, pos.down(), Direction.UP);
+    }
+
+    public FluidState getFluidState(BlockState state) {
+        return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     public void onSteppedOn(World world, BlockPos pos, Entity entity) {
@@ -111,5 +118,12 @@ public class BrickBlock extends Block implements Waterloggable, BlockEntityProvi
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(WATERLOGGED);
         stateManager.add(BAKE_PROGRESS);
+    }
+
+    @Nullable
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        boolean bl = fluidState.getFluid() == Fluids.WATER;
+        return super.getPlacementState(ctx).with(WATERLOGGED, bl);
     }
 }
