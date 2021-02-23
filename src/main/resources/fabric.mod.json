@@ -2,11 +2,15 @@
   "schemaVersion": 1,
   "id": "mbtw",
   "version": "${version}",
-  "name": "mbtw",
+  "name": "ModernBTW",
   "description": "",
-  "authors": [],
-  "contact": {},
-  "license": "MIT",
+  "authors": ["EradurGwath"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/mbtw",
+    "sources": "https://github.com/eragaxshim/mbtw",
+    "issues": "https://github.com/eragaxshim/mbtw/issues"
+  },
+  "license": "CC BY 4.0",
   "icon": "assets/mbtw/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -23,7 +27,8 @@
   "depends": {
     "fabricloader": ">=0.11.1",
     "fabric": "*",
-    "minecraft": "1.16.5"
+    "minecraft": "1.16.5",
+    "json-model-extensions": "*"
   },
   "accessWidener" : "mbtw.accesswidener"
 }
