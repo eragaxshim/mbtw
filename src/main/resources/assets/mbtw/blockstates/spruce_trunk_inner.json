@@ -1,6 +1,6 @@
 {
   "multipart": [
-    {   "when": { "up": "true" },
+    {   "when": { "up": "true", "break_level": "1|2|3|4" },
       "apply": { "model": "mbtw:block/spruce_trunk_inner_up" }
     },
     {   "when": { "break_level": "1" },
@@ -15,7 +15,7 @@
     {   "when": { "break_level": "4" },
       "apply": { "model": "mbtw:block/spruce_trunk_inner_b4" }
     },
-    {   "when": { "down": "true" },
+    {   "when": { "down": "true", "break_level": "1|2|3|4" },
       "apply": { "model": "mbtw:block/spruce_trunk_inner_down" }
     },
     {   "when": { "break_level": "0" },

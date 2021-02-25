@@ -1,25 +1,115 @@
 {
   "multipart": [
-    {   "when": { "up": "true" },
+    {   "when": { "up": "true", "break_level": "1|2|3|4",  "axis":  "x"},
+      "apply": { "model": "mbtw:block/oak_log_inner_up",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "up": "true", "break_level": "1|2|3|4",  "axis":  "y"},
       "apply": { "model": "mbtw:block/oak_log_inner_up" }
     },
-    {   "when": { "break_level": "1" },
+    {   "when": { "up": "true", "break_level": "1|2|3|4",  "axis":  "z"},
+      "apply": { "model": "mbtw:block/oak_log_inner_up",
+        "x": 90
+      }
+    },
+    {   "when": { "break_level": "1",  "axis":  "x" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b1",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "break_level": "1",  "axis":  "y" },
       "apply": { "model": "mbtw:block/oak_log_inner_b1" }
     },
-    {   "when": { "break_level": "2" },
+    {   "when": { "break_level": "1",  "axis":  "z" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b1",
+        "x": 90
+      }
+    },
+    {   "when": { "break_level": "2",  "axis":  "x" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b2",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "break_level": "2",  "axis":  "y" },
       "apply": { "model": "mbtw:block/oak_log_inner_b2" }
     },
-    {   "when": { "break_level": "3" },
+    {   "when": { "break_level": "2",  "axis":  "z" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b2",
+        "x": 90
+      }
+    },
+    {   "when": { "break_level": "3",  "axis":  "x" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b3",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "break_level": "3",  "axis":  "y" },
       "apply": { "model": "mbtw:block/oak_log_inner_b3" }
     },
-    {   "when": { "break_level": "4" },
+    {   "when": { "break_level": "3",  "axis":  "z" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b3",
+        "x": 90
+      }
+    },
+    {   "when": { "break_level": "4",  "axis":  "x" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b4",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "break_level": "4",  "axis":  "y" },
       "apply": { "model": "mbtw:block/oak_log_inner_b4" }
     },
-    {   "when": { "down": "true" },
+    {   "when": { "break_level": "4",  "axis":  "z" },
+      "apply": { "model": "mbtw:block/oak_log_inner_b4",
+        "x": 90
+      }
+    },
+    {   "when": { "down": "true", "break_level": "1|2|3|4",  "axis":  "x" },
+      "apply": { "model": "mbtw:block/oak_log_inner_down",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "down": "true", "break_level": "1|2|3|4",  "axis":  "y" },
       "apply": { "model": "mbtw:block/oak_log_inner_down" }
     },
-    {   "when": { "break_level": "0" },
+    {   "when": { "down": "true", "break_level": "1|2|3|4",  "axis":  "z" },
+      "apply": { "model": "mbtw:block/oak_log_inner_down",
+        "x": 90
+      }
+    },
+    {   "when": { "break_level": "0",  "axis":  "x" },
+      "apply": { "model": "minecraft:block/stripped_oak_log",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when": { "break_level": "0",  "axis":  "y" },
       "apply": { "model": "minecraft:block/stripped_oak_log" }
+    },
+    {   "when": { "break_level": "0",  "axis":  "z" },
+      "apply": { "model": "minecraft:block/stripped_oak_log",
+        "x": 90
+      }
+    },
+    {   "when": { "break_level": "5",  "axis":  "x" },
+      "apply": { "model": "minecraft:block/oak_log",
+        "x": 90,
+        "y": 90 }
+    },
+    {   "when": { "break_level": "5",  "axis":  "y" },
+      "apply": { "model": "minecraft:block/oak_log" }
+    },
+    {   "when": { "break_level": "5",  "axis":  "z" },
+      "apply": { "model": "minecraft:block/oak_log",
+        "x": 90
+      }
     }
   ]
 }

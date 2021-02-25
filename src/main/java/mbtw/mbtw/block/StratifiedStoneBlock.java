@@ -1,31 +1,21 @@
 package mbtw.mbtw.block;
 
-import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.item.ChiselItem;
-import mbtw.mbtw.mixin.ExplosionAccessMixin;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.item.EnchantmentPredicate;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
 import java.util.Map;
-import java.util.Random;
 
-public class StratifiedStoneBlock extends InterceptBreakBlock {
+public class StratifiedStoneBlock extends Block implements BreakInterceptable {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 9);
     public final int stratification;
     public final int breakingPoint;
@@ -34,7 +24,7 @@ public class StratifiedStoneBlock extends InterceptBreakBlock {
 
     public StratifiedStoneBlock(FabricBlockSettings settings, int breakingPoint, int stratification, Block blockDrop, Item itemDrop) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(InterceptBreakBlock.BROKEN, false).with(BREAK_LEVEL, 0));
+        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(BREAK_LEVEL, 0));
         this.breakingPoint = breakingPoint;
         this.stratification = stratification;
         this.blockDrop = blockDrop;
@@ -57,7 +47,7 @@ public class StratifiedStoneBlock extends InterceptBreakBlock {
                 Map<Enchantment, Integer> ei = EnchantmentHelper.get(handStack);
                 if (ei.containsKey(Enchantments.SILK_TOUCH))
                 {
-                    return state.with(InterceptBreakBlock.BROKEN, true);
+                    return state.with(BreakInterceptable.BROKEN, true);
                 }
 
                 brokenDelta = miningEffect * 3 + 1;
@@ -89,7 +79,7 @@ public class StratifiedStoneBlock extends InterceptBreakBlock {
         }
         else
         {
-            return state.with(InterceptBreakBlock.BROKEN, true);
+            return state.with(BreakInterceptable.BROKEN, true);
         }
     }
 
@@ -101,6 +91,6 @@ public class StratifiedStoneBlock extends InterceptBreakBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(BREAK_LEVEL);
-        stateManager.add(InterceptBreakBlock.BROKEN);
+        stateManager.add(BreakInterceptable.BROKEN);
     }
 }

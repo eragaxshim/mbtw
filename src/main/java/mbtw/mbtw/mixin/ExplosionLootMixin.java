@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin;
 
-import mbtw.mbtw.block.InterceptBreakBlock;
+import mbtw.mbtw.block.BreakInterceptable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,14 +11,10 @@ import net.minecraft.loot.condition.SurvivesExplosionLootCondition;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.function.ExplosionDecayLootFunction;
-import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 
 @Mixin(SurvivesExplosionLootCondition.class)
 class SurvivesExplosionMixin {
@@ -30,7 +26,7 @@ class SurvivesExplosionMixin {
         {
             Block block = blockState.getBlock();
 
-            if (block == Blocks.STONE || block instanceof InterceptBreakBlock)
+            if (block == Blocks.STONE || block instanceof BreakInterceptable)
             {
                 Entity entity = lootContext.get(LootContextParameters.THIS_ENTITY);
 
@@ -53,7 +49,7 @@ class ExplosionDecayMixin {
         {
             Block block = blockState.getBlock();
 
-            if (block == Blocks.STONE || block instanceof InterceptBreakBlock)
+            if (block == Blocks.STONE || block instanceof BreakInterceptable)
             {
                 Entity entity = lootContext.get(LootContextParameters.THIS_ENTITY);
 

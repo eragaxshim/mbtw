@@ -1,7 +1,9 @@
 package mbtw.mbtw.mixin;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.InterceptBreakBlock;
+import mbtw.mbtw.block.BreakInterceptable;
+import mbtw.mbtw.block.InnerLogBlock;
+import mbtw.mbtw.tag.MbtwTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -13,6 +15,7 @@ import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
@@ -46,31 +49,39 @@ public abstract class InterceptBreakBlockMixin {
             ServerWorld world = this.world;
             ServerPlayerEntity player = this.player;
             ItemStack handStack = player.getMainHandStack();
-            boolean isInterceptBlock = block instanceof InterceptBreakBlock;
-            boolean isStone = false;
-            if (!isInterceptBlock && block == Blocks.STONE) {
-                isStone = true;
-            }
+            boolean isInterceptable = block instanceof BreakInterceptable;
 
-            if (isInterceptBlock || isStone)
+            if (isInterceptable || block.isIn(MbtwTags.BREAK_INTERCEPTABLES))
             {
                 BlockState newState;
-                if (isInterceptBlock) {
-                    newState = ((InterceptBreakBlock) block).processBreakAttempt(world, pos, state, handStack);
+                if (isInterceptable) {
+                    newState = ((BreakInterceptable) block).processBreakAttempt(world, pos, state, handStack);
                 }
                 else {
-                    newState = ((InterceptBreakBlock) Mbtw.MBTW_STONE).processBreakAttempt(world, pos, Mbtw.MBTW_STONE.getDefaultState(), handStack);
+                    if (block == Blocks.STONE) {
+                        newState = ((BreakInterceptable) Mbtw.MBTW_STONE).processBreakAttempt(world, pos, Mbtw.MBTW_STONE.getDefaultState(), handStack);
+                    }
+                    else if (block.isIn(BlockTags.LOGS)) {
+                        BlockState possibleInnerLogState = InnerLogBlock.innerLogFromLog(state);
+                        newState = possibleInnerLogState.getBlock() instanceof InnerLogBlock ? ((InnerLogBlock) possibleInnerLogState.getBlock()).processBreakAttempt(world, pos, possibleInnerLogState, handStack) : state;
+                    }
+                    else {
+                        newState = state;
+                    }
                 }
 
-                Block.replace(state, newState, world, pos, 2);
+                if (newState != state)
+                {
+                    Block.replace(state, newState, world, pos, 2);
 
-                BooleanProperty BROKEN = (BooleanProperty) newState.getBlock().getStateManager().getProperty("broken");
-                if (!newState.get(BROKEN)) {
-                    cir.setReturnValue(true);
-                }
-                else {
-                    newState.getBlock().onBreak(world, pos, newState, player);
-                    player.addExhaustion(0.005F);
+                    BooleanProperty BROKEN = (BooleanProperty) newState.getBlock().getStateManager().getProperty("broken");
+                    if (!newState.get(BROKEN)) {
+                        cir.setReturnValue(true);
+                    }
+                    else {
+                        newState.getBlock().onBreak(world, pos, newState, player);
+                        player.addExhaustion(0.005F);
+                    }
                 }
             }
         }

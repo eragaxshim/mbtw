@@ -10,12 +10,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.PickaxeItem;
+import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Map;
 
-public class StratifiedOreBlock extends InterceptBreakBlock {
+public class StratifiedOreBlock extends Block implements BreakInterceptable {
     public final StratifiedStoneBlock sourceBlock;
     public final Item itemDrop;
     public final Item chunkDrop;
@@ -23,6 +24,7 @@ public class StratifiedOreBlock extends InterceptBreakBlock {
 
     public StratifiedOreBlock(Settings settings, StratifiedStoneBlock sourceBlock, Item itemDrop) {
         super(settings);
+        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false));
         this.sourceBlock = sourceBlock;
         this.itemDrop = itemDrop;
         this.chunkDrop = null;
@@ -30,6 +32,7 @@ public class StratifiedOreBlock extends InterceptBreakBlock {
     }
     public StratifiedOreBlock(Settings settings, StratifiedStoneBlock sourceBlock, Item chunkDrop, Item pileDrop) {
         super(settings);
+        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false));
         this.sourceBlock = sourceBlock;
         this.itemDrop = null;
         this.chunkDrop = chunkDrop;
@@ -83,5 +86,10 @@ public class StratifiedOreBlock extends InterceptBreakBlock {
 
         }
         return sourceBlock.processBreakAttempt(world, pos, sourceBlock.getDefaultState(), handStack);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BreakInterceptable.BROKEN);
     }
 }

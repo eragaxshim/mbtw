@@ -13,6 +13,9 @@ import java.util.List;
 public abstract class InsertItemMixin {
     @Shadow @Final public List<Slot> slots;
 
+    /**
+     * @author EradurGwath
+     */
     @Overwrite
     public boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
         boolean bl = false;

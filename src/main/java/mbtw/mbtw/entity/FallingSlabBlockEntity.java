@@ -2,7 +2,6 @@ package mbtw.mbtw.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.*;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.*;

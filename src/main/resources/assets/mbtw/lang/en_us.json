@@ -1,5 +1,7 @@
 {
   "block.mbtw.loose_cobblestone": "Loose Cobblestone",
+  "block.mbtw.spruce_trunk": "Spruce Trunk",
+  "block.mbtw.oak_trunk": "Oak Trunk",
   "block.mbtw.stone": "Stone",
   "block.mbtw.hard_stone": "Hard Stone",
   "block.mbtw.deep_stone": "Deep Stone",
@@ -14,11 +16,13 @@
   "block.mbtw.clay_brick": "Clay Brick",
   "block.mbtw.brick_oven": "Brick Oven",
   "container.mbtw.brick_oven": "Brick Oven",
+  "container.mbtw.trunk_workbench": "Trunk Workbench",
   "item.mbtw.loose_stone": "Loose Stone",
   "item.mbtw.gravel_pile": "Pile of Gravel",
   "item.mbtw.iron_ore_pile": "Pile of Iron Ore",
   "item.mbtw.coal_dust_pile": "Pile of Coal Dust",
   "item.mbtw.iron_ore_chunk": "Chunk of Iron Ore",
   "item.mbtw.pointy_stick": "Pointy Stick",
-  "item.mbtw.chisel_stone": "Sharp Rock"
+  "item.mbtw.sharp_stone": "Sharp Stone",
+  "item.mbtw.iron_chisel": "Iron Chisel"
 }

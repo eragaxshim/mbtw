@@ -12,7 +12,9 @@
     "ReplaceUndergroundOreFeatureMixin",
     "SlotIndexAccessor",
     "SurvivesExplosionMixin",
-    "InsertItemMixin"
+    "InsertItemMixin",
+    "CraftingContextAccessor",
+    "TreeTrunkMixin"
   ],
   "client": [
   ],

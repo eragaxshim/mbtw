@@ -1,6 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,15 +23,15 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TrunkBlock extends InterceptBreakBlock{
+public class TrunkBlock extends Block implements BreakInterceptable{
     private final InnerTrunkBlock innerBlock;
-    private static final Text TITLE = new TranslatableText("container.crafting");
+    private static final Text TITLE = new TranslatableText("container.mbtw.trunk_workbench");
     public static final BooleanProperty WORKBENCH = BooleanProperty.of("workbench");
 
     public TrunkBlock(Settings settings, Block innerBlock) {
         super(settings);
         this.innerBlock = (InnerTrunkBlock) innerBlock;
-        setDefaultState(getStateManager().getDefaultState().with(InterceptBreakBlock.BROKEN, false).with(WORKBENCH, false));
+        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(WORKBENCH, false));
     }
 
     public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
@@ -39,9 +40,10 @@ public class TrunkBlock extends InterceptBreakBlock{
             return state.with(WORKBENCH, true);
         }
         else if (handStack.getItem() instanceof AxeItem && ((AxeItem) handStack.getItem()).getMaterial().getMiningLevel() > 3) {
-            return state.with(InterceptBreakBlock.BROKEN, true);
+            return state.with(BreakInterceptable.BROKEN, true);
         }
 
+        //TODO drop bark
         return innerBlock.getDefaultState().with(InnerTrunkBlock.BREAK_LEVEL, 1);
     }
 
@@ -63,13 +65,13 @@ public class TrunkBlock extends InterceptBreakBlock{
 
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> {
-            return new CraftingScreenHandler(i, playerInventory, ScreenHandlerContext.create(world, pos));
+            return new TrunkWorkbenchScreenHandler(i, playerInventory, ScreenHandlerContext.create(world, pos));
         }, TITLE);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(WORKBENCH);
-        stateManager.add(InterceptBreakBlock.BROKEN);
+        stateManager.add(BreakInterceptable.BROKEN);
     }
 }

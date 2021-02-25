@@ -7,7 +7,7 @@
         {
           "condition": "minecraft:match_tool",
           "predicate": {
-            "tag": "mbtw:pickaxes"
+            "tag": "fabric:pickaxes"
           }
         }
       ],
@@ -41,7 +41,7 @@
           "term": {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "tag": "mbtw:pickaxes"
+              "tag": "fabric:pickaxes"
             }
           }
         }
