@@ -38,28 +38,37 @@ public class Mbtw implements ModInitializer {
     public static final Item MBTW_IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
     public static final Item MBTW_COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
-    public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.ORGANIC_PRODUCT).strength(0.1f).sounds(BlockSoundGroup.GRAVEL));
-
     public static final Block MBTW_LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(0.7f));
-    public static final Block MBTW_STONE = new MultiBreakBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F), 9, 0, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
-    public static final Block MBTW_HARD_STONE = new MultiBreakBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.0f), 9, 1, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
-    public static final Block MBTW_DEEP_STONE = new MultiBreakBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(2.5f), 9, 2, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
 
-    public static final Block MBTW_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (MultiBreakBlock) MBTW_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_HARD_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.5f), (MultiBreakBlock) MBTW_HARD_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_DEEP_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(3.0f), (MultiBreakBlock) MBTW_DEEP_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (MultiBreakBlock) MBTW_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
-    public static final Block MBTW_HARD_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.5f), (MultiBreakBlock) MBTW_HARD_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
-    public static final Block MBTW_DEEP_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(3.0f), (MultiBreakBlock) MBTW_DEEP_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
+    public static final Block OAK_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.2f));
+    public static final Block SPRUCE_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.2f));
+
+    public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.2f));
+    public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.2f));
+    public static final Block OAK_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.2f), OAK_TRUNK_INNER);
+    public static final Block SPRUCE_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.2f), SPRUCE_TRUNK_INNER);
+
+    public static final Block MBTW_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F), 9, 0, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
+    public static final Block MBTW_HARD_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.0f), 9, 1, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
+    public static final Block MBTW_DEEP_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(2.5f), 9, 2, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
+
+    public static final Block MBTW_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (StratifiedStoneBlock) MBTW_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
+    public static final Block MBTW_HARD_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.5f), (StratifiedStoneBlock) MBTW_HARD_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
+    public static final Block MBTW_DEEP_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(3.0f), (StratifiedStoneBlock) MBTW_DEEP_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
+    public static final Block MBTW_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f), (StratifiedStoneBlock) MBTW_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
+    public static final Block MBTW_HARD_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_HARD_STRATIFIED).strength(2.5f), (StratifiedStoneBlock) MBTW_HARD_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
+    public static final Block MBTW_DEEP_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(MBTW_DEEP_STRATIFIED).strength(3.0f), (StratifiedStoneBlock) MBTW_DEEP_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
 
     public static final Item MBTW_GRAVEL_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
     public static final Block MBTW_GRAVEL_SLAB = new FallingSlabBlock(-8356741, FabricBlockSettings.of(Material.SOIL, MaterialColor.DIRT).strength(0.05f).sounds(BlockSoundGroup.GRAVEL));
     public static final Block MBTW_LOOSE_COBBLESTONE_SLAB = new FallingSlabBlock(MaterialColor.STONE.color, FabricBlockSettings.of(Material.STONE).strength(0.7f).sounds(BlockSoundGroup.STONE));
 
-    public static final Item MBTW_CHISEL_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
-    public static final Item MBTW_POINTY_STICK = new ChiselItem(10, 1, -2.8F, ToolMaterials.WOOD, new FabricItemSettings().group(ItemGroup.TOOLS));
+    public static final Item POINTY_STICK = new ChiselItem(10, 1, -2.8F, ToolMaterials.WOOD, new FabricItemSettings().group(ItemGroup.TOOLS));
+    public static final Item SHARP_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
+    public static final Item IRON_CHISEL = new ChiselItem(50, 1, -2.8F, ToolMaterials.IRON, new FabricItemSettings().group(ItemGroup.TOOLS));
 
+    public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.ORGANIC_PRODUCT).strength(0.1f).sounds(BlockSoundGroup.GRAVEL));
     public static BlockEntityType<BrickBlockEntity> CLAY_BRICK_ENTITY;
 
     public static final Block BRICK_OVEN = new BrickOvenBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).requiresTool().strength(2.0F, 6.0F).luminance((LitStateInvoker.invokeCreateLightLevelFromBlockState(13))));
@@ -88,16 +97,26 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier("mbtw", "coal_dust_pile"), MBTW_COAL_DUST_PILE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "gravel_pile"), MBTW_GRAVEL_PILE);
 
-
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "loose_cobblestone"), MBTW_LOOSE_COBBLESTONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "loose_cobblestone"), new BlockItem(MBTW_LOOSE_COBBLESTONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "oak_log_inner"), OAK_LOG_INNER);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "oak_log_inner"), new BlockItem(OAK_LOG_INNER, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "spruce_log_inner"), SPRUCE_LOG_INNER);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "spruce_log_inner"), new BlockItem(SPRUCE_LOG_INNER, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "oak_trunk"), OAK_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "oak_trunk"), new BlockItem(OAK_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "spruce_trunk"), SPRUCE_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "spruce_trunk"), new BlockItem(SPRUCE_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "oak_trunk_inner"), OAK_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier("mbtw", "spruce_trunk_inner"), SPRUCE_TRUNK_INNER);
+
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "stone"), MBTW_STONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "stone"), new BlockItem(MBTW_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "hard_stone"), MBTW_HARD_STONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "hard_stone"), new BlockItem(MBTW_HARD_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "deep_stone"), MBTW_DEEP_STONE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "deep_stone"), new BlockItem(MBTW_DEEP_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-
 
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "iron_ore"), MBTW_IRON_ORE);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_ore"), new BlockItem(MBTW_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
@@ -118,13 +137,13 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "loose_cobblestone_slab"), MBTW_LOOSE_COBBLESTONE_SLAB);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "loose_cobblestone_slab"), new BlockItem(MBTW_LOOSE_COBBLESTONE_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "chisel_stone"), MBTW_CHISEL_STONE);
-        Registry.register(Registry.ITEM, new Identifier("mbtw", "pointy_stick"), MBTW_POINTY_STICK);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "pointy_stick"), POINTY_STICK);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "sharp_stone"), SHARP_STONE);
+        Registry.register(Registry.ITEM, new Identifier("mbtw", "iron_chisel"), IRON_CHISEL);
 
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "clay_brick"), CLAY_BRICK);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "clay_brick"), new BlockItem(CLAY_BRICK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mbtw", "clay_brick"), BlockEntityType.Builder.create(BrickBlockEntity::new, CLAY_BRICK).build(null));
-
 
         Registry.register(Registry.BLOCK, new Identifier("mbtw", "brick_oven"), BRICK_OVEN);
         Registry.register(Registry.ITEM, new Identifier("mbtw", "brick_oven"), new BlockItem(BRICK_OVEN, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));

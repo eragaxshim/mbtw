@@ -1,0 +1,25 @@
+{
+  "multipart": [
+    {   "when": { "up": "true" },
+      "apply": { "model": "mbtw:block/spruce_trunk_inner_up" }
+    },
+    {   "when": { "break_level": "1" },
+      "apply": { "model": "mbtw:block/spruce_trunk_inner_b1" }
+    },
+    {   "when": { "break_level": "2" },
+      "apply": { "model": "mbtw:block/spruce_trunk_inner_b2" }
+    },
+    {   "when": { "break_level": "3" },
+      "apply": { "model": "mbtw:block/spruce_trunk_inner_b3" }
+    },
+    {   "when": { "break_level": "4" },
+      "apply": { "model": "mbtw:block/spruce_trunk_inner_b4" }
+    },
+    {   "when": { "down": "true" },
+      "apply": { "model": "mbtw:block/spruce_trunk_inner_down" }
+    },
+    {   "when": { "break_level": "0" },
+      "apply": { "model": "mbtw:block/spruce_trunk" }
+    }
+  ]
+}

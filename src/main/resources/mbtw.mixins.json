@@ -7,9 +7,12 @@
     "ExplosionDecayMixin",
     "GenerationStepStratifierMixin",
     "InterceptBreakBlockMixin",
+    "IsBurningInvoker",
     "LitStateInvoker",
     "ReplaceUndergroundOreFeatureMixin",
-    "SurvivesExplosionMixin"
+    "SlotIndexAccessor",
+    "SurvivesExplosionMixin",
+    "InsertItemMixin"
   ],
   "client": [
   ],

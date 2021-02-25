@@ -25,16 +25,16 @@ import net.minecraft.world.explosion.Explosion;
 import java.util.Map;
 import java.util.Random;
 
-public class MultiBreakBlock extends InterceptBreakBlock {
+public class StratifiedStoneBlock extends InterceptBreakBlock {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 9);
     public final int stratification;
     public final int breakingPoint;
     public final Block blockDrop;
     public final Item itemDrop;
 
-    public MultiBreakBlock(FabricBlockSettings settings, int breakingPoint, int stratification, Block blockDrop, Item itemDrop) {
+    public StratifiedStoneBlock(FabricBlockSettings settings, int breakingPoint, int stratification, Block blockDrop, Item itemDrop) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BREAK_LEVEL, 0).with(BROKEN, false));
+        setDefaultState(getStateManager().getDefaultState().with(InterceptBreakBlock.BROKEN, false).with(BREAK_LEVEL, 0));
         this.breakingPoint = breakingPoint;
         this.stratification = stratification;
         this.blockDrop = blockDrop;
@@ -57,7 +57,7 @@ public class MultiBreakBlock extends InterceptBreakBlock {
                 Map<Enchantment, Integer> ei = EnchantmentHelper.get(handStack);
                 if (ei.containsKey(Enchantments.SILK_TOUCH))
                 {
-                    return state.with(BROKEN, true);
+                    return state.with(InterceptBreakBlock.BROKEN, true);
                 }
 
                 brokenDelta = miningEffect * 3 + 1;
@@ -89,7 +89,7 @@ public class MultiBreakBlock extends InterceptBreakBlock {
         }
         else
         {
-            return state.with(BROKEN, true);
+            return state.with(InterceptBreakBlock.BROKEN, true);
         }
     }
 
@@ -101,6 +101,6 @@ public class MultiBreakBlock extends InterceptBreakBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(BREAK_LEVEL);
-        stateManager.add(BROKEN);
+        stateManager.add(InterceptBreakBlock.BROKEN);
     }
 }

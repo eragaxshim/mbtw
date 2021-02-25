@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/log_inner_b2",
+  "textures": {
+    "side": "minecraft:block/stripped_spruce_log",
+    "end": "mbtw:block/spruce_trunk_top"
+  }
+}

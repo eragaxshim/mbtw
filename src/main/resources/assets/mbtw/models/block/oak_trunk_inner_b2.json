@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/log_inner_b2",
+  "textures": {
+    "side": "minecraft:block/stripped_oak_log",
+    "end": "mbtw:block/oak_trunk_top"
+  }
+}
