@@ -2,15 +2,13 @@ package mbtw.mbtw.screen;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.mixin.CraftingContextAccessor;
-import mbtw.mbtw.tag.MbtwTags;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class TrunkWorkbenchScreenHandler extends CraftingScreenHandler {
@@ -26,7 +24,7 @@ public class TrunkWorkbenchScreenHandler extends CraftingScreenHandler {
         ScreenHandlerContext context = ((CraftingContextAccessor)this).getContext();
 
         Block block = ((BlockState) context.run(World::getBlockState, false)).getBlock();
-        if (block.isIn(MbtwTags.TRUNKS))
+        if (block.isIn(MbtwTagsMaps.TRUNKS))
         {
             return canUse(context, player, block);
         }

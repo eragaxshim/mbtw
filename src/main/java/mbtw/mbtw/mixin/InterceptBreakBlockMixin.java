@@ -3,35 +3,24 @@ package mbtw.mbtw.mixin;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.BreakInterceptable;
 import mbtw.mbtw.block.InnerLogBlock;
-import mbtw.mbtw.tag.MbtwTags;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stats;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Iterator;
 
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class InterceptBreakBlockMixin {
@@ -51,9 +40,9 @@ public abstract class InterceptBreakBlockMixin {
             ItemStack handStack = player.getMainHandStack();
             boolean isInterceptable = block instanceof BreakInterceptable;
 
-            if (isInterceptable || block.isIn(MbtwTags.BREAK_INTERCEPTABLES))
+            if (isInterceptable || block.isIn(MbtwTagsMaps.BREAK_INTERCEPTABLES))
             {
-                BlockState newState;
+                BlockState newState = state;
                 if (isInterceptable) {
                     newState = ((BreakInterceptable) block).processBreakAttempt(world, pos, state, player, handStack);
                 }
@@ -62,11 +51,11 @@ public abstract class InterceptBreakBlockMixin {
                         newState = ((BreakInterceptable) Mbtw.STONE).processBreakAttempt(world, pos, Mbtw.STONE.getDefaultState(), player, handStack);
                     }
                     else if (block.isIn(BlockTags.LOGS)) {
-                        BlockState possibleInnerLogState = Mbtw.INNER_LOG_MAP.get(block);
-                        newState = possibleInnerLogState.getBlock() instanceof InnerLogBlock ? ((InnerLogBlock) possibleInnerLogState.getBlock()).processBreakAttempt(world, pos, possibleInnerLogState, player, handStack) : state;
-                    }
-                    else {
-                        newState = state;
+                        BlockState possibleInnerLogState = MbtwTagsMaps.INNER_LOG_MAP.get(block);
+                        if (possibleInnerLogState.getBlock() instanceof InnerLogBlock)
+                        {
+                            newState = ((InnerLogBlock) possibleInnerLogState.getBlock()).processBreakAttempt(world, pos, possibleInnerLogState.with(PillarBlock.AXIS, state.get(PillarBlock.AXIS)), player, handStack);
+                        }
                     }
                 }
 

@@ -1,6 +1,7 @@
 package mbtw.mbtw.mixin;
 
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockBox;
@@ -29,7 +30,7 @@ public class HugeFungusTrunkMixin {
     @Inject(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/gen/feature/HugeFungusFeature;generateHat(Lnet/minecraft/world/WorldAccess;Ljava/util/Random;Lnet/minecraft/world/gen/feature/HugeFungusFeatureConfig;Lnet/minecraft/util/math/BlockPos;IZ)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     protected void addTrunk(StructureWorldAccess structureWorldAccess, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, HugeFungusFeatureConfig hugeFungusFeatureConfig, CallbackInfoReturnable<Boolean> cir, Block block, BlockPos blockPos2, int i, boolean thickStem)
     {
-        BlockState trunk = Mbtw.LOG_TRUNK_MAP.get(hugeFungusFeatureConfig.stemState.getBlock());
+        BlockState trunk = MbtwTagsMaps.LOG_TRUNK_MAP.get(hugeFungusFeatureConfig.stemState.getBlock());
         if (trunk != null)
         {
             BlockPos.Mutable mutable = new BlockPos.Mutable();

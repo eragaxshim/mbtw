@@ -1,6 +1,7 @@
 package mbtw.mbtw.mixin;
 
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +39,7 @@ public class TreeTrunkMixin {
             for (BlockPos minYPos : minYPositions)
             {
                 BlockState logState = config.trunkProvider.getBlockState(random, minYPos);
-                BlockState trunkState = Mbtw.LOG_TRUNK_MAP.get(logState.getBlock());
+                BlockState trunkState = MbtwTagsMaps.LOG_TRUNK_MAP.get(logState.getBlock());
                 world.setBlockState(minYPos, trunkState != null ? trunkState : logState, 19);
             }
         }

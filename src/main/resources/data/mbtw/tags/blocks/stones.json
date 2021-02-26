@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:stone",
+    "mbtw:stone",
+    "mbtw:hard_stone",
+    "mbtw:deep_stone"
+  ]
+}

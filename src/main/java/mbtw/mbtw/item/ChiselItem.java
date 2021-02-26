@@ -76,7 +76,8 @@ public class ChiselItem extends MiningToolItem {
     }
 
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-        return isEffectiveOn(state) ? Math.max(this.miningSpeed / 3.5F, 1.0F) : 1.0F;
+        float slowModifier = this.getMaterial().getMiningLevel() < 2 ? 1.5F : 0.75F;
+        return isEffectiveOn(state) ? Math.max(this.miningSpeed / slowModifier, 1.0F) : 1.0F;
     }
 
     private int getDamageAmount(float base)

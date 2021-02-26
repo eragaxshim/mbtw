@@ -2,6 +2,7 @@ package mbtw.mbtw.block;
 
 import com.google.common.collect.ImmutableMap;
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
@@ -10,6 +11,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -38,7 +40,7 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
 
     public InnerLogBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(PillarBlock.AXIS, Direction.Axis.Y).with(BREAK_LEVEL, 0).with(UP, false).with(DOWN, false));
+        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(PillarBlock.AXIS, Direction.Axis.Y).with(BREAK_LEVEL, 0).with(UP, true).with(DOWN, true));
     }
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -102,7 +104,17 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
     {
         int b = state.get(BREAK_LEVEL);
 
-        if (handStack.getItem() instanceof AxeItem) {
+        int d = state.get(PillarBlock.AXIS) == Direction.Axis.Z ? -1 : 1;
+        if (state.get(UP) && !world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), d)).getBlock().isIn(BlockTags.LOGS))
+        {
+            state = state.with(UP, false);
+        }
+        if (state.get(DOWN) && !world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -d)).getBlock().isIn(BlockTags.LOGS))
+        {
+            state = state.with(DOWN, false);
+        }
+
+        if (handStack.getItem() instanceof AxeItem && (!(this instanceof InnerTrunkBlock) || ((AxeItem) handStack.getItem()).getMaterial().getMiningLevel() > 3)) {
             return state.with(BreakInterceptable.BROKEN, true);
         }
 

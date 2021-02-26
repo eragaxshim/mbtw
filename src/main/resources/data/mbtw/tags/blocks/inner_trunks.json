@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "mbtw:oak_trunk_inner",
+    "mbtw:spruce_trunk_inner",
+    "mbtw:birch_trunk_inner",
+    "mbtw:jungle_trunk_inner",
+    "mbtw:acacia_trunk_inner",
+    "mbtw:dark_oak_trunk_inner",
+    "mbtw:crimson_trunk_inner",
+    "mbtw:warped_trunk_inner"
+  ]
+}

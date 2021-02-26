@@ -4,7 +4,9 @@
   "package": "mbtw.mbtw.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AxeEffectiveMixin",
     "AxeStripMixin",
+    "BlockBreakingDeltaMixin",
     "CraftingContextAccessor",
     "ExplosionDecayMixin",
     "GenerationStepStratifierMixin",
@@ -12,9 +14,12 @@
     "InsertItemMixin",
     "InterceptBreakBlockMixin",
     "IsBurningInvoker",
+    "ItemEffectiveMixin",
     "LitStateInvoker",
     "ReplaceUndergroundOreFeatureMixin",
+    "ShovelEffectiveMixin",
     "SlotIndexAccessor",
+    "StoneSlowerMixin",
     "SurvivesExplosionMixin",
     "TreeTrunkMixin"
   ],

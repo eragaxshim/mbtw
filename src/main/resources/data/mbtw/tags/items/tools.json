@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#mbtw:chisels",
+    "#fabric:pickaxes",
+    "#fabric:axes",
+    "#fabric:shovels",
+    "#fabric:swords",
+    "#fabric:shears",
+    "#fabric:hoes"
+  ]
+}
