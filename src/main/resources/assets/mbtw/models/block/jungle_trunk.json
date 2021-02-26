@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "mbtw:block/jungle_trunk",
+    "end": "mbtw:block/jungle_trunk_top"
+  }
+}

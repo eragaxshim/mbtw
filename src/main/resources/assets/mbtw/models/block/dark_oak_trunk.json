@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "mbtw:block/dark_oak_trunk",
+    "end": "mbtw:block/dark_oak_trunk_top"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "workbench=false": { "model": "mbtw:block/acacia_trunk" },
+    "workbench=true": { "model": "mbtw:block/acacia_workbench" }
+  }
+}

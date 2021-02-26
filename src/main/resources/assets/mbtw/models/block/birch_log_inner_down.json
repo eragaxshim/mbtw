@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/log_inner_down",
+  "textures": {
+    "side": "minecraft:block/stripped_birch_log",
+    "end": "minecraft:block/stripped_birch_log_top"
+  }
+}

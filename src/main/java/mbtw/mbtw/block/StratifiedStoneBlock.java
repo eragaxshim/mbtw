@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
@@ -31,7 +32,7 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
         this.itemDrop = itemDrop;
     }
 
-    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
     {
         int b = state.get(BREAK_LEVEL);
         int brokenDelta = 0;

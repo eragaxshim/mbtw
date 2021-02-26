@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/log_inner_down",
+  "textures": {
+    "side": "minecraft:block/stripped_jungle_log",
+    "end": "mbtw:block/jungle_trunk_top"
+  }
+}

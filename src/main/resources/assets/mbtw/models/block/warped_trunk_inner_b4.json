@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/log_inner_b4",
+  "textures": {
+    "side": "minecraft:block/stripped_warped_stem",
+    "end": "mbtw:block/warped_trunk_top"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "name": "minecraft:stripped_dark_oak_log",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "mbtw:dark_oak_log_inner",
+                      "properties": {
+                        "break_level": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "minecraft:item",
+                  "name": "minecraft:dark_oak_log",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "mbtw:dark_oak_log_inner",
+                      "properties": {
+                        "break_level": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "minecraft:item",
+                  "name": "mbtw:saw_dust"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "tag": "fabric:axes"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "name": "minecraft:dark_oak_log",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "mbtw:dark_oak_log_inner",
+                      "properties": {
+                        "break_level": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "minecraft:item",
+                  "name": "minecraft:stripped_dark_oak_log",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "mbtw:dark_oak_log_inner",
+                      "properties": {
+                        "break_level": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "minecraft:item",
+                  "functions": [
+                    {
+                      "function": "minecraft:set_count",
+                      "count": {
+                        "n": 5,
+                        "p": 0.6,
+                        "type": "minecraft:binomial"
+                      }
+                    }
+                  ],
+                  "name": "mbtw:saw_dust"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:survives_explosion"
+                }
+              ]
+            },
+            {
+              "type": "minecraft:group",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "functions": [
+                    {
+                      "function": "minecraft:set_count",
+                      "count": {
+                        "n": 3,
+                        "p": 0.2,
+                        "type": "minecraft:binomial"
+                      }
+                    }
+                  ],
+                  "name": "minecraft:stick"
+                },
+                {
+                  "type": "minecraft:item",
+                  "functions": [
+                    {
+                      "function": "minecraft:set_count",
+                      "count": {
+                        "n": 1,
+                        "p": 0.4,
+                        "type": "minecraft:binomial"
+                      }
+                    }
+                  ],
+                  "name": "mbtw:saw_dust"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mbtw:dark_oak_bark",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "mbtw:dark_oak_log_inner",
+              "properties": {
+                "break_level": 5
+              }
+            },
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:match_tool",
+                "predicate": {
+                  "tag": "fabric:axes"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

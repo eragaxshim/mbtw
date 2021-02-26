@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/log_inner_inventory",
+  "textures": {
+    "side": "minecraft:block/stripped_acacia_log",
+    "end": "minecraft:block/stripped_acacia_log_top"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "workbench=false": { "model": "mbtw:block/dark_oak_trunk" },
+    "workbench=true": { "model": "mbtw:block/dark_oak_workbench" }
+  }
+}

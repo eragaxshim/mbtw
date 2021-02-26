@@ -34,7 +34,7 @@ public class TrunkBlock extends Block implements BreakInterceptable{
         setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(WORKBENCH, false));
     }
 
-    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
     {
         if (handStack.getItem() instanceof ChiselItem && ((ChiselItem) handStack.getItem()).getMaterial().getMiningLevel() > 1) {
             return state.with(WORKBENCH, true);
@@ -43,7 +43,6 @@ public class TrunkBlock extends Block implements BreakInterceptable{
             return state.with(BreakInterceptable.BROKEN, true);
         }
 
-        //TODO drop bark
         return innerBlock.getDefaultState().with(InnerTrunkBlock.BREAK_LEVEL, 1);
     }
 

@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MiningToolItem;
@@ -39,7 +40,7 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
         this.pileDrop = pileDrop;
     }
 
-    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
     {
         Item handItem = handStack.getItem();
         if (handItem instanceof MiningToolItem)
@@ -85,7 +86,7 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
 
 
         }
-        return sourceBlock.processBreakAttempt(world, pos, sourceBlock.getDefaultState(), handStack);
+        return sourceBlock.processBreakAttempt(world, pos, sourceBlock.getDefaultState(), player, handStack);
     }
 
     @Override

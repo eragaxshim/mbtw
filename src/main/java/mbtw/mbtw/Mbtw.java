@@ -1,5 +1,6 @@
 package mbtw.mbtw;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializer;
 import mbtw.mbtw.block.*;
@@ -40,31 +41,46 @@ public class Mbtw implements ModInitializer {
     public static int DEEP_STONE_MAX = 25;
     public static int HARD_STONE_MAX = 45;
 
-    public static final Item MBTW_LOOSE_STONE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item MBTW_IRON_ORE_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item MBTW_IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item MBTW_COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item LOOSE_STONE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item SAW_DUST = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item FUNGAL_DUST = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item OAK_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item SPRUCE_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item BIRCH_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item JUNGLE_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item ACACIA_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item DARK_OAK_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item CRIMSON_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item WARPED_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item IRON_ORE_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item GRAVEL_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
-    public static final Block MBTW_LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(0.7f));
+    public static final Block LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(0.7f));
 
     public static final Block OAK_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.5f));
     public static final Block SPRUCE_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.5f));
+    public static final Block BIRCH_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.5f));
+    public static final Block JUNGLE_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.5f));
+    public static final Block ACACIA_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.5f));
+    public static final Block DARK_OAK_LOG_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.5f));
+    public static final Block CRIMSON_STEM_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(1.5f));
+    public static final Block WARPED_STEM_INNER = new InnerLogBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(1.5f));
 
-    public static final Block MBTW_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).requiresTool(), 9, 0, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
-    public static final Block MBTW_HARD_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f).requiresTool(), 9, 1, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
-    public static final Block MBTW_DEEP_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(2.5f).requiresTool(), 9, 2, MBTW_LOOSE_COBBLESTONE, MBTW_LOOSE_STONE);
+    public static final Block STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).requiresTool(), 9, 0, LOOSE_COBBLESTONE, LOOSE_STONE);
+    public static final Block HARD_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f).requiresTool(), 9, 1, LOOSE_COBBLESTONE, LOOSE_STONE);
+    public static final Block DEEP_STONE = new StratifiedStoneBlock(FabricBlockSettings.of(Material.STONE).strength(2.5f).requiresTool(), 9, 2, LOOSE_COBBLESTONE, LOOSE_STONE);
 
-    public static final Block MBTW_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f).requiresTool(), (StratifiedStoneBlock) MBTW_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_HARD_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.5f).requiresTool(), (StratifiedStoneBlock) MBTW_HARD_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_DEEP_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(3.0f).requiresTool(), (StratifiedStoneBlock) MBTW_DEEP_STONE, MBTW_IRON_ORE_CHUNK, MBTW_IRON_ORE_PILE);
-    public static final Block MBTW_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f).requiresTool(), (StratifiedStoneBlock) MBTW_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
-    public static final Block MBTW_HARD_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.5f).requiresTool(), (StratifiedStoneBlock) MBTW_HARD_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
-    public static final Block MBTW_DEEP_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(3.0f).requiresTool(), (StratifiedStoneBlock) MBTW_DEEP_STONE, Items.COAL, MBTW_COAL_DUST_PILE);
+    public static final Block IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f).requiresTool(), (StratifiedStoneBlock) STONE, IRON_ORE_CHUNK, IRON_ORE_PILE);
+    public static final Block HARD_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.5f).requiresTool(), (StratifiedStoneBlock) HARD_STONE, IRON_ORE_CHUNK, IRON_ORE_PILE);
+    public static final Block DEEP_IRON_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(3.0f).requiresTool(), (StratifiedStoneBlock) DEEP_STONE, IRON_ORE_CHUNK, IRON_ORE_PILE);
+    public static final Block COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0f).requiresTool(), (StratifiedStoneBlock) STONE, Items.COAL, COAL_DUST_PILE);
+    public static final Block HARD_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.5f).requiresTool(), (StratifiedStoneBlock) HARD_STONE, Items.COAL, COAL_DUST_PILE);
+    public static final Block DEEP_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(3.0f).requiresTool(), (StratifiedStoneBlock) DEEP_STONE, Items.COAL, COAL_DUST_PILE);
 
-    public static final Item MBTW_GRAVEL_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-
-    public static final Block MBTW_GRAVEL_SLAB = new FallingSlabBlock(-8356741, FabricBlockSettings.of(Material.SOIL, MaterialColor.DIRT).strength(0.05f).sounds(BlockSoundGroup.GRAVEL));
-    public static final Block MBTW_LOOSE_COBBLESTONE_SLAB = new FallingSlabBlock(MaterialColor.STONE.color, FabricBlockSettings.of(Material.STONE).strength(0.7f).sounds(BlockSoundGroup.STONE));
+    public static final Block GRAVEL_SLAB = new FallingSlabBlock(-8356741, FabricBlockSettings.of(Material.SOIL, MaterialColor.DIRT).strength(0.05f).sounds(BlockSoundGroup.GRAVEL));
+    public static final Block LOOSE_COBBLESTONE_SLAB = new FallingSlabBlock(MaterialColor.STONE.color, FabricBlockSettings.of(Material.STONE).strength(0.7f).sounds(BlockSoundGroup.STONE));
 
     public static final Item POINTY_STICK = new ChiselItem(10, 1, -2.8F, ToolMaterials.WOOD, new FabricItemSettings().group(ItemGroup.TOOLS));
     public static final Item SHARP_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
@@ -72,14 +88,68 @@ public class Mbtw implements ModInitializer {
 
     public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.5f).requiresTool());
     public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.5f).requiresTool());
+    public static final Block BIRCH_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.5f).requiresTool());
+    public static final Block JUNGLE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.5f).requiresTool());
+    public static final Block ACACIA_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.5f).requiresTool());
+    public static final Block DARK_OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.5f).requiresTool());
+    public static final Block CRIMSON_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(3.5f).requiresTool());
+    public static final Block WARPED_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(3.5f).requiresTool());
+
     public static final Block OAK_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.0f).requiresTool(), OAK_TRUNK_INNER);
     public static final Block SPRUCE_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.0f).requiresTool(), SPRUCE_TRUNK_INNER);
+    public static final Block BIRCH_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.0f).requiresTool(), BIRCH_TRUNK_INNER);
+    public static final Block JUNGLE_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.0f).requiresTool(), JUNGLE_TRUNK_INNER);
+    public static final Block ACACIA_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.0f).requiresTool(), ACACIA_TRUNK_INNER);
+    public static final Block DARK_OAK_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(3.0f).requiresTool(), DARK_OAK_TRUNK_INNER);
+    public static final Block CRIMSON_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(3.0f).requiresTool(), CRIMSON_TRUNK_INNER);
+    public static final Block WARPED_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(3.0f).requiresTool(), WARPED_TRUNK_INNER);
     public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "trunk_workbench"), TrunkWorkbenchScreenHandler::new);
 
-    public static final Map<Block, BlockState> logTrunkMap  = new HashMap<Block, BlockState>() {{
-        put(Blocks.OAK_LOG, OAK_TRUNK.getDefaultState());
-        put(Blocks.SPRUCE_LOG, SPRUCE_TRUNK.getDefaultState());
-    }};
+    public static final ImmutableMap<Block, BlockState> LOG_TRUNK_MAP = ImmutableMap.<Block, BlockState>builder()
+        .put(Blocks.OAK_LOG, OAK_TRUNK.getDefaultState())
+        .put(Blocks.SPRUCE_LOG, SPRUCE_TRUNK.getDefaultState())
+        .put(Blocks.BIRCH_LOG, BIRCH_TRUNK.getDefaultState())
+        .put(Blocks.JUNGLE_LOG, JUNGLE_TRUNK.getDefaultState())
+        .put(Blocks.ACACIA_LOG, ACACIA_TRUNK.getDefaultState())
+        .put(Blocks.DARK_OAK_LOG, DARK_OAK_TRUNK.getDefaultState())
+        .put(Blocks.CRIMSON_STEM, CRIMSON_TRUNK.getDefaultState())
+        .put(Blocks.WARPED_STEM, WARPED_TRUNK.getDefaultState())
+            .build();
+
+    public static final ImmutableMap<Block, BlockState> INNER_LOG_MAP = ImmutableMap.<Block, BlockState>builder()
+            .put(Blocks.OAK_LOG, OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.OAK_WOOD, OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_OAK_LOG, OAK_LOG_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_OAK_WOOD, OAK_LOG_INNER.getDefaultState())
+            .put(Blocks.SPRUCE_LOG, SPRUCE_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.SPRUCE_WOOD, SPRUCE_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_SPRUCE_LOG, SPRUCE_LOG_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_SPRUCE_WOOD, SPRUCE_LOG_INNER.getDefaultState())
+            .put(Blocks.BIRCH_LOG, BIRCH_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.BIRCH_WOOD, BIRCH_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_BIRCH_LOG, BIRCH_LOG_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_BIRCH_WOOD, BIRCH_LOG_INNER.getDefaultState())
+            .put(Blocks.JUNGLE_LOG, JUNGLE_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.JUNGLE_WOOD, JUNGLE_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_JUNGLE_LOG, JUNGLE_LOG_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_JUNGLE_WOOD, JUNGLE_LOG_INNER.getDefaultState())
+            .put(Blocks.ACACIA_LOG, ACACIA_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.ACACIA_WOOD, ACACIA_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_ACACIA_LOG, ACACIA_LOG_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_ACACIA_WOOD, ACACIA_LOG_INNER.getDefaultState())
+            .put(Blocks.DARK_OAK_LOG, DARK_OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.DARK_OAK_WOOD, DARK_OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_DARK_OAK_LOG, DARK_OAK_LOG_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_DARK_OAK_WOOD, DARK_OAK_LOG_INNER.getDefaultState())
+            .put(Blocks.CRIMSON_STEM, CRIMSON_STEM_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.CRIMSON_HYPHAE, CRIMSON_STEM_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_CRIMSON_STEM, CRIMSON_STEM_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_CRIMSON_HYPHAE, CRIMSON_STEM_INNER.getDefaultState())
+            .put(Blocks.WARPED_STEM, WARPED_STEM_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.WARPED_HYPHAE, WARPED_STEM_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
+            .put(Blocks.STRIPPED_WARPED_STEM, WARPED_STEM_INNER.getDefaultState())
+            .put(Blocks.STRIPPED_WARPED_HYPHAE, WARPED_STEM_INNER.getDefaultState())
+            .build();
 
     public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.ORGANIC_PRODUCT).strength(0.1f).sounds(BlockSoundGroup.GRAVEL));
     public static BlockEntityType<BrickBlockEntity> CLAY_BRICK_ENTITY;
@@ -93,60 +163,93 @@ public class Mbtw implements ModInitializer {
     public static final RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER = new CookingRecipeSerializer(BrickOvenRecipe::new, 100);
     public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "brick_oven"), BrickOvenScreenHandler::new);
 
-    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(MBTW_HARD_STONE);
-    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(MBTW_DEEP_STONE);
-    public static final ConfiguredFeature<?, ?> ORE_COAL = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, MBTW_COAL_ORE.getDefaultState(), 17)).rangeOf(128)).spreadHorizontally()).repeat(13);
-    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, MBTW_HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX)).spreadHorizontally()).repeat(5);
-    public static final ConfiguredFeature<?, ?> ORE_COAL_DEEP = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, MBTW_DEEP_COAL_ORE.getDefaultState(), 17)).rangeOf(DEEP_STONE_MAX)).spreadHorizontally()).repeat(4);
-    public static final ConfiguredFeature<?, ?> ORE_IRON = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, MBTW_IRON_ORE.getDefaultState(), 9)).rangeOf(64)).spreadHorizontally()).repeat(14);
-    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, MBTW_HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX)).spreadHorizontally()).repeat(6);
-    public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, MBTW_DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX)).spreadHorizontally()).repeat(5);
+    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
+    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
+    public static final ConfiguredFeature<?, ?> ORE_COAL = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, COAL_ORE.getDefaultState(), 17)).rangeOf(128)).spreadHorizontally()).repeat(13);
+    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX)).spreadHorizontally()).repeat(5);
+    public static final ConfiguredFeature<?, ?> ORE_COAL_DEEP = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_COAL_ORE.getDefaultState(), 17)).rangeOf(DEEP_STONE_MAX)).spreadHorizontally()).repeat(4);
+    public static final ConfiguredFeature<?, ?> ORE_IRON = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRON_ORE.getDefaultState(), 9)).rangeOf(64)).spreadHorizontally()).repeat(14);
+    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX)).spreadHorizontally()).repeat(6);
+    public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX)).spreadHorizontally()).repeat(5);
 
     @Override
     public void onInitialize() {
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_stone"), MBTW_LOOSE_STONE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore_pile"), MBTW_IRON_ORE_PILE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore_chunk"), MBTW_IRON_ORE_CHUNK);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "coal_dust_pile"), MBTW_COAL_DUST_PILE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_pile"), MBTW_GRAVEL_PILE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_stone"), LOOSE_STONE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore_pile"), IRON_ORE_PILE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore_chunk"), IRON_ORE_CHUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "coal_dust_pile"), COAL_DUST_PILE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "saw_dust"), SAW_DUST);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fungal_dust"), FUNGAL_DUST);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "oak_bark"), OAK_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "spruce_bark"), SPRUCE_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "birch_bark"), BIRCH_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "jungle_bark"), JUNGLE_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "acacia_bark"), ACACIA_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "dark_oak_bark"), DARK_OAK_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "crimson_bark"), CRIMSON_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "warped_bark"), WARPED_BARK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_pile"), GRAVEL_PILE);
 
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "loose_cobblestone"), MBTW_LOOSE_COBBLESTONE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_cobblestone"), new BlockItem(MBTW_LOOSE_COBBLESTONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "loose_cobblestone"), LOOSE_COBBLESTONE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_cobblestone"), new BlockItem(LOOSE_COBBLESTONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "oak_log_inner"), OAK_LOG_INNER);
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "spruce_log_inner"), SPRUCE_LOG_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "birch_log_inner"), BIRCH_LOG_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "jungle_log_inner"), JUNGLE_LOG_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "acacia_log_inner"), ACACIA_LOG_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "crimson_stem_inner"), CRIMSON_STEM_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "warped_stem_inner"), WARPED_STEM_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "dark_oak_log_inner"), DARK_OAK_LOG_INNER);
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "oak_trunk"), OAK_TRUNK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "oak_trunk"), new BlockItem(OAK_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "spruce_trunk"), SPRUCE_TRUNK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "spruce_trunk"), new BlockItem(SPRUCE_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "oak_trunk_inner"), OAK_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "birch_trunk"), BIRCH_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "birch_trunk"), new BlockItem(BIRCH_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "jungle_trunk"), JUNGLE_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "jungle_trunk"), new BlockItem(JUNGLE_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "acacia_trunk"), ACACIA_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "acacia_trunk"), new BlockItem(ACACIA_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "dark_oak_trunk"), DARK_OAK_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "dark_oak_trunk"), new BlockItem(DARK_OAK_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "crimson_trunk"), CRIMSON_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "crimson_trunk"), new BlockItem(CRIMSON_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "warped_trunk"), WARPED_TRUNK);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "warped_trunk"), new BlockItem(WARPED_TRUNK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "spruce_trunk_inner"), SPRUCE_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "birch_trunk_inner"), BIRCH_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "jungle_trunk_inner"), JUNGLE_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "acacia_trunk_inner"), ACACIA_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "dark_oak_trunk_inner"), DARK_OAK_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "crimson_trunk_inner"), CRIMSON_TRUNK_INNER);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "warped_trunk_inner"), WARPED_TRUNK_INNER);
 
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "stone"), MBTW_STONE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "stone"), new BlockItem(MBTW_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hard_stone"), MBTW_HARD_STONE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hard_stone"), new BlockItem(MBTW_HARD_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_stone"), MBTW_DEEP_STONE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_stone"), new BlockItem(MBTW_DEEP_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "stone"), STONE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "stone"), new BlockItem(STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hard_stone"), HARD_STONE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hard_stone"), new BlockItem(HARD_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_stone"), DEEP_STONE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_stone"), new BlockItem(DEEP_STONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "iron_ore"), MBTW_IRON_ORE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore"), new BlockItem(MBTW_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hard_iron_ore"), MBTW_HARD_IRON_ORE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hard_iron_ore"), new BlockItem(MBTW_HARD_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_iron_ore"), MBTW_DEEP_IRON_ORE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_iron_ore"), new BlockItem(MBTW_DEEP_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "iron_ore"), IRON_ORE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore"), new BlockItem(IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hard_iron_ore"), HARD_IRON_ORE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hard_iron_ore"), new BlockItem(HARD_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_iron_ore"), DEEP_IRON_ORE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_iron_ore"), new BlockItem(DEEP_IRON_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "coal_ore"), MBTW_COAL_ORE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "coal_ore"), new BlockItem(MBTW_COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hard_coal_ore"), MBTW_HARD_COAL_ORE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hard_coal_ore"), new BlockItem(MBTW_HARD_COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_coal_ore"), MBTW_DEEP_COAL_ORE);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_coal_ore"), new BlockItem(MBTW_DEEP_COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "coal_ore"), COAL_ORE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "coal_ore"), new BlockItem(COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "hard_coal_ore"), HARD_COAL_ORE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "hard_coal_ore"), new BlockItem(HARD_COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_coal_ore"), DEEP_COAL_ORE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_coal_ore"), new BlockItem(DEEP_COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "gravel_slab"), MBTW_GRAVEL_SLAB);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_slab"), new BlockItem(MBTW_GRAVEL_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "loose_cobblestone_slab"), MBTW_LOOSE_COBBLESTONE_SLAB);
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_cobblestone_slab"), new BlockItem(MBTW_LOOSE_COBBLESTONE_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "gravel_slab"), GRAVEL_SLAB);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_slab"), new BlockItem(GRAVEL_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "loose_cobblestone_slab"), LOOSE_COBBLESTONE_SLAB);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_cobblestone_slab"), new BlockItem(LOOSE_COBBLESTONE_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "pointy_stick"), POINTY_STICK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "sharp_stone"), SHARP_STONE);

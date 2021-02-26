@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.security.KeyException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Mixin(TreeFeature.class)
 public class TreeTrunkMixin {
@@ -26,13 +27,20 @@ public class TreeTrunkMixin {
     protected void addTrunk(ModifiableTestableWorld world, Random random, BlockPos pos, Set<BlockPos> logPositions, Set<BlockPos> leavesPositions, BlockBox box, TreeFeatureConfig config, CallbackInfoReturnable<Boolean> cir)
     {
         try {
-            BlockPos minYPos = logPositions.stream()
+            int minY = logPositions.stream()
                     .min(Comparator.comparing(BlockPos::getY))
-                    .orElseThrow(NoSuchElementException::new);
+                    .orElseThrow(NoSuchElementException::new)
+                    .getY();
+            List<BlockPos> minYPositions = logPositions.stream()
+                    .filter(p -> p.getY() == minY)
+                    .collect(Collectors.toList());
 
-            BlockState logState = config.trunkProvider.getBlockState(random, minYPos);
-            BlockState trunkState = Mbtw.logTrunkMap.get(logState.getBlock());
-            world.setBlockState(minYPos, trunkState != null ? trunkState : logState, 19);
+            for (BlockPos minYPos : minYPositions)
+            {
+                BlockState logState = config.trunkProvider.getBlockState(random, minYPos);
+                BlockState trunkState = Mbtw.LOG_TRUNK_MAP.get(logState.getBlock());
+                world.setBlockState(minYPos, trunkState != null ? trunkState : logState, 19);
+            }
         }
         catch (NoSuchElementException ignored) { }
     }

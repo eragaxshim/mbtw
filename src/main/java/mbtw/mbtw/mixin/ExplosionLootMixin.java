@@ -1,6 +1,7 @@
 package mbtw.mbtw.mixin;
 
 import mbtw.mbtw.block.BreakInterceptable;
+import mbtw.mbtw.block.StratifiedStoneBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -42,7 +43,7 @@ class SurvivesExplosionMixin {
 @Mixin(ExplosionDecayLootFunction.class)
 class ExplosionDecayMixin {
     @Inject(method = "process", at = @At("HEAD"), cancellable = true)
-    protected void changeProcess(ItemStack stack, LootContext lootContext, CallbackInfoReturnable<Boolean> cir)
+    protected void changeProcess(ItemStack stack, LootContext lootContext, CallbackInfoReturnable<ItemStack> cir)
     {
         BlockState blockState = lootContext.get(LootContextParameters.BLOCK_STATE);
         if (blockState != null)
@@ -55,7 +56,7 @@ class ExplosionDecayMixin {
 
                 if (!(entity instanceof TntEntity))
                 {
-                    cir.setReturnValue(false);
+                    cir.setReturnValue(ItemStack.EMPTY);
                 }
             }
         }

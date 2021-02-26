@@ -55,15 +55,15 @@ public abstract class InterceptBreakBlockMixin {
             {
                 BlockState newState;
                 if (isInterceptable) {
-                    newState = ((BreakInterceptable) block).processBreakAttempt(world, pos, state, handStack);
+                    newState = ((BreakInterceptable) block).processBreakAttempt(world, pos, state, player, handStack);
                 }
                 else {
                     if (block == Blocks.STONE) {
-                        newState = ((BreakInterceptable) Mbtw.MBTW_STONE).processBreakAttempt(world, pos, Mbtw.MBTW_STONE.getDefaultState(), handStack);
+                        newState = ((BreakInterceptable) Mbtw.STONE).processBreakAttempt(world, pos, Mbtw.STONE.getDefaultState(), player, handStack);
                     }
                     else if (block.isIn(BlockTags.LOGS)) {
-                        BlockState possibleInnerLogState = InnerLogBlock.innerLogFromLog(state);
-                        newState = possibleInnerLogState.getBlock() instanceof InnerLogBlock ? ((InnerLogBlock) possibleInnerLogState.getBlock()).processBreakAttempt(world, pos, possibleInnerLogState, handStack) : state;
+                        BlockState possibleInnerLogState = Mbtw.INNER_LOG_MAP.get(block);
+                        newState = possibleInnerLogState.getBlock() instanceof InnerLogBlock ? ((InnerLogBlock) possibleInnerLogState.getBlock()).processBreakAttempt(world, pos, possibleInnerLogState, player, handStack) : state;
                     }
                     else {
                         newState = state;
@@ -74,13 +74,12 @@ public abstract class InterceptBreakBlockMixin {
                 {
                     Block.replace(state, newState, world, pos, 2);
 
-                    BooleanProperty BROKEN = (BooleanProperty) newState.getBlock().getStateManager().getProperty("broken");
-                    if (!newState.get(BROKEN)) {
+                    if (!newState.get(BreakInterceptable.BROKEN)) {
+                        handStack.postMine(this.world, newState, pos, this.player);
                         cir.setReturnValue(true);
                     }
                     else {
                         newState.getBlock().onBreak(world, pos, newState, player);
-                        player.addExhaustion(0.005F);
                     }
                 }
             }

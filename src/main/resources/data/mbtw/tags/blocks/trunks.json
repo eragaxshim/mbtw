@@ -2,6 +2,12 @@
   "replace": false,
   "values": [
     "mbtw:oak_trunk",
-    "mbtw:spruce_trunk"
+    "mbtw:spruce_trunk",
+    "mbtw:birch_trunk",
+    "mbtw:jungle_trunk",
+    "mbtw:acacia_trunk",
+    "mbtw:dark_oak_trunk",
+    "mbtw:crimson_trunk",
+    "mbtw:warped_trunk"
   ]
 }

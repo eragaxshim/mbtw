@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "mbtw:block/warped_workbench",
+    "top": "minecraft:block/crafting_table_top",
+    "bottom": "mbtw:block/warped_trunk_top"
+  }
+}

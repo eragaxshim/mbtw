@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "mbtw:block/warped_trunk",
+    "end": "mbtw:block/warped_trunk_top"
+  }
+}

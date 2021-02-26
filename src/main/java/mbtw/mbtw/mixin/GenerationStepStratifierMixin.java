@@ -64,7 +64,7 @@ public class GenerationStepStratifierMixin {
                             y = k + o;
 
                             if (chunk.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.STONE) {
-                                chunk.setBlockState(mutable.set(x, y, z), Mbtw.MBTW_DEEP_STONE.getDefaultState(), false);
+                                chunk.setBlockState(mutable.set(x, y, z), Mbtw.DEEP_STONE.getDefaultState(), false);
                             }
                         }
                     }
@@ -74,7 +74,7 @@ public class GenerationStepStratifierMixin {
                             y = k + p;
 
                             if (chunk.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.STONE) {
-                                chunk.setBlockState(mutable.set(x, y, z), Mbtw.MBTW_HARD_STONE.getDefaultState(), false);
+                                chunk.setBlockState(mutable.set(x, y, z), Mbtw.HARD_STONE.getDefaultState(), false);
                             }
                         }
                     }

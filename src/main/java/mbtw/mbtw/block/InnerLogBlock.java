@@ -1,10 +1,10 @@
 package mbtw.mbtw.block;
 
+import com.google.common.collect.ImmutableMap;
 import mbtw.mbtw.Mbtw;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -98,13 +98,17 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         }
     }
 
-    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, ItemStack handStack)
+    public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
     {
         int b = state.get(BREAK_LEVEL);
+
+        if (handStack.getItem() instanceof AxeItem) {
+            return state.with(BreakInterceptable.BROKEN, true);
+        }
+
         if (b == 5)
         {
             b = 0;
-            //TODO drop bark
         }
 
         if (b+1 > 4)
@@ -112,6 +116,7 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
             return state.with(BreakInterceptable.BROKEN, true);
         }
         else {
+            Block.dropStacks(state, world, pos, world.getBlockEntity(pos), player, handStack);
             return state.with(BREAK_LEVEL, b+1);
         }
     }
@@ -145,27 +150,6 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         stateManager.add(BREAK_LEVEL);
         stateManager.add(UP);
         stateManager.add(DOWN);
-    }
-
-    public static BlockState innerLogFromLog(BlockState logState)
-    {
-        String logId = Registry.BLOCK.getId(logState.getBlock()).toString();
-        int stripped = 5;
-        if (!logId.contains("stripped"))
-        {
-            stripped = 0;
-        }
-
-        if (logId.contains("oak"))
-        {
-            return Mbtw.OAK_LOG_INNER.getDefaultState().with(BREAK_LEVEL, stripped).with(PillarBlock.AXIS, logState.get(PillarBlock.AXIS));
-        }
-        else if (logId.contains("spruce"))
-        {
-            return Mbtw.SPRUCE_LOG_INNER.getDefaultState().with(BREAK_LEVEL, stripped).with(PillarBlock.AXIS, logState.get(PillarBlock.AXIS));
-        }
-
-        return logState;
     }
 
     private static VoxelShape createCuboidShapeFromArray(Double[] coords)

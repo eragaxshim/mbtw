@@ -4,16 +4,18 @@
   "package": "mbtw.mbtw.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AxeStripMixin",
+    "CraftingContextAccessor",
     "ExplosionDecayMixin",
     "GenerationStepStratifierMixin",
+    "HugeFungusTrunkMixin",
+    "InsertItemMixin",
     "InterceptBreakBlockMixin",
     "IsBurningInvoker",
     "LitStateInvoker",
     "ReplaceUndergroundOreFeatureMixin",
     "SlotIndexAccessor",
     "SurvivesExplosionMixin",
-    "InsertItemMixin",
-    "CraftingContextAccessor",
     "TreeTrunkMixin"
   ],
   "client": [
