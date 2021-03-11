@@ -1,20 +1,16 @@
 package mbtw.mbtw;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializer;
 import mbtw.mbtw.block.*;
 import mbtw.mbtw.block.entity.BrickBlockEntity;
 import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
-import mbtw.mbtw.mixin.LitStateInvoker;
+import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -31,9 +27,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Mbtw implements ModInitializer {
     public static final String MOD_ID = "mbtw";

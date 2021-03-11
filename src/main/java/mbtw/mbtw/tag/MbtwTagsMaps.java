@@ -12,6 +12,9 @@ import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
+
+import java.util.Map;
 
 public class MbtwTagsMaps {
     public static final Tag<Block> DEEP_STONE_OVERWORLD = registerBlockTag("deep_stone_overworld");
@@ -57,6 +60,57 @@ public class MbtwTagsMaps {
             .put(Blocks.WARPED_HYPHAE, Mbtw.WARPED_STEM_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
             .put(Blocks.STRIPPED_WARPED_STEM, Mbtw.WARPED_STEM_INNER.getDefaultState())
             .put(Blocks.STRIPPED_WARPED_HYPHAE, Mbtw.WARPED_STEM_INNER.getDefaultState())
+            .build();
+
+    public static final ImmutableMap<String, Pair<Identifier, Float>> RECIPE_COPY_MAP = ImmutableMap.<String, Pair<Identifier, Float>>builder()
+            .put("baked_potato", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("black_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("blue_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("brown_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("coal_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("cooked_beef", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cooked_chicken", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cooked_cod", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cooked_mutton", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cooked_porkchop", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cooked_rabbit", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cooked_salmon", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("cracked_nether_bricks", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("cracked_polished_blackstone_bricks", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("cracked_stone_bricks", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("cyan_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("diamond_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("dried_kelp_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 2.5F))
+            .put("emerald_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("glass", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("gold_ingot", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("gray_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("green_dye", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("green_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("lapis_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("light_blue_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("light_gray_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("lime_dye_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("lime_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("magenta_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("netherite_scrap", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("nether_brick", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("orange_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("pink_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("popped_chorus_fruit", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("purple_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("quartz", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("redstone_from_smelting", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("red_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("smooth_quartz", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("smooth_red_sandstone", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("smooth_sandstone", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("smooth_stone", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("sponge", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("stone", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("white_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
+            .put("yellow_glazed_terracotta", new Pair<>(new Identifier("mbtw", "brick_smelting"), 10.0F))
             .build();
 
     public static final ImmutableMap<Block, BlockState> LOG_TRUNK_MAP = ImmutableMap.<Block, BlockState>builder()

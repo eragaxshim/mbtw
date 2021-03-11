@@ -1,20 +1,22 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.item.AxeItem;
-import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.util.ActionResult;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Set;
 
 @Mixin(AxeItem.class)
-public abstract class AxeEffectiveMixin extends ItemEffectiveMixin {
+public abstract class AxeItemMixin extends ItemEffectiveMixin {
     @Shadow @Final private static Set<Material> field_23139;
 
     @Shadow @Final private static Set<Block> EFFECTIVE_BLOCKS;
@@ -28,5 +30,10 @@ public abstract class AxeEffectiveMixin extends ItemEffectiveMixin {
         else {
             System.out.println("huh");
         }
+    }
+
+    @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
+    protected void disableAxeStrip(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+        cir.setReturnValue(ActionResult.PASS);
     }
 }

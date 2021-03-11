@@ -1,0 +1,9 @@
+{
+  "type": "mbtw:brick_smelting",
+  "ingredient": {
+    "item": "mbtw:clay_brick"
+  },
+  "result": "minecraft:brick",
+  "experience": 0.3,
+  "cookingtime": 1000
+}

@@ -57,15 +57,8 @@ public class FallingSlabBlock extends SlabBlock {
 
     public static boolean canFallThrough(BlockState state) {
         Material material = state.getMaterial();
-        if (state.getBlock() instanceof SlabBlock)
-        {
-            if (state.get(Properties.SLAB_TYPE) == SlabType.BOTTOM)
-            {
-                return true;
-            }
-        }
-
-        return state.isAir() || state.isIn(BlockTags.FIRE) || material.isLiquid() || material.isReplaceable();
+        boolean bl = state.getBlock() instanceof SlabBlock && state.get(Properties.SLAB_TYPE) == SlabType.BOTTOM;
+        return bl || state.isAir() || state.isIn(BlockTags.FIRE) || material.isLiquid() || material.isReplaceable();
     }
 
     public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingSlabBlockEntity fallingBlockEntity) {

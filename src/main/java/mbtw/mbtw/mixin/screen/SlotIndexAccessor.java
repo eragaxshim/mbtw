@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.screen;
 
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.explosion.Explosion;

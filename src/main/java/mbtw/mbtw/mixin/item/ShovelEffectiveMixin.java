@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

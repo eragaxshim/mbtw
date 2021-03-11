@@ -14,7 +14,7 @@ public class OvenFuelSlot extends FurnaceFuelSlot {
     }
 
     public boolean canInsert(ItemStack stack) {
-        if (this.handler.isBurning())
+        if (this.handler.isBurning() && this.handler.getFuelProgress() / 13.0f > 0.1)
         {
             return false;
         }

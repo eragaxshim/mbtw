@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.block;
 
 import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.AbstractBlock;
@@ -22,7 +22,7 @@ public class BlockBreakingDeltaMixin {
         if (calculatedDelta > 0.0f)
         {
             // non-effective / 200 vs effective / 80 (i.e. tool is 2.5 times faster)
-            float newDelta = calculatedDelta / (player.isUsingEffectiveTool(state) ? 80.0F / 30.0F : 200.0F / 100.0F);
+            float newDelta = calculatedDelta / (player.isUsingEffectiveTool(state) ? 60.0F / 30.0F : 200.0F / 100.0F);
             boolean usingEffective = player.inventory.getMainHandStack().isEffectiveOn(state);
             Block block = state.getBlock();
 

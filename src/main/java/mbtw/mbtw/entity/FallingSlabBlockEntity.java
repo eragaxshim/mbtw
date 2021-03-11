@@ -1,6 +1,8 @@
 package mbtw.mbtw.entity;
 
 import com.google.common.collect.Lists;
+import mbtw.mbtw.block.FallingSlabBlock;
+import mbtw.mbtw.mixin.entity.FallingBlockMixin;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
@@ -31,24 +33,30 @@ import java.util.Iterator;
 import java.util.List;
 
 public class FallingSlabBlockEntity extends FallingBlockEntity {
-    private BlockState block;
+    private boolean moveTop;
+    private BlockState renderBlock;
 
     public FallingSlabBlockEntity(World world, double x, double y, double z, BlockState block) {
-        super(world, x, y, z, block);
-        if (block.get(Properties.SLAB_TYPE) == SlabType.TOP) {
-            this.block = block.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
-        }
-        else {
-            this.block = block;
-        }
+        super(world, x, y, z, changeBlock(block));
+        moveTop = block.get(Properties.SLAB_TYPE) == SlabType.TOP;
     }
     
-    public void tick()
+    private static BlockState changeBlock(BlockState block)
     {
-        if (this.block.isAir()) {
+        if (block.get(Properties.SLAB_TYPE) == SlabType.TOP) {
+            return block.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
+        }
+        else {
+            return block;
+        }
+    }
+
+    public void tick() {
+        int tt = this.timeFalling;
+        if (((FallingBlockMixin)this).getBlock().isAir()) {
             this.remove();
         } else {
-            Block block = this.block.getBlock();
+            Block block = ((FallingBlockMixin)this).getBlock().getBlock();
             BlockPos blockPos2;
             if (this.timeFalling++ == 0) {
                 blockPos2 = this.getBlockPos();
@@ -67,7 +75,7 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
             this.move(MovementType.SELF, this.getVelocity());
             if (!this.world.isClient) {
                 blockPos2 = this.getBlockPos();
-                boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
+                boolean bl = block instanceof ConcretePowderBlock;
                 boolean bl2 = bl && this.world.getFluidState(blockPos2).isIn(FluidTags.WATER);
                 double d = this.getVelocity().lengthSquared();
                 if (bl && d > 1.0D) {
@@ -83,7 +91,6 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                         if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                             this.dropItem(block);
                         }
-                        System.out.println("OP1");
                         this.remove();
                     }
                 } else {
@@ -91,47 +98,44 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                     this.setVelocity(this.getVelocity().multiply(0.7D, -0.5D, 0.7D));
                     if (!blockState.isOf(Blocks.MOVING_PISTON)) {
                         this.remove();
-                        boolean bl3 = blockState.canReplace(new AutomaticItemPlacementContext(this.world, blockPos2, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
-                        boolean bl4 = FallingBlock.canFallThrough(this.world.getBlockState(blockPos2.down())) && (!bl || !bl2);
-                        boolean bl5 = this.block.canPlaceAt(this.world, blockPos2) && !bl4;
-                        System.out.println(bl3);
-                        System.out.println(bl4);
-                        System.out.println(bl5);
-                        if (bl3 && bl5) {
-                            if (this.block.contains(Properties.WATERLOGGED) && this.world.getFluidState(blockPos2).getFluid() == Fluids.WATER) {
-                                this.block = (BlockState)this.block.with(Properties.WATERLOGGED, true);
-                            }
-                            System.out.println("OP2");
-                            if (this.world.setBlockState(blockPos2, this.block, 3)) {
-                                if (block instanceof FallingBlock) {
-                                    ((FallingBlock)block).onLanding(this.world, blockPos2, this.block, blockState, this);
+                        if (!((FallingBlockMixin)this).getDestroyedOnLanding()) {
+                            boolean bl3 = blockState.canReplace(new AutomaticItemPlacementContext(this.world, blockPos2, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
+                            boolean bl4 = FallingBlock.canFallThrough(this.world.getBlockState(blockPos2.down())) && (!bl || !bl2);
+                            boolean bl5 = ((FallingBlockMixin)this).getBlock().canPlaceAt(this.world, blockPos2) && !bl4;
+                            if (bl3 && bl5) {
+                                if (((FallingBlockMixin)this).getBlock().contains(Properties.WATERLOGGED) && this.world.getFluidState(blockPos2).getFluid() == Fluids.WATER) {
+                                    ((FallingBlockMixin)this).setBlock(((FallingBlockMixin)this).getBlock().with(Properties.WATERLOGGED, true));
                                 }
 
-                                if (this.blockEntityData != null && block instanceof BlockEntityProvider) {
-                                    BlockEntity blockEntity = this.world.getBlockEntity(blockPos2);
-                                    if (blockEntity != null) {
-                                        CompoundTag compoundTag = blockEntity.toTag(new CompoundTag());
-                                        Iterator var13 = this.blockEntityData.getKeys().iterator();
-
-                                        while(var13.hasNext()) {
-                                            String string = (String)var13.next();
-                                            Tag tag = this.blockEntityData.get(string);
-                                            if (!"x".equals(string) && !"y".equals(string) && !"z".equals(string)) {
-                                                compoundTag.put(string, tag.copy());
-                                            }
-                                        }
-
-                                        blockEntity.fromTag(this.block, compoundTag);
-                                        blockEntity.markDirty();
+                                if (this.world.setBlockState(blockPos2, ((FallingBlockMixin)this).getBlock(), 3)) {
+                                    if (block instanceof FallingSlabBlock) {
+                                        ((FallingSlabBlock)block).onLanding(this.world, blockPos2, ((FallingBlockMixin)this).getBlock(), blockState, this);
                                     }
+
+                                    if (this.blockEntityData != null && block instanceof BlockEntityProvider) {
+                                        BlockEntity blockEntity = this.world.getBlockEntity(blockPos2);
+                                        if (blockEntity != null) {
+                                            CompoundTag compoundTag = blockEntity.toTag(new CompoundTag());
+
+                                            for (String string : this.blockEntityData.getKeys()) {
+                                                Tag tag = this.blockEntityData.get(string);
+                                                if (!"x".equals(string) && !"y".equals(string) && !"z".equals(string)) {
+                                                    compoundTag.put(string, tag.copy());
+                                                }
+                                            }
+
+                                            blockEntity.fromTag(((FallingBlockMixin)this).getBlock(), compoundTag);
+                                            blockEntity.markDirty();
+                                        }
+                                    }
+                                } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+                                    this.dropItem(block);
                                 }
                             } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                                 this.dropItem(block);
-                                System.out.println("OP3");
                             }
-                        } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                            this.dropItem(block);
-                            System.out.println("OP4");
+                        } else if (block instanceof FallingSlabBlock) {
+                            ((FallingSlabBlock)block).onDestroyedOnLanding(this.world, blockPos2, this);
                         }
                     }
                 }

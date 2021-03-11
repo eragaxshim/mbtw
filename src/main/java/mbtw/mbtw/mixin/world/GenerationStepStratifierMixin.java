@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.world;
 
 import mbtw.mbtw.Mbtw;
 import net.minecraft.block.Blocks;

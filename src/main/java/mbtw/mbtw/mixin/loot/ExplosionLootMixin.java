@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.loot;
 
 import mbtw.mbtw.block.BreakInterceptable;
 import mbtw.mbtw.block.StratifiedStoneBlock;

@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.item;
 
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
@@ -17,7 +17,7 @@ public class StoneSlowerMixin {
     protected void modifyStoneMiningSpeed(CallbackInfoReturnable<Float> cir)
     {
         if (this.miningLevel == 1) {
-            cir.setReturnValue(cir.getReturnValue() * 0.75F);
+            cir.setReturnValue(cir.getReturnValue() * 0.55F);
         }
     }
 }

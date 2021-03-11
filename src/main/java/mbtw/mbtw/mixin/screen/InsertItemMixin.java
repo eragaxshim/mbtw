@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin;
+package mbtw.mbtw.mixin.screen;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
@@ -15,6 +15,7 @@ public abstract class InsertItemMixin {
 
     /**
      * @author EradurGwath
+     * @reason Too many different calls to this method to use redirect, too many separate changes to use injections
      */
     @Overwrite
     public boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
