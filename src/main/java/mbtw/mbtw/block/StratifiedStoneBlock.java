@@ -46,8 +46,7 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
             int miningEffect = getMiningEffect(toolItem);
             if (toolItem instanceof PickaxeItem)
             {
-                Map<Enchantment, Integer> ei = EnchantmentHelper.get(handStack);
-                if (ei.containsKey(Enchantments.SILK_TOUCH))
+                if (EnchantmentHelper.get(handStack).containsKey(Enchantments.SILK_TOUCH))
                 {
                     return state.with(BreakInterceptable.BROKEN, true);
                 }

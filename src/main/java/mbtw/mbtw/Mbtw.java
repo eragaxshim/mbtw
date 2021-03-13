@@ -72,8 +72,10 @@ public class Mbtw implements ModInitializer {
     public static final Block HARD_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(2.5F).requiresTool(), (StratifiedStoneBlock) HARD_STONE, Items.COAL, COAL_DUST_PILE);
     public static final Block DEEP_COAL_ORE = new StratifiedOreBlock(FabricBlockSettings.of(Material.STONE).strength(4.5F).requiresTool(), (StratifiedStoneBlock) DEEP_STONE, Items.COAL, COAL_DUST_PILE);
 
-    public static final Block GRAVEL_SLAB = new FallingSlabBlock(-8356741, FabricBlockSettings.copyOf(Blocks.GRAVEL));
-    public static final Block LOOSE_COBBLESTONE_SLAB = new FallingSlabBlock(MaterialColor.STONE.color, FabricBlockSettings.copyOf(Mbtw.LOOSE_COBBLESTONE));
+    public static final Block STATIONARY_GRAVEL_SLAB = new SlabBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL));
+    public static final Block STATIONARY_LOOSE_COBBLESTONE_SLAB = new SlabBlock(FabricBlockSettings.copyOf(Mbtw.LOOSE_COBBLESTONE));
+    public static final Block GRAVEL_SLAB = new FallingSlabBlock(FabricBlockSettings.copyOf(Blocks.GRAVEL), STATIONARY_GRAVEL_SLAB.getDefaultState());
+    public static final Block LOOSE_COBBLESTONE_SLAB = new FallingSlabBlock(FabricBlockSettings.copyOf(Mbtw.LOOSE_COBBLESTONE), STATIONARY_LOOSE_COBBLESTONE_SLAB.getDefaultState());
 
     public static final Item POINTY_STICK = new ChiselItem(10, 1, -2.8F, ToolMaterials.WOOD, new FabricItemSettings().group(ItemGroup.TOOLS));
     public static final Item SHARP_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
@@ -97,6 +99,8 @@ public class Mbtw implements ModInitializer {
     public static final Block CRIMSON_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(4.5F).requiresTool(), CRIMSON_TRUNK_INNER);
     public static final Block WARPED_TRUNK = new TrunkBlock(FabricBlockSettings.of(Material.NETHER_WOOD).sounds(BlockSoundGroup.NETHER_STEM).strength(4.5F).requiresTool(), WARPED_TRUNK_INNER);
     public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "trunk_workbench"), TrunkWorkbenchScreenHandler::new);
+
+    public static final Block DAMAGED_COBWEB = new DamagedCobwebBlock(FabricBlockSettings.of(Material.COBWEB).noCollision().ticksRandomly().requiresTool().strength(4.0F));
 
     public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
     public static BlockEntityType<BrickBlockEntity> CLAY_BRICK_ENTITY;
@@ -194,6 +198,8 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "deep_coal_ore"), DEEP_COAL_ORE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "deep_coal_ore"), new BlockItem(DEEP_COAL_ORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
 
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "stationary_gravel_slab"), STATIONARY_GRAVEL_SLAB);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "stationary_loose_cobblestone_slab"), STATIONARY_LOOSE_COBBLESTONE_SLAB);
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "gravel_slab"), GRAVEL_SLAB);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_slab"), new BlockItem(GRAVEL_SLAB, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "loose_cobblestone_slab"), LOOSE_COBBLESTONE_SLAB);
@@ -202,6 +208,8 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "pointy_stick"), POINTY_STICK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "sharp_stone"), SHARP_STONE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_chisel"), IRON_CHISEL);
+
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "clay_brick"), CLAY_BRICK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "clay_brick"), new BlockItem(CLAY_BRICK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));

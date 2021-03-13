@@ -1,9 +1,13 @@
 package mbtw.mbtw.mixin.item;
 
+import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import org.spongepowered.asm.mixin.Final;
@@ -27,8 +31,14 @@ public abstract class AxeItemMixin extends ItemEffectiveMixin {
         {
             cir.setReturnValue(true);
         }
-        else {
-            System.out.println("huh");
+    }
+
+    @Inject(method = "getMiningSpeedMultiplier", at = @At("RETURN"), cancellable = true)
+    protected void changeMiningSpeedMultiplier(ItemStack stack, BlockState state, CallbackInfoReturnable<Float> cir)
+    {
+        if ((state.isOf(Mbtw.DAMAGED_COBWEB) || state.isOf(Blocks.COBWEB)) && cir.getReturnValue() == 1.0F)
+        {
+            cir.setReturnValue(15.0F);
         }
     }
 

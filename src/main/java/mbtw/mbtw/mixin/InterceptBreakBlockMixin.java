@@ -35,13 +35,13 @@ public abstract class InterceptBreakBlockMixin {
     {
         if (!this.isCreative())
         {
-            ServerWorld world = this.world;
-            ServerPlayerEntity player = this.player;
-            ItemStack handStack = player.getMainHandStack();
             boolean isInterceptable = block instanceof BreakInterceptable;
 
             if (isInterceptable || block.isIn(MbtwTagsMaps.BREAK_INTERCEPTABLES))
             {
+                ServerWorld world = this.world;
+                ServerPlayerEntity player = this.player;
+                ItemStack handStack = player.getMainHandStack();
                 BlockState newState = state;
                 if (isInterceptable) {
                     newState = ((BreakInterceptable) block).processBreakAttempt(world, pos, state, player, handStack);
@@ -56,6 +56,10 @@ public abstract class InterceptBreakBlockMixin {
                         {
                             newState = ((InnerLogBlock) possibleInnerLogState.getBlock()).processBreakAttempt(world, pos, possibleInnerLogState.with(PillarBlock.AXIS, state.get(PillarBlock.AXIS)), player, handStack);
                         }
+                    }
+                    else if (block == Blocks.COBWEB)
+                    {
+                        newState = ((BreakInterceptable) Mbtw.DAMAGED_COBWEB).processBreakAttempt(world, pos, Mbtw.DAMAGED_COBWEB.getDefaultState(), player, handStack);
                     }
                 }
 

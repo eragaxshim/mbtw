@@ -1,5 +1,6 @@
 package mbtw.mbtw.mixin.entity;
 
+import mbtw.mbtw.Mbtw;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,7 +25,7 @@ public abstract class SpiderCreateCobwebMixin extends SpiderDespawnCobwebMixin{
         if (!world.isClient && this.world.getDifficulty() != Difficulty.PEACEFUL)
         {
             float f = new Random().nextFloat();
-            if (f > 0.75f && world.getTimeOfDay() > 22800)
+            if (f > 0.6f && (world.getTimeOfDay() > 22800 || world.getTimeOfDay() < 12000))
             {
                 BlockPos.Mutable mutable = this.getBlockPos().mutableCopy();
                 int x = mutable.getX();
@@ -43,7 +44,7 @@ public abstract class SpiderCreateCobwebMixin extends SpiderDespawnCobwebMixin{
                 if (mutable != null)
                 {
                     BlockPos pos = mutable.up().toImmutable();
-                    world.setBlockState(pos, Blocks.COBWEB.getDefaultState(), 3);
+                    world.setBlockState(pos, Mbtw.DAMAGED_COBWEB.getDefaultState(), 3);
                 }
             }
         }

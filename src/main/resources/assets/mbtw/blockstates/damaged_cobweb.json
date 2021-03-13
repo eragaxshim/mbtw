@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "break_level=0": { "model": "minecraft:block/cobweb" },
+    "break_level=1": { "model": "mbtw:block/damaged_cobweb_b1" },
+    "break_level=2": { "model": "mbtw:block/damaged_cobweb_b2" },
+    "break_level=3": { "model": "mbtw:block/damaged_cobweb_b3" }
+  }
+}

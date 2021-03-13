@@ -33,12 +33,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class FallingSlabBlockEntity extends FallingBlockEntity {
-    private boolean moveTop;
-    private BlockState renderBlock;
+    private BlockState sourceBlock;
 
-    public FallingSlabBlockEntity(World world, double x, double y, double z, BlockState block) {
-        super(world, x, y, z, changeBlock(block));
-        moveTop = block.get(Properties.SLAB_TYPE) == SlabType.TOP;
+    public FallingSlabBlockEntity(World world, double x, double y, double z, BlockState block, BlockState sourceBlock) {
+        super(world, x, y, z, block);
+        this.sourceBlock = sourceBlock;
     }
     
     private static BlockState changeBlock(BlockState block)
@@ -60,7 +59,7 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
             BlockPos blockPos2;
             if (this.timeFalling++ == 0) {
                 blockPos2 = this.getBlockPos();
-                if (this.world.getBlockState(blockPos2).isOf(block)) {
+                if (this.world.getBlockState(blockPos2).isOf(sourceBlock.getBlock())) {
                     this.world.removeBlock(blockPos2, false);
                 } else if (!this.world.isClient) {
                     this.remove();
@@ -89,10 +88,12 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                 if (!this.onGround && !bl2) {
                     if (!this.world.isClient && (this.timeFalling > 100 && (blockPos2.getY() < 1 || blockPos2.getY() > 256) || this.timeFalling > 600)) {
                         if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                            this.dropItem(block);
+                            this.dropItem(sourceBlock.getBlock());
+                            System.out.println("dropp3");
                         }
                         this.remove();
                     }
+                    System.out.println("next tick moving");
                 } else {
                     BlockState blockState = this.world.getBlockState(blockPos2);
                     this.setVelocity(this.getVelocity().multiply(0.7D, -0.5D, 0.7D));
@@ -107,9 +108,9 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                                     ((FallingBlockMixin)this).setBlock(((FallingBlockMixin)this).getBlock().with(Properties.WATERLOGGED, true));
                                 }
 
-                                if (this.world.setBlockState(blockPos2, ((FallingBlockMixin)this).getBlock(), 3)) {
+                                if (this.world.setBlockState(blockPos2, sourceBlock, 3)) {
                                     if (block instanceof FallingSlabBlock) {
-                                        ((FallingSlabBlock)block).onLanding(this.world, blockPos2, ((FallingBlockMixin)this).getBlock(), blockState, this);
+                                        ((FallingSlabBlock)block).onLanding(this.world, blockPos2, sourceBlock, blockState, this);
                                     }
 
                                     if (this.blockEntityData != null && block instanceof BlockEntityProvider) {
@@ -129,10 +130,12 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                                         }
                                     }
                                 } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                    this.dropItem(block);
+                                    this.dropItem(sourceBlock.getBlock());
+                                    System.out.println("dropp1");
                                 }
                             } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                this.dropItem(block);
+                                this.dropItem(sourceBlock.getBlock());
+                                System.out.println("dropp2");
                             }
                         } else if (block instanceof FallingSlabBlock) {
                             ((FallingSlabBlock)block).onDestroyedOnLanding(this.world, blockPos2, this);
@@ -145,8 +148,13 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
         }
     }
 
-    @Override
-    public ItemEntity dropItem(ItemConvertible item) {
-        return super.dropItem(item);
+    protected void writeCustomDataToTag(CompoundTag tag) {
+        tag.put("SourceBlockState", NbtHelper.fromBlockState(sourceBlock));
+        super.writeCustomDataToTag(tag);
+    }
+
+    protected void readCustomDataFromTag(CompoundTag tag) {
+        this.sourceBlock = NbtHelper.toBlockState(tag.getCompound("SourceBlockState"));
+        super.readCustomDataFromTag(tag);
     }
 }

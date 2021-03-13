@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "minecraft:stone",
-    "#minecraft:logs"
+    "#minecraft:logs",
+    "minecraft:cobweb"
   ]
 }
