@@ -116,11 +116,11 @@ public class Mbtw implements ModInitializer {
 
     public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
     public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
-    public static final ConfiguredFeature<?, ?> ORE_COAL = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, COAL_ORE.getDefaultState(), 17)).rangeOf(128)).spreadHorizontally()).repeat(13);
-    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX)).spreadHorizontally()).repeat(5);
-    public static final ConfiguredFeature<?, ?> ORE_COAL_DEEP = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_COAL_ORE.getDefaultState(), 17)).rangeOf(DEEP_STONE_MAX)).spreadHorizontally()).repeat(4);
-    public static final ConfiguredFeature<?, ?> ORE_IRON = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRON_ORE.getDefaultState(), 9)).rangeOf(64)).spreadHorizontally()).repeat(14);
-    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = (ConfiguredFeature) ((ConfiguredFeature) ((ConfiguredFeature) Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX)).spreadHorizontally()).repeat(6);
+    public static final ConfiguredFeature<?, ?> ORE_COAL = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, COAL_ORE.getDefaultState(), 17)).rangeOf(128).spreadHorizontally().repeat(13);
+    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(5);
+    public static final ConfiguredFeature<?, ?> ORE_COAL_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_COAL_ORE.getDefaultState(), 17)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(4);
+    public static final ConfiguredFeature<?, ?> ORE_IRON = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRON_ORE.getDefaultState(), 9)).rangeOf(64).spreadHorizontally().repeat(14);
+    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(6);
     public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(5);
 
     @Override

@@ -7,6 +7,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
@@ -15,6 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
@@ -34,10 +38,14 @@ public abstract class MobEntityMixin extends LivingEntity {
 
     }
 
-
-
     @Inject(method = "onEatingGrass", at = @At("HEAD"))
     protected void changeEatinGrass(CallbackInfo ci) {
+
+    }
+
+    @Inject(method = "interactMob", at = @At("HEAD"), cancellable = true)
+    protected void changeInteraction(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir)
+    {
 
     }
 }

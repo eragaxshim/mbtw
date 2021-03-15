@@ -30,7 +30,6 @@ public abstract class QuadrupedMixin<T extends Entity> extends EntityModelMixin<
         super.changeAnimateModel(entity, limbAngle, limbDistance, tickDelta, ci);
         if (entity instanceof CowEntity)
         {
-            System.out.println("changeAnimateQQ");
             this.head.pivotY = 6.0F + ((QuadrupedMixinAccess) entity).getNeckAngle(tickDelta) * 9.0F;
             this.headPitchModifier = ((QuadrupedMixinAccess) entity).getHeadAngle(tickDelta);
         }
