@@ -41,10 +41,8 @@ public class DamagedCobwebBlock extends CobwebBlock implements BreakInterceptabl
         float darkness = Math.max((9 - world.getLightLevel(pos)) / 8.0F, 0);
         float chance = darkness > 0 ? 1.0F : 0.11F;
         double break_float = (chance + (darkness / 9) - random.nextFloat()) * 3.6;
-        System.out.println(break_float);
         if (break_float > 0) {
             int break_amount = (int) Math.max(Math.round(break_float), 1);
-            System.out.println("a" + break_amount);
             int b = state.get(BREAK_LEVEL);
             if (b + break_amount > 3)
             {

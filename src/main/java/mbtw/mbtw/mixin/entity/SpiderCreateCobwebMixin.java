@@ -1,7 +1,6 @@
 package mbtw.mbtw.mixin.entity;
 
 import mbtw.mbtw.Mbtw;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.SpiderEntity;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(SpiderEntity.class)
-public abstract class SpiderCreateCobwebMixin extends SpiderDespawnCobwebMixin{
+public abstract class SpiderCreateCobwebMixin extends MobEntityMixin {
     protected SpiderCreateCobwebMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
