@@ -28,7 +28,8 @@
     "fabricloader": ">=0.11.1",
     "fabric": "*",
     "minecraft": "1.16.5",
-    "json-model-extensions": "*"
+    "json-model-extensions": "*",
+    "nbtcrafting": "*"
   },
   "accessWidener" : "mbtw.accesswidener"
 }

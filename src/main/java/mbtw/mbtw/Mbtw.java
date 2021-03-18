@@ -4,6 +4,7 @@ import mbtw.mbtw.block.*;
 import mbtw.mbtw.block.entity.BrickBlockEntity;
 import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
@@ -49,6 +50,7 @@ public class Mbtw implements ModInitializer {
     public static final Item IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
     public static final Item COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
     public static final Item GRAVEL_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item CREEPER_OYSTER = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
 
     public static final Block LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(1.0F));
 
@@ -140,6 +142,7 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "crimson_bark"), CRIMSON_BARK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "warped_bark"), WARPED_BARK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_pile"), GRAVEL_PILE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "creeper_oyster"), CREEPER_OYSTER);
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "loose_cobblestone"), LOOSE_COBBLESTONE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_cobblestone"), new BlockItem(LOOSE_COBBLESTONE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
@@ -229,5 +232,6 @@ public class Mbtw implements ModInitializer {
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_hard"), ORE_IRON_HARD);
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_deep"), ORE_IRON_DEEP);
 
+        MbtwLootModifier.modifyLootTables();
     }
 }

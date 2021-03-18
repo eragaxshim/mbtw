@@ -1,0 +1,74 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:stone_axe",
+        "remainder": {
+          "item": "minecraft:stone_axe",
+          "data": {
+            "$": "$ i0",
+            "Damage": "$ i0.Damage + 2"
+          }
+        }
+      },
+      {
+        "item": "minecraft:iron_axe",
+        "remainder": {
+          "item": "minecraft:iron_axe",
+          "data": {
+            "$": "$ i0",
+            "Damage": "$ i0.Damage + 2"
+          }
+        }
+      },
+      {
+        "item": "minecraft:diamond_axe",
+        "remainder": {
+          "item": "minecraft:diamond_axe",
+          "data": {
+            "$": "$ i0",
+            "Damage": "$ i0.Damage + 2"
+          }
+        }
+      },
+      {
+        "item": "minecraft:golden_axe",
+        "remainder": {
+          "item": "minecraft:golden_axe",
+          "data": {
+            "$": "$ i0",
+            "Damage": "$ i0.Damage + 2"
+          }
+        }
+      },
+      {
+        "item": "minecraft:netherite_axe",
+        "remainder": {
+          "item": "minecraft:netherite_axe",
+          "data": {
+            "$": "$ i0",
+            "Damage": "$ i0.Damage + 2"
+          }
+        }
+      }
+    ],
+    {
+      "tag": "mbtw:oak_logs_bark"
+    }
+  ],
+  "result": {
+    "item": "minecraft:oak_planks",
+    "count": 2
+  },
+  "dropResults": [
+    {
+      "item": "mbtw:oak_bark",
+      "count": 1
+    },
+    {
+      "item": "mbtw:saw_dust",
+      "count": 1
+    }
+  ]
+}

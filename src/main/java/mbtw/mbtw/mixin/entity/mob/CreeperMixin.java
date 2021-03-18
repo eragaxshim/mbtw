@@ -1,18 +1,17 @@
 package mbtw.mbtw.mixin.entity.mob;
 
 
+import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.entity.CreeperMixinAccess;
 import mbtw.mbtw.mixin.entity.MobEntityMixin;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Shearable;
+import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -51,6 +50,10 @@ public abstract class CreeperMixin extends MobEntityMixin implements CreeperMixi
     public void sheared(SoundCategory shearedSoundCategory) {
         this.world.playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0F, 1.0F);
         this.defuse();
+        ItemEntity itemEntity = this.dropItem(Mbtw.CREEPER_OYSTER, 1);
+        if (itemEntity != null) {
+            itemEntity.setVelocity(itemEntity.getVelocity().add((this.random.nextFloat() - this.random.nextFloat()) * 0.1F, this.random.nextFloat() * 0.05F, (this.random.nextFloat() - this.random.nextFloat()) * 0.1F));
+        }
     }
 
     public void defuse()
@@ -80,12 +83,12 @@ public abstract class CreeperMixin extends MobEntityMixin implements CreeperMixi
 
     @Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
     public void writeExtraData(CompoundTag tag, CallbackInfo ci) {
-        tag.putBoolean("defused", this.getDefused());
+        tag.putBoolean("Defused", this.getDefused());
     }
 
     @Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
     public void readExtraData(CompoundTag tag, CallbackInfo ci) {
-        this.dataTracker.set(DEFUSED, tag.getBoolean("defused"));
+        this.dataTracker.set(DEFUSED, tag.getBoolean("Defused"));
     }
 
     public boolean getDefused() {

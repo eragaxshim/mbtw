@@ -15,6 +15,10 @@ repositories {
         name = "dblsaiko"
         url = "https://maven.dblsaiko.net/"
     }
+    maven {
+        name "Siphalor's Maven"
+        url "https://maven.siphalor.de"
+    }
 }
 
 dependencies {
@@ -31,12 +35,12 @@ dependencies {
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
     modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false}
-    // remove next line if you want JMX to be an optional dependency
-    include "grondag:frex-${project.mc_tag}:${project.frex_version}.+"
 
     modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false}
     // remove next line if you want JMX to be an optional dependency
     include "grondag:jmx-${project.mc_tag}:${project.jmx_version}.+"
+
+    modImplementation "de.siphalor:nbtcrafting-1.16:2+"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.

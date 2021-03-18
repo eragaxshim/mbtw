@@ -49,7 +49,6 @@ public abstract class CowMixin extends AnimalMixin implements QuadrupedMixinAcce
     @Override
     @Environment(EnvType.CLIENT)
     public float getNeckAngle(float delta) {
-        System.out.println(this.eatGrassTimer);
         if (this.eatGrassTimer <= 0) {
             return 0.0F;
         } else if (this.eatGrassTimer >= 4 && this.eatGrassTimer <= 36) {

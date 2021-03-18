@@ -27,8 +27,8 @@ public class EatGrassMixin {
     @Inject(method = "canStart", at = @At("HEAD"), cancellable = true)
     protected void changeCanStart(CallbackInfoReturnable<Boolean> cir)
     {
-        if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 50 : 200) != 0) {
-            cir.setReturnValue(true);
+        if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 25 : 50) != 0) {
+            cir.setReturnValue(false);
         } else {
             BlockPos blockPos = this.mob.getBlockPos();
             if (GRASS_PREDICATE.test(this.world.getBlockState(blockPos))) {
