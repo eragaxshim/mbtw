@@ -6,12 +6,18 @@
   "mixins": [
     "InterceptBreakBlockMixin",
     "block.BlockBreakingDeltaMixin",
+    "block.BlockEntityMixin",
+    "block.CampfireBlockEntityAccessor",
+    "block.CampfireBlockEntityMixin",
+    "block.CampfireBlockMixin",
     "block.LitStateInvoker",
     "client.render.entity.CreeperRendererMixin",
     "client.render.entity.model.CowModelMixin",
     "client.render.entity.model.EntityModelMixin",
     "client.render.entity.model.QuadrupedMixin",
+    "client.render.item.HeldItemMixin",
     "entity.FallingBlockMixin",
+    "entity.LivingEntityAccessor",
     "entity.MobEntityMixin",
     "entity.SpiderCreateCobwebMixin",
     "entity.ai.goal.CreeperIgniteMixin",
@@ -39,6 +45,7 @@
     "world.GenerationStepStratifierMixin",
     "world.HugeFungusTrunkMixin",
     "world.ReplaceUndergroundOreFeatureMixin",
+    "world.ServerWorldMixin",
     "world.TreeTrunkMixin"
   ],
   "client": [

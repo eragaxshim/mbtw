@@ -8,9 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
 public class BrickBlockEntity extends BlockEntity implements Tickable {
-    private int bake_stage_time;
-
-
+    private int bakeStageTime;
+    
     public BrickBlockEntity() {
         super(Mbtw.CLAY_BRICK_ENTITY);
     }
@@ -18,7 +17,7 @@ public class BrickBlockEntity extends BlockEntity implements Tickable {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("bake_stage_time", bake_stage_time);
+        tag.putInt("bakeStageTime", bakeStageTime);
 
         return tag;
     }
@@ -26,7 +25,7 @@ public class BrickBlockEntity extends BlockEntity implements Tickable {
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        bake_stage_time = tag.getInt("bake_stage_time");
+        bakeStageTime = tag.getInt("bakeStageTime");
     }
 
     @Override
@@ -38,8 +37,8 @@ public class BrickBlockEntity extends BlockEntity implements Tickable {
                 BlockState state = this.world.getBlockState(this.pos);
 
                 if (((this.world.isRaining() && this.world.isSkyVisible(this.pos)) || state.get(BrickBlock.WATERLOGGED))) {
-                    if (bake_stage_time != 0 || bake_progress != 0) {
-                        bake_stage_time = 0;
+                    if (bakeStageTime != 0 || bake_progress != 0) {
+                        bakeStageTime = 0;
                         this.world.setBlockState(this.pos, state.with(BrickBlock.BAKE_PROGRESS, 0), 3);
                         this.markDirty();
                     }
@@ -48,18 +47,18 @@ public class BrickBlockEntity extends BlockEntity implements Tickable {
                     long time = this.world.getTimeOfDay();
                     if ((time < 12500 || time > 23500) && this.world.isSkyVisible(this.pos)) {
                         if (state.isOf(Mbtw.CLAY_BRICK)) {
-                            if (bake_stage_time > 75) {
-                                bake_stage_time = 0;
+                            if (bakeStageTime > 75) {
+                                bakeStageTime = 0;
                                 this.world.setBlockState(this.pos, state.with(BrickBlock.BAKE_PROGRESS, bake_progress+1), 3);
                             }
                             else {
-                                bake_stage_time++;
+                                bakeStageTime++;
                             }
                             this.markDirty();
                         }
                     }
-                    else if (bake_stage_time != 0) {
-                        bake_stage_time = 0;
+                    else if (bakeStageTime != 0) {
+                        bakeStageTime = 0;
                         this.markDirty();
                     }
                 }

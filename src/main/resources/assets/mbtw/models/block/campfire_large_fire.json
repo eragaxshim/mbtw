@@ -1,0 +1,42 @@
+{
+  "textures": {
+    "fire": "minecraft:block/campfire_fire"
+  },
+  "elements": [
+    {   "from": [ -0.28, 1, 8 ],
+      "to": [ 16.28, 19.4, 8 ],
+      "shade": false,
+      "faces": {
+        "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" },
+        "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" }
+      }
+    },
+    {   "from": [ 8, 1, -0.28 ],
+      "to": [ 8, 19.4, 16.28 ],
+      "shade": false,
+      "faces": {
+        "west": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" },
+        "east": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" }
+      }
+    },
+    {   "from": [ -0.28, 1, 8 ],
+      "to": [ 16.28, 19.4, 8 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": true },
+      "shade": false,
+      "faces": {
+        "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" },
+        "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" }
+      }
+    },
+    {   "from": [ 8, 1, -0.28 ],
+      "to": [ 8, 19.4, 16.28 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": true },
+      "shade": false,
+      "faces": {
+        "west": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" },
+        "east": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" }
+      }
+    }
+  ]
+}
+
