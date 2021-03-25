@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.screen.slot.CraftingResultSlot;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.collection.DefaultedList;
@@ -34,8 +35,8 @@ public class CraftingResultMixin {
         if (server != null)
         {
             Optional<CraftingRecipe> optional = server.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.input, player.world);
-            if (optional.isPresent()) {
-                CraftingRecipe craftingRecipe = optional.get();
+            CraftingRecipe craftingRecipe;
+            if (optional.isPresent() && (craftingRecipe = optional.get()) instanceof ShapelessRecipe) {
 
                 DefaultedList<ItemStack> dropOutput = ((RecipeMixinAccess)craftingRecipe).getDropOutput();
                 if (!dropOutput.isEmpty())

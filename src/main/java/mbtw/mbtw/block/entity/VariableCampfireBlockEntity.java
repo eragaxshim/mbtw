@@ -1,26 +1,19 @@
 package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.AshBlock;
 import mbtw.mbtw.block.VariableCampfireBlock;
-import mbtw.mbtw.mixin.block.CampfireBlockEntityAccessor;
-import mbtw.mbtw.mixin.block.CampfireBlockEntityMixin;
-import mbtw.mbtw.mixin.world.ServerWorldMixin;
 import mbtw.mbtw.world.BlockSchedule;
 import mbtw.mbtw.world.BlockScheduleManagerAccess;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.CampfireBlockEntity;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class VariableCampfireBlockEntity extends CampfireBlockEntity {
@@ -32,7 +25,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
 
     public VariableCampfireBlockEntity() {
         super();
-        this.burnableTime = 200;
+        this.burnableTime = 1600;
         this.calculateBurnPower();
     }
 
@@ -40,8 +33,19 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
         BlockState state = this.getCachedState();
 
         boolean isServer = this.world != null && !this.world.isClient;
-        if (isServer && state.isOf(Mbtw.VARIABLE_CAMPFIRE))
+        if (isServer && state.getBlock() instanceof VariableCampfireBlock)
         {
+            boolean isRaining = false;
+            if (this.world.isRaining() && this.world.isSkyVisible(this.pos))
+            {
+                isRaining = true;
+                if (this.world.getRandom().nextFloat() < 0.01F)
+                {
+                    this.world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.2F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
+                }
+            }
+
+            boolean isEmbers;
             if (state.get(Properties.LIT))
             {
                 if (this.embersTime != 0)
@@ -62,7 +66,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
 
                 if (this.burnTime == 0)
                 {
-                    this.world.setBlockState(pos, state.with(Properties.LIT, false).with(VariableCampfireBlock.EMBERS, true), 3);
+                    this.world.setBlockState(pos, state.with(Properties.LIT, false).with(VariableCampfireBlock.EMBERS, true).with(VariableCampfireBlock.FIRE_SIZE, 1), 3);
                     this.burnableTime = 0;
                     this.tempWhileFueling = 0;
                     this.updateListeners();
@@ -73,28 +77,51 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
                         this.calculateBurnPower();
                         this.markDirty();
                     }
-                    if (this.world.getTime() % 30 == 0)
+                    if ((this.burnTime < 300 && this.tempWhileFueling == 0 && this.world.getTime() % 20 == 0) || this.world.getTime() % 30 == 0)
                     {
-                        this.updateFireSize(this.world);
+                        this.updateFireSize(this.world, isRaining);
                     }
-                    this.burnTime -= Math.min(Math.min(this.burnPower, Math.max((int)(0.05*burnTime), 200)), this.burnTime);
+                    this.burnTime -= Math.min(Math.min(this.burnPower, Math.max((int)(0.05*burnTime), 200))*(isRaining ? 3 : 1), this.burnTime);
                 }
             }
-            else if (state.get(VariableCampfireBlock.EMBERS) && this.world.getTime() % 20 == 0)
+            else if (this.world.getTime() % 20 == 0 && ((isEmbers = state.get(VariableCampfireBlock.EMBERS)) || state.get(VariableCampfireBlock.FIRE_SIZE) == 0))
             {
-                this.embersTime += 20;
+                this.embersTime += 20*(isRaining ? 3 : 1);
 
-                if (this.embersTime >= 20)
+                if (this.embersTime >= 1600 && isEmbers)
                 {
-                    this.world.setBlockState(pos, Mbtw.ASH.getDefaultState().with(AshBlock.SCHEDULED, true).with(AshBlock.III, 5));
-                    BlockSchedule blockSchedule = new BlockSchedule.Builder(pos, Mbtw.ASH)
-                            .addProperty(AshBlock.SCHEDULED, true)
-                            .build();
-
-                    ((BlockScheduleManagerAccess)world).getBlockScheduleManager().schedule(20, blockSchedule);
+                    this.embersTime = 0;
+                    this.world.setBlockState(this.pos, Mbtw.ASH.getDefaultState());
+                    this.world.playSound(null, this.pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 0.1F, (float) (0.9 + 0.1 * this.world.getRandom().nextFloat()));
+                    BlockSchedule blockSchedule = new BlockSchedule(pos, Mbtw.ASH);
+                    ((BlockScheduleManagerAccess)world).getBlockScheduleManager().schedule(4500, blockSchedule);
+                    this.updateListeners();
+                    return;
+                }
+                //fire_size = 0, so special case where there is fuel and is smoldering
+                else if (this.embersTime >= 800 && !isEmbers)
+                {
+                    this.burnableTime = 0;
+                    this.world.setBlockState(this.pos, state.with(VariableCampfireBlock.EMBERS, true).with(VariableCampfireBlock.FIRE_SIZE, 1));
+                    this.updateListeners();
                 }
                 else {
                     this.markDirty();
+                }
+            }
+            else if (this.world.getTime() % 40 == 0) {
+                if (BlockPos.streamOutwards(this.pos, 1, 0, 1)
+                        .anyMatch(blockPos -> {
+                            BlockState block = world.getBlockState(blockPos);
+                            if (block.getBlock() instanceof VariableCampfireBlock)
+                            {
+                                return block.get(Properties.LIT) && block.get(VariableCampfireBlock.FIRE_SIZE) > 1;
+                            }
+                            else return block.isOf(Blocks.FIRE);
+                        })
+                && this.world.getRandom().nextFloat() > 0.75F) {
+                    ((VariableCampfireBlock) state.getBlock()).ignite(this.world, null, null, state, this.pos);
+                    this.updateListeners();
                 }
             }
 
@@ -107,6 +134,11 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
         itemStack.split(1);
         this.burnableTime += Math.round(fuelTime * 4 / (float) this.burnPower) + 1;
         this.markDirty();
+    }
+
+    public void resetEmbers()
+    {
+        this.embersTime = 0;
     }
 
     public void fromTag(BlockState state, CompoundTag tag) {
@@ -127,17 +159,26 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
         return tag;
     }
 
-    private void updateFireSize(World world)
+    private void updateFireSize(World world, boolean isRaining)
     {
         BlockState state = this.getCachedState();
         int fireSize = state.get(VariableCampfireBlock.FIRE_SIZE);
         int newFireSize = fireSize;
         int burnComparisonValue = this.burnTime + this.tempWhileFueling;
-        if (burnComparisonValue < 600)
+        if (burnComparisonValue < 750)
         {
             if (fireSize > 1)
             {
                 newFireSize--;
+            }
+            else if (this.tempWhileFueling == 0 && this.burnTime < 450 && world.getRandom().nextFloat() < 0.2F)
+            {
+                newFireSize = 0;
+                world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.2F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
+            }
+            else if (fireSize == 0)
+            {
+                newFireSize = 1;
             }
         }
         else if (burnComparisonValue < 6000)
@@ -172,6 +213,10 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
 
         if (newFireSize != fireSize)
         {
+            if (newFireSize < fireSize && isRaining)
+            {
+                world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.3F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
+            }
             world.setBlockState(this.pos, state.with(VariableCampfireBlock.FIRE_SIZE, newFireSize));
             this.updateListeners();
         }

@@ -7,7 +7,6 @@
     "InterceptBreakBlockMixin",
     "block.BlockBreakingDeltaMixin",
     "block.BlockEntityMixin",
-    "block.CampfireBlockEntityAccessor",
     "block.CampfireBlockEntityMixin",
     "block.CampfireBlockMixin",
     "block.LitStateInvoker",

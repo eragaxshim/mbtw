@@ -124,6 +124,7 @@ public class BrickBlock extends Block implements Waterloggable, BlockEntityProvi
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         boolean bl = fluidState.getFluid() == Fluids.WATER;
-        return super.getPlacementState(ctx).with(WATERLOGGED, bl);
+        BlockState superState = super.getPlacementState(ctx);
+        return superState != null ? superState.with(WATERLOGGED, bl) : null;
     }
 }

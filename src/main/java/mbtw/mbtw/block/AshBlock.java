@@ -1,10 +1,12 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.world.BlockSchedulable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -17,12 +19,9 @@ import net.minecraft.world.WorldView;
 
 public class AshBlock extends Block implements BlockSchedulable {
     private static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    public static final BooleanProperty SCHEDULED = BooleanProperty.of("scheduled");
-    public static final IntProperty III = IntProperty.of("iii", 2, 5);
 
     public AshBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getDefaultState().with(SCHEDULED, false).with(III, 3));
     }
 
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
@@ -38,8 +37,11 @@ public class AshBlock extends Block implements BlockSchedulable {
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(SCHEDULED);
-        stateManager.add(III);
         super.appendProperties(stateManager);
+    }
+
+    public void runScheduled(ServerWorld world, BlockState state, BlockPos pos) {
+        world.setBlockState(pos, Blocks.AIR.getDefaultState());
+        Block.dropStack(world, pos, Mbtw.ASH_PILE.getDefaultStack());
     }
 }

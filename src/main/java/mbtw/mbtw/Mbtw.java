@@ -12,10 +12,12 @@ import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
+import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.impl.content.registry.FuelRegistryImpl;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.*;
@@ -38,24 +40,25 @@ public class Mbtw implements ModInitializer {
     public static int DEEP_STONE_MAX = 25;
     public static int HARD_STONE_MAX = 45;
 
-    public static final Item LOOSE_STONE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item SAW_DUST = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item FUNGAL_DUST = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item OAK_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item SPRUCE_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item BIRCH_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item JUNGLE_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item ACACIA_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item DARK_OAK_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item CRIMSON_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item WARPED_BARK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item IRON_ORE_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item IRON_ORE_CHUNK = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item COAL_DUST_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item GRAVEL_PILE = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
-    public static final Item CREEPER_OYSTER = new Item((new FabricItemSettings().group(ItemGroup.MATERIALS)));
+    public static final Item LOOSE_STONE = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item SAW_DUST = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item FUNGAL_DUST = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item OAK_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item SPRUCE_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item BIRCH_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item JUNGLE_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item ACACIA_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item DARK_OAK_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item CRIMSON_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item WARPED_BARK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item IRON_ORE_PILE = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item IRON_ORE_CHUNK = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item COAL_DUST_PILE = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item GRAVEL_PILE = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item CREEPER_OYSTER = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
+    public static final Item ASH_PILE = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
 
-    public static final Block ASH = new AshBlock(FabricBlockSettings.of(Material.AGGREGATE));
+    public static final Block ASH = new AshBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.4F).sounds(BlockSoundGroup.GRAVEL));
 
     public static final Block LOOSE_COBBLESTONE = new FallingBlock(FabricBlockSettings.of(Material.STONE).strength(1.0F));
 
@@ -88,7 +91,9 @@ public class Mbtw implements ModInitializer {
     public static final Item SHARP_STONE = new ChiselItem(6, 1, -2.8F, ToolMaterials.STONE, new FabricItemSettings().group(ItemGroup.TOOLS));
     public static final Item IRON_CHISEL = new ChiselItem(50, 1, -2.8F, ToolMaterials.IRON, new FabricItemSettings().group(ItemGroup.TOOLS));
 
-    public static final Item CDI = new FireStarterItem(new FabricItemSettings().group(ItemGroup.MATERIALS), 200, Items.STICK.getDefaultStack(), 0.8F);
+    public static final Item FIRE_STRIKER = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 800, Items.FLINT.getDefaultStack(), 10);
+    public static final Item BOW_DRILL = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 900, ItemStack.EMPTY, 150);
+    public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 700, ItemStack.EMPTY, 600);
 
     public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
     public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -113,7 +118,6 @@ public class Mbtw implements ModInitializer {
 
     public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
     public static BlockEntityType<BrickBlockEntity> CLAY_BRICK_ENTITY;
-
 
 
     public static final Block VARIABLE_CAMPFIRE = new VariableCampfireBlock(true, 1, FabricBlockSettings.copyOf(Blocks.CAMPFIRE).luminance(VariableCampfireBlock.createLightLevelFromFireSize()));
@@ -154,7 +158,9 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "crimson_bark"), CRIMSON_BARK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "warped_bark"), WARPED_BARK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_pile"), GRAVEL_PILE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "ash_pile"), ASH_PILE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "creeper_oyster"), CREEPER_OYSTER);
+
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "ash"), ASH);
 
@@ -226,7 +232,9 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "sharp_stone"), SHARP_STONE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_chisel"), IRON_CHISEL);
 
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "cdi"), CDI);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fire_striker"), FIRE_STRIKER);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "bow_drill"), BOW_DRILL);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fire_plough"), FIRE_PLOUGH);
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 
@@ -235,6 +243,7 @@ public class Mbtw implements ModInitializer {
         CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "clay_brick"), BlockEntityType.Builder.create(BrickBlockEntity::new, CLAY_BRICK).build(null));
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "variable_campfire"), VARIABLE_CAMPFIRE);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "variable_campfire"), new BlockItem(VARIABLE_CAMPFIRE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         VARIABLE_CAMPFIRE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "variable_campfire"), BlockEntityType.Builder.create(VariableCampfireBlockEntity::new, VARIABLE_CAMPFIRE, Blocks.SOUL_CAMPFIRE, Blocks.CAMPFIRE).build(null));
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN);
@@ -250,6 +259,12 @@ public class Mbtw implements ModInitializer {
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron"), ORE_IRON);
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_hard"), ORE_IRON_HARD);
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_deep"), ORE_IRON_DEEP);
+
+        FuelRegistryImpl.INSTANCE.add(SAW_DUST, 100);
+        FuelRegistryImpl.INSTANCE.add(POINTY_STICK, 100);
+        FuelRegistryImpl.INSTANCE.add(FIRE_PLOUGH, 200);
+        FuelRegistryImpl.INSTANCE.add(BOW_DRILL, 200);
+        FuelRegistryImpl.INSTANCE.add(MbtwTagsMaps.BARK, 100);
 
         MbtwLootModifier.modifyLootTables();
     }

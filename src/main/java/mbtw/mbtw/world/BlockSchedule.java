@@ -50,7 +50,6 @@ public class BlockSchedule {
 
     public void runSchedule(ServerWorld world)
     {
-        System.out.println("Attempting run!");
         BlockState nowState = world.getBlockState(this.blockPos);
         if (Registry.BLOCK.getId(nowState.getBlock()).toString().equals(this.blockName) && nowState.getBlock() instanceof BlockSchedulable)
         {
@@ -61,7 +60,7 @@ public class BlockSchedule {
             }
             if (complies)
             {
-                ((BlockSchedulable) nowState.getBlock()).runScheduled();
+                ((BlockSchedulable) nowState.getBlock()).runScheduled(world, nowState, this.blockPos);
             }
         }
     }

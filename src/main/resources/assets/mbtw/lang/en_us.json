@@ -21,6 +21,8 @@
   "block.mbtw.loose_cobblestone_slab": "Loose Cobblestone Slab",
   "block.mbtw.clay_brick": "Clay Brick",
   "block.mbtw.brick_oven": "Brick Oven",
+  "block.mbtw.ash": "Ash",
+  "block.mbtw.variable_campfire": "Campfire",
   "container.mbtw.brick_oven": "Brick Oven",
   "container.mbtw.trunk_workbench": "Trunk Workbench",
   "item.mbtw.loose_stone": "Loose Stone",
@@ -41,5 +43,9 @@
   "item.mbtw.iron_ore_chunk": "Chunk of Iron Ore",
   "item.mbtw.pointy_stick": "Pointy Stick",
   "item.mbtw.sharp_stone": "Sharp Stone",
-  "item.mbtw.iron_chisel": "Iron Chisel"
+  "item.mbtw.iron_chisel": "Iron Chisel",
+  "item.mbtw.fire_plough": "Fire Plough",
+  "item.mbtw.bow_drill": "Bow Drill",
+  "item.mbtw.fire_striker": "Fire Striker",
+  "item.mbtw.ash_pile": "Pile of Ash"
 }

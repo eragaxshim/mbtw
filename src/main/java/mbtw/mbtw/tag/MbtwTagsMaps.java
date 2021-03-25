@@ -2,6 +2,7 @@ package mbtw.mbtw.tag;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.InnerLogBlock;
 import net.fabricmc.fabric.api.tag.TagRegistry;
@@ -27,6 +28,7 @@ public class MbtwTagsMaps {
     public static final Tag<Block> IGNITEABLES = registerBlockTag("igniteables");
 
     public static final Tag<Item> CHISELS = registerItemTag("chisels");
+    public static final Tag<Item> BARK = registerItemTag("bark");
 
     public static final ImmutableMap<Block, BlockState> INNER_LOG_MAP = ImmutableMap.<Block, BlockState>builder()
             .put(Blocks.OAK_LOG, Mbtw.OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))

@@ -1,25 +1,20 @@
 {
   "multipart": [
     {   "when": { "facing":  "east", "lit": "false", "embers":  "false"},
-      "apply": { "model": "minecraft:block/campfire_off",
+      "apply": { "model": "mbtw:block/campfire_unlit",
         "y": 270
       }
     },
     {   "when": { "facing":  "north", "lit": "false", "embers":  "false"},
-      "apply": { "model": "minecraft:block/campfire_off",
+      "apply": { "model": "mbtw:block/campfire_unlit",
         "y": 180
       }
     },
-    {   "when": { "facing":  "east", "lit": "false", "embers":  "false"},
-      "apply": { "model": "minecraft:block/campfire_off",
-        "y": 270
-      }
-    },
     {   "when": { "facing":  "south", "lit": "false", "embers":  "false"},
-      "apply": { "model": "minecraft:block/campfire_off" }
+      "apply": { "model": "mbtw:block/campfire_unlit" }
     },
     {   "when": { "facing":  "west", "lit": "false", "embers":  "false"},
-      "apply": { "model": "minecraft:block/campfire_off",
+      "apply": { "model": "mbtw:block/campfire_unlit",
         "y": 90
       }
     },
@@ -35,26 +30,52 @@
     {   "when": { "fire_size": "4", "lit": "true"},
       "apply": { "model": "mbtw:block/campfire_large_fire" }
     },
-    {   "when": { "facing":  "east", "lit": "true"},
+    {   "when": { "OR": [
+          { "facing":  "east", "lit": "true" },
+          { "facing":  "east", "lit": "false", "fire_size": "0" }
+        ]},
       "apply": { "model": "mbtw:block/campfire_base_lit",
         "y": 270
       }
     },
-    {   "when": { "facing":  "north", "lit": "true"},
+    {   "when": { "OR": [
+          { "facing":  "north", "lit": "true" },
+          { "facing":  "north", "lit": "false", "fire_size": "0" }
+        ]},
       "apply": { "model": "mbtw:block/campfire_base_lit",
         "y": 180
       }
     },
-    {   "when": { "facing":  "south", "lit": "true"},
+    {   "when": { "OR": [
+          { "facing":  "south", "lit": "true" },
+          { "facing":  "south", "lit": "false", "fire_size": "0" }
+        ]},
       "apply": { "model": "mbtw:block/campfire_base_lit" }
     },
-    {   "when": { "facing":  "west", "lit": "true"},
+    {   "when": { "OR": [
+          { "facing":  "west", "lit": "true" },
+          { "facing":  "west", "lit": "false", "fire_size": "0" }
+        ]},
       "apply": { "model": "mbtw:block/campfire_base_lit",
         "y": 90
       }
     },
-    {   "when": { "embers":  "true", "lit": "false"},
-      "apply": { "model": "mbtw:block/campfire_embers"
+    {   "when": { "facing":  "east", "lit": "false", "embers":  "true"},
+      "apply": { "model": "mbtw:block/campfire_embers",
+        "y": 270
+      }
+    },
+    {   "when": { "facing":  "north", "lit": "false", "embers":  "true"},
+      "apply": { "model": "mbtw:block/campfire_embers",
+        "y": 180
+      }
+    },
+    {   "when": { "facing":  "south", "lit": "false", "embers":  "true"},
+      "apply": { "model": "mbtw:block/campfire_embers" }
+    },
+    {   "when": { "facing":  "west", "lit": "false", "embers":  "true"},
+      "apply": { "model": "mbtw:block/campfire_embers",
+        "y": 90
       }
     }
   ]

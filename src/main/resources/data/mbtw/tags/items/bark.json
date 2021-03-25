@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "mbtw:oak_bark",
+    "mbtw:spruce_bark",
+    "mbtw:birch_bark",
+    "mbtw:jungle_bark",
+    "mbtw:acacia_bark",
+    "mbtw:dark_oak_bark",
+    "mbtw:crimson_bark",
+    "mbtw:warped_bark"
+  ]
+}

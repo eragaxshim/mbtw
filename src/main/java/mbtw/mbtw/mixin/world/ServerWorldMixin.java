@@ -40,7 +40,6 @@ public abstract class ServerWorldMixin extends World implements BlockScheduleMan
 
     @Shadow public abstract PersistentStateManager getPersistentStateManager();
 
-    @Shadow private boolean inBlockTick;
     private BlockScheduleManager blockScheduleManager;
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getWorldBorder()Lnet/minecraft/world/border/WorldBorder;"))

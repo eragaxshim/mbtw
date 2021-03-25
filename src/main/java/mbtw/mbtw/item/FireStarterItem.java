@@ -1,15 +1,12 @@
 package mbtw.mbtw.item;
 
-import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.Igniteable;
 import mbtw.mbtw.tag.MbtwTagsMaps;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -18,11 +15,23 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class FireStarterItem extends ConsumeDamageItem{
-    private final float startEfficiency;
+    private final int meanStartTick;
 
-    public FireStarterItem(Settings settings, int useTime, ItemStack targetItem, float startEfficiency) {
+    public FireStarterItem(Settings settings, int useTime, ItemStack targetItem, int meanStartTick) {
         super(settings, useTime, targetItem, false);
-        this.startEfficiency = startEfficiency;
+        this.meanStartTick = meanStartTick;
+    }
+
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        CompoundTag stackTag = stack.getOrCreateTag();
+        if (stackTag.contains("RequiredTemp"))
+        {
+            stackTag.remove("RequiredTemp");
+        }
+        if (stackTag.contains("StartPos"))
+        {
+            stackTag.remove("StartPos");
+        }
     }
 
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
@@ -35,13 +44,14 @@ public class FireStarterItem extends ConsumeDamageItem{
             BlockState targetBlock = world.getBlockState(pos);
             if (targetBlock.getBlock() instanceof Igniteable)
             {
-                ((Igniteable) targetBlock.getBlock()).attemptFireStart(world, user, stack, targetBlock, pos);
+                ((Igniteable) targetBlock.getBlock()).attemptFireStart(world, user, stack, this.meanStartTick, remainingUseTicks, targetBlock, pos);
+                super.usageTick(world, user, stack, remainingUseTicks);
             }
             else if (targetBlock.getBlock().isIn(MbtwTagsMaps.IGNITEABLES))
             {
 
             }
-            super.usageTick(world, user, stack, remainingUseTicks);
+
         }
     }
 
@@ -62,10 +72,5 @@ public class FireStarterItem extends ConsumeDamageItem{
             vec3d = vec3d.add(vec3d2.x * 0.5D, vec3d2.y * 0.5D, vec3d2.z * 0.5D);
         }
         return pos;
-    }
-
-    public float getStartEfficiency()
-    {
-        return this.startEfficiency;
     }
 }

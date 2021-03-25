@@ -28,12 +28,12 @@ public class VariableCampfireBlockEntityRenderer extends BlockEntityRenderer<Var
             if (itemStack != ItemStack.EMPTY) {
                 matrixStack.push();
                 matrixStack.translate(0.5D, 0.44921875D, 0.5D);
+                int d = k == 0 ? 1 : -1;
+                matrixStack.translate(direction.getOffsetX()*0.3375D*d, 0D, direction.getOffsetZ()*0.3375D*d);
                 Direction direction2 = Direction.fromHorizontal((k + direction.getHorizontal()) % 4);
                 float g = -direction2.asRotation();
                 matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(g));
                 matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.0F));
-                matrixStack.translate(0.0D, -0.3125D, 0.0D);
-                matrixStack.translate(k*0.3125D, k*0.3125D, 0.0D);
                 matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(45.0F));
                 matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(k*90.0F));
                 matrixStack.scale(0.375F, 0.375F, 0.375F);
