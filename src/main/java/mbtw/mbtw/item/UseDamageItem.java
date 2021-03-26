@@ -13,14 +13,20 @@ import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
-public class ConsumeDamageItem extends Item {
+public class UseDamageItem extends Item {
     private final ItemStack targetItem;
     private final boolean doesDamageDecrease;
 
-    public ConsumeDamageItem(Settings settings, int useTime, ItemStack targetItem, boolean doesDamageDecrease) {
+    public UseDamageItem(Settings settings, int useTime, ItemStack targetItem, boolean doesDamageDecrease) {
         super(settings.maxDamage(useTime));
         this.targetItem = targetItem;
         this.doesDamageDecrease = doesDamageDecrease;
+    }
+
+    public UseDamageItem(Settings settings, int useTime, ItemStack targetItem) {
+        super(settings.maxDamage(useTime));
+        this.targetItem = targetItem;
+        this.doesDamageDecrease = false;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

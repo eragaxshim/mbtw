@@ -5,8 +5,8 @@ import mbtw.mbtw.block.entity.BrickBlockEntity;
 import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
-import mbtw.mbtw.item.ConsumeDamageItem;
 import mbtw.mbtw.item.FireStarterItem;
+import mbtw.mbtw.item.TickDamageItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
@@ -95,6 +95,8 @@ public class Mbtw implements ModInitializer {
     public static final Item BOW_DRILL = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 900, ItemStack.EMPTY, 150);
     public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 700, ItemStack.EMPTY, 600);
 
+    public static final Item TDI = new TickDamageItem(new FabricItemSettings().group(ItemGroup.TOOLS), 600, ItemStack.EMPTY, false);
+
     public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
     public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
     public static final Block BIRCH_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -118,7 +120,6 @@ public class Mbtw implements ModInitializer {
 
     public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
     public static BlockEntityType<BrickBlockEntity> CLAY_BRICK_ENTITY;
-
 
     public static final Block VARIABLE_CAMPFIRE = new VariableCampfireBlock(true, 1, FabricBlockSettings.copyOf(Blocks.CAMPFIRE).luminance(VariableCampfireBlock.createLightLevelFromFireSize()));
     public static BlockEntityType<VariableCampfireBlockEntity> VARIABLE_CAMPFIRE_ENTITY;
@@ -160,7 +161,6 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gravel_pile"), GRAVEL_PILE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "ash_pile"), ASH_PILE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "creeper_oyster"), CREEPER_OYSTER);
-
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "ash"), ASH);
 
@@ -235,6 +235,8 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fire_striker"), FIRE_STRIKER);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "bow_drill"), BOW_DRILL);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fire_plough"), FIRE_PLOUGH);
+
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "tdi"), TDI);
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 

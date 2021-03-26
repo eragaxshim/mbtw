@@ -1,24 +1,28 @@
 package mbtw.mbtw.mixin.screen;
 
+import mbtw.mbtw.screen.ScreenHandlerMixinAccessor;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import java.util.List;
 
 @Mixin(ScreenHandler.class)
-public abstract class InsertItemMixin {
+public abstract class ScreenHandlerMixin implements ScreenHandlerMixinAccessor {
     @Shadow @Final public List<Slot> slots;
 
-    /**
-     * @author EradurGwath
-     * @reason Too many different calls to this method to use redirect, too many separate changes to use injections
-     */
-    @Overwrite
-    public boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
+    @Inject(method = "insertItem", at = @At("HEAD"), cancellable = true)
+    protected void changeInsertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast, CallbackInfoReturnable<Boolean> cir) {
         boolean bl = false;
         int i = startIndex;
         if (fromLast) {
@@ -102,6 +106,6 @@ public abstract class InsertItemMixin {
             }
         }
 
-        return bl;
+        cir.setReturnValue(bl);
     }
 }

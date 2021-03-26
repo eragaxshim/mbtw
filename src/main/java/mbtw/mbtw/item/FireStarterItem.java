@@ -14,11 +14,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-public class FireStarterItem extends ConsumeDamageItem{
+public class FireStarterItem extends UseDamageItem {
     private final int meanStartTick;
 
     public FireStarterItem(Settings settings, int useTime, ItemStack targetItem, int meanStartTick) {
-        super(settings, useTime, targetItem, false);
+        super(settings, useTime, targetItem);
         this.meanStartTick = meanStartTick;
     }
 

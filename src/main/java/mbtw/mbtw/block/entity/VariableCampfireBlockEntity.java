@@ -3,8 +3,7 @@ package mbtw.mbtw.block.entity;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.VariableCampfireBlock;
 import mbtw.mbtw.world.BlockSchedule;
-import mbtw.mbtw.world.BlockScheduleManagerAccess;
-import net.minecraft.block.Block;
+import mbtw.mbtw.world.ServerWorldMixinAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.CampfireBlockEntity;
@@ -88,13 +87,13 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
             {
                 this.embersTime += 20*(isRaining ? 3 : 1);
 
-                if (this.embersTime >= 1600 && isEmbers)
+                if (this.embersTime >= 100 && isEmbers)
                 {
                     this.embersTime = 0;
                     this.world.setBlockState(this.pos, Mbtw.ASH.getDefaultState());
                     this.world.playSound(null, this.pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 0.1F, (float) (0.9 + 0.1 * this.world.getRandom().nextFloat()));
                     BlockSchedule blockSchedule = new BlockSchedule(pos, Mbtw.ASH);
-                    ((BlockScheduleManagerAccess)world).getBlockScheduleManager().schedule(4500, blockSchedule);
+                    ((ServerWorldMixinAccessor)world).getChunkedScheduleManager().schedule(4500, blockSchedule);
                     this.updateListeners();
                     return;
                 }

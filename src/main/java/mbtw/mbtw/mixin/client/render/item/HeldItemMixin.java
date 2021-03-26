@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin.client.render.item;
 
-import mbtw.mbtw.item.ConsumeDamageItem;
+import mbtw.mbtw.item.UseDamageItem;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -29,7 +29,7 @@ public abstract class HeldItemMixin {
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getUseAction()Lnet/minecraft/util/UseAction;"), cancellable = true)
     protected void changeFirstPersonItemRender(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci)
     {
-        if (item.getUseAction() == UseAction.NONE && item.getItem() instanceof ConsumeDamageItem)
+        if (item.getUseAction() == UseAction.NONE && item.getItem() instanceof UseDamageItem)
         {
             boolean bl = hand == Hand.MAIN_HAND;
             Arm arm = bl ? player.getMainArm() : player.getMainArm().getOpposite();

@@ -1,4 +1,4 @@
-package mbtw.mbtw.mixin.block;
+package mbtw.mbtw.mixin.block.entity;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
