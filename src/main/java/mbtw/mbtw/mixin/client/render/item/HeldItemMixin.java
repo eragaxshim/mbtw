@@ -1,6 +1,8 @@
 package mbtw.mbtw.mixin.client.render.item;
 
+import mbtw.mbtw.item.TickDamageItem;
 import mbtw.mbtw.item.UseDamageItem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -12,6 +14,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -45,6 +48,24 @@ public abstract class HeldItemMixin {
             this.renderItem(player, item, bl4 ? ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND : ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, !bl4, matrices, vertexConsumers, light);
             matrices.pop();
             ci.cancel();
+        }
+    }
+
+    @Shadow
+    private ItemStack mainHand;
+    @Shadow
+    @Final
+    private MinecraftClient client;
+
+    @Inject(at = @At("HEAD"), method = "updateHeldItems")
+    private void updateHeldItems(CallbackInfo ci) {
+        if (this.client.player != null)
+        {
+            ItemStack mainHandStack = this.client.player.getMainHandStack();
+            if ((mainHandStack.getItem() instanceof UseDamageItem || mainHandStack.getItem() instanceof TickDamageItem) && mainHandStack.getItem() == mainHand.getItem())
+            {
+                this.mainHand = mainHandStack;
+            }
         }
     }
 }

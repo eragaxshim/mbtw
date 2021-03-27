@@ -6,7 +6,6 @@ import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
 import mbtw.mbtw.item.FireStarterItem;
-import mbtw.mbtw.item.TickDamageItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
@@ -21,7 +20,10 @@ import net.fabricmc.fabric.impl.content.registry.FuelRegistryImpl;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.*;
-import net.minecraft.recipe.*;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.CookingRecipeSerializer;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
@@ -95,7 +97,8 @@ public class Mbtw implements ModInitializer {
     public static final Item BOW_DRILL = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 900, ItemStack.EMPTY, 150);
     public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 700, ItemStack.EMPTY, 600);
 
-    public static final Item TDI = new TickDamageItem(new FabricItemSettings().group(ItemGroup.TOOLS), 600, ItemStack.EMPTY, false);
+    public static final Block FINITE_TORCH = new FiniteTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
+    public static final Block FINITE_WALL_TORCH = new FiniteWallTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
 
     public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
     public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -235,8 +238,6 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fire_striker"), FIRE_STRIKER);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "bow_drill"), BOW_DRILL);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "fire_plough"), FIRE_PLOUGH);
-
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "tdi"), TDI);
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 

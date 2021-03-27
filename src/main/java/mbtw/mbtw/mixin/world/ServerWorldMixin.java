@@ -2,6 +2,7 @@ package mbtw.mbtw.mixin.world;
 
 import mbtw.mbtw.world.*;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
@@ -23,8 +24,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 @Mixin(ServerWorld.class)
@@ -37,15 +42,19 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
     @Shadow public abstract PersistentStateManager getPersistentStateManager();
 
     private BlockScheduleManager blockScheduleManager;
-    private ItemTickManager1 itemTickManager;
+    private ItemTickManager itemTickManager;
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getWorldBorder()Lnet/minecraft/world/border/WorldBorder;"))
     protected void initBlockScheduleManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci)
     {
 
         this.blockScheduleManager = this.getPersistentStateManager().getOrCreate(() -> new BlockScheduleManager(((ServerWorld) (Object) this)), ChunkedPersistentState.nameFor(this.getDimension(), BlockScheduleManager.key));
-        this.itemTickManager = this.getPersistentStateManager().getOrCreate(() -> new ItemTickManager1(((ServerWorld) (Object) this)), ItemTickManager1.nameFor(this.getDimension()));
+        //this.itemTickManager = this.getPersistentStateManager().getOrCreate(() -> new ItemTickManager(((ServerWorld) (Object) this)), ChunkedPersistentState.nameFor(this.getDimension(), ItemTickManager.key));
     }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    protected void testTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci)
+    {}
 
     @Inject(method = "tickChunk", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=tickBlocks"))
     protected void tickBlockScheduler2(WorldChunk chunk, int randomTickSpeed, CallbackInfo ci)
@@ -69,7 +78,7 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
         return this.blockScheduleManager;
     }
 
-    public ItemTickManager1 getItemTickManager() {
+    public ItemTickManager getItemTickManager() {
         return this.itemTickManager;
     }
 }
