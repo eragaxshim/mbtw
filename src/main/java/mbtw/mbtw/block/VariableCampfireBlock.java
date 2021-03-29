@@ -43,7 +43,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
-public class VariableCampfireBlock extends CampfireBlock implements Ignitable {
+public class VariableCampfireBlock extends CampfireBlock implements Ignitable, IgnitionProvider {
     /* fire size 0 is used for the temporarily extinguished flame near end of lifetime
         and also for the special case when it was embers but fuel was added, which allows quicker ignition */
     public static final IntProperty FIRE_SIZE = IntProperty.of("fire_size", 0, 4);
@@ -201,5 +201,9 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable {
             return world.setBlockState(pos, state.with(LIT, true), 11);
         }
         return false;
+    }
+
+    public boolean canIgniteItem(ItemStack stack, BlockState state) {
+        return state.getBlock() instanceof VariableCampfireBlock && state.get(Properties.LIT);
     }
 }

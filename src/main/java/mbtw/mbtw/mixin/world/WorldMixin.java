@@ -1,7 +1,7 @@
 package mbtw.mbtw.mixin.world;
 
 import com.google.common.collect.Lists;
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
@@ -72,8 +72,8 @@ public abstract class WorldMixin implements WorldAccess {
                                     inventoryField.setAccessible(true);
                                     DefaultedList<ItemStack> inventory = (DefaultedList<ItemStack>) inventoryField.get(blockEntity);
                                     inventory.stream()
-                                            .filter(stack -> stack.getItem() instanceof TickDamageItem)
-                                            .forEach(stack -> ((TickDamageItem) stack.getItem()).tick(stack, blockEntity.getWorld(), blockEntity.getPos()));
+                                            .filter(stack -> stack.getItem() instanceof ItemTickable)
+                                            .forEach(stack -> ((ItemTickable) stack.getItem()).tick(stack, blockEntity.getWorld(), blockEntity.getPos(), null));
                                 }
                             } catch (IllegalAccessException | ClassCastException ignored) { }
                         }

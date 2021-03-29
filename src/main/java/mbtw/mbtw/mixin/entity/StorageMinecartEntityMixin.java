@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin.entity;
 
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.vehicle.StorageMinecartEntity;
 import net.minecraft.item.ItemStack;
@@ -23,9 +23,9 @@ public abstract class StorageMinecartEntityMixin extends AbstractMinecartEntityM
         {
             for (ItemStack stack : this.inventory)
             {
-                if (stack.getItem() instanceof TickDamageItem)
+                if (stack.getItem() instanceof ItemTickable)
                 {
-                    ((TickDamageItem)stack.getItem()).tick(stack, this.world, this.getBlockPos());
+                    ((ItemTickable)stack.getItem()).tick(stack, this.world, this.getBlockPos(), null);
                 }
             }
         }

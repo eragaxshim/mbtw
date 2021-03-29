@@ -1,7 +1,7 @@
 package mbtw.mbtw.mixin.entity;
 
 import mbtw.mbtw.item.Extinguishable;
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,9 +21,9 @@ public abstract class ItemEntityMixin extends EntityMixin {
         if (!this.removed && this.world.getTime() % 23 == 0)
         {
             ItemStack stack = this.getStack();
-            if (stack.getItem() instanceof TickDamageItem)
+            if (stack.getItem() instanceof ItemTickable)
             {
-                ((TickDamageItem)stack.getItem()).tick(stack, this.world, this.getBlockPos());
+                ((ItemTickable)stack.getItem()).tick(stack, this.world, this.getBlockPos(), (ItemEntity) (Object) this);
             }
         }
     }
@@ -31,9 +31,9 @@ public abstract class ItemEntityMixin extends EntityMixin {
     @Override
     protected void changeExtinguish(CallbackInfo ci)
     {
-        if (!this.world.isClient && this.getStack().getItem() instanceof Extinguishable)
+        if (!this.world.isClient && this.isTouchingWater() && this.getStack().getItem() instanceof Extinguishable)
         {
-            ((Extinguishable) this.getStack().getItem()).extinguish(this.getStack(), this.world);
+            ((Extinguishable) this.getStack().getItem()).extinguish(this.getStack(), this.world, this.getBlockPos());
         }
     }
 }

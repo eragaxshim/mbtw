@@ -17,14 +17,14 @@ public abstract class PlayerEntityMixin extends EntityMixin {
     @Override
     protected void changeExtinguish(CallbackInfo ci)
     {
-        if (!this.world.isClient)
+        if (!this.world.isClient && this.isTouchingWater())
         {
             for (int i = 0; i < this.inventory.size(); i++)
             {
                 ItemStack stack = this.inventory.getStack(i);
                 if (stack.getItem() instanceof Extinguishable)
                 {
-                    ((Extinguishable) stack.getItem()).extinguish(stack, this.world);
+                    ((Extinguishable) stack.getItem()).extinguish(stack, this.world, this.getBlockPos());
                 }
             }
         }

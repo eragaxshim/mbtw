@@ -1,7 +1,7 @@
 package mbtw.mbtw.mixin.entity;
 
 import mbtw.mbtw.item.Extinguishable;
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,9 +54,9 @@ public abstract class MobEntityMixin extends LivingEntityMixin {
             combinedStacks.addAll(this.armorItems);
             for (ItemStack stack : combinedStacks)
             {
-                if (stack.getItem() instanceof TickDamageItem)
+                if (stack.getItem() instanceof ItemTickable)
                 {
-                    ((TickDamageItem)stack.getItem()).tick(stack, this.world, this.getBlockPos());
+                    ((ItemTickable)stack.getItem()).tick(stack, this.world, this.getBlockPos(), (MobEntity) (Object) this);
                 }
             }
         }
@@ -65,13 +65,13 @@ public abstract class MobEntityMixin extends LivingEntityMixin {
     @Override
     protected void changeExtinguish(CallbackInfo ci)
     {
-        if (!this.world.isClient)
+        if (!this.world.isClient && this.isTouchingWater())
         {
             for (ItemStack stack : this.handItems)
             {
                 if (stack.getItem() instanceof Extinguishable)
                 {
-                    ((Extinguishable) stack.getItem()).extinguish(stack, this.world);
+                    ((Extinguishable) stack.getItem()).extinguish(stack, this.world, this.getBlockPos());
                 }
             }
         }

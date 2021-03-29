@@ -1,6 +1,7 @@
 package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.block.FiniteTorchBlock;
+import mbtw.mbtw.item.FiniteTorchItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -10,7 +11,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Tickable;
 
 public class FiniteTorchBlockEntity extends BlockEntity implements Tickable {
-    private int burningTime;
+    private int burnTime;
 
     public <T extends FiniteTorchBlockEntity> FiniteTorchBlockEntity(BlockEntityType<T> type) {
         super(type);
@@ -19,12 +20,13 @@ public class FiniteTorchBlockEntity extends BlockEntity implements Tickable {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("BurningTime", burningTime);
+        tag.putInt("BurnTime", this.burnTime);
         if (this.getCachedState().getBlock() instanceof FiniteTorchBlock)
         {
             tag.putInt("TorchFire", this.getCachedState().get(FiniteTorchBlock.TORCH_FIRE));
+            tag.putInt("MaxProgress", ((FiniteTorchItem) this.getCachedState().getBlock().asItem()).getMaxProgress());
         }
-        tag.putBoolean("TickDamage", burningTime != 0);
+        tag.putBoolean("TickProgress", this.burnTime != 0);
 
         return tag;
     }
@@ -32,34 +34,35 @@ public class FiniteTorchBlockEntity extends BlockEntity implements Tickable {
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.burningTime = tag.getInt("BurningTime");
+        this.burnTime = tag.getInt("BurnTime");
     }
 
 
     @Override
     public void tick() {
         BlockState state = this.getCachedState();
-
-
         if (this.world != null && this.world.getTime() % 11 == 0 && !this.world.isClient && state.getBlock() instanceof FiniteTorchBlock)
         {
             int torchFire = state.get(FiniteTorchBlock.TORCH_FIRE);
             if (torchFire > 1)
             {
+                int maxBurnTime = ((FiniteTorchItem) state.getBlock().asItem()).getMaxProgress();
+                if (this.burnTime == 0)
+                {
+                    this.burnTime = maxBurnTime;
+                }
                 boolean isRaining = false;
                 if (this.world.isRaining() && this.world.isSkyVisible(this.pos))
                 {
                     isRaining = true;
-                    if (this.world.getRandom().nextFloat() < 0.05F)
+                    if (this.world.getRandom().nextFloat() < 0.01F)
                     {
-                        this.world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
+                        this.world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.2F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
                     }
                 }
 
-                this.burningTime += isRaining ? 33 : 11;
-
-                int maxBurnTime = state.getBlock().asItem().getMaxDamage();
-                int newTorchFire = calculateTorchFire(this.burningTime, maxBurnTime);
+                this.burnTime -= isRaining ? 33 : 11;
+                int newTorchFire = calculateTorchFire(this.burnTime, maxBurnTime);
                 if (newTorchFire != torchFire)
                 {
                     if (newTorchFire < torchFire && isRaining)
@@ -68,23 +71,23 @@ public class FiniteTorchBlockEntity extends BlockEntity implements Tickable {
                     }
                     this.world.setBlockState(this.pos, state.with(FiniteTorchBlock.TORCH_FIRE, newTorchFire));
                 }
-                if (this.burningTime != 0 && newTorchFire <= 1)
+                if (this.burnTime != 0 && newTorchFire <= 1)
                 {
-                    this.burningTime = 0;
+                    this.burnTime = 0;
                 }
                 this.markDirty();
             }
         }
     }
 
-    public static int calculateTorchFire(int burningTime, int maxBurnTime)
+    public static int calculateTorchFire(int burnTime, int maxBurnTime)
     {
 
-        if (burningTime > maxBurnTime)
+        if (burnTime <= 0)
         {
             return 1;
         }
-        else if (burningTime > 0.8 * maxBurnTime)
+        else if (burnTime < 0.2 * maxBurnTime)
         {
             return 2;
         }

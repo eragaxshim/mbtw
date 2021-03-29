@@ -124,7 +124,7 @@ public class Mbtw implements ModInitializer {
     public static final Block FINITE_WALL_TORCH = new FiniteWallTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
     public static BlockEntityType<FiniteTorchBlockEntity> FINITE_TORCH_BLOCK_ENTITY;
 
-    public static final Item FINITE_TORCH_ITEM = new FiniteTorchItem(FINITE_TORCH, FINITE_WALL_TORCH, new FabricItemSettings().group(ItemGroup.DECORATIONS), 3100);
+    public static final Item FINITE_TORCH_ITEM = new FiniteTorchItem(FINITE_TORCH, FINITE_WALL_TORCH, new FabricItemSettings().group(ItemGroup.DECORATIONS).maxCount(16), 3100);
 
     public static final Block CLAY_BRICK = new ClayBrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
     public static BlockEntityType<ClayBrickBlockEntity> CLAY_BRICK_ENTITY;

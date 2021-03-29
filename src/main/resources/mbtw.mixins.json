@@ -15,6 +15,7 @@
     "client.render.entity.model.EntityModelMixin",
     "client.render.entity.model.QuadrupedMixin",
     "client.render.item.HeldItemMixin",
+    "client.render.item.ItemRendererMixin",
     "entity.AbstractMinecartEntityMixin",
     "entity.EntityMixin",
     "entity.EntityMixinAccessor",

@@ -23,6 +23,8 @@
   "block.mbtw.brick_oven": "Brick Oven",
   "block.mbtw.ash": "Ash",
   "block.mbtw.variable_campfire": "Campfire",
+  "block.mbtw.finite_torch": "Crude Torch",
+  "block.mbtw.finite_wall_torch": "Crude Torch",
   "container.mbtw.brick_oven": "Brick Oven",
   "container.mbtw.trunk_workbench": "Trunk Workbench",
   "item.mbtw.loose_stone": "Loose Stone",
@@ -47,5 +49,6 @@
   "item.mbtw.fire_plough": "Fire Plough",
   "item.mbtw.bow_drill": "Bow Drill",
   "item.mbtw.fire_striker": "Fire Striker",
-  "item.mbtw.ash_pile": "Pile of Ash"
+  "item.mbtw.ash_pile": "Pile of Ash",
+  "item.mbtw.finite_torch": "Crude Torch"
 }

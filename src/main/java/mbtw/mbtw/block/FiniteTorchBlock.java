@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
-public class FiniteTorchBlock extends TorchBlock implements BlockEntityProvider, Ignitable {
+public class FiniteTorchBlock extends TorchBlock implements BlockEntityProvider, Ignitable, IgnitionProvider {
     public static final IntProperty TORCH_FIRE = IntProperty.of("torch_fire", 0, 3);
 
     public FiniteTorchBlock(Settings settings, ParticleEffect particle) {
@@ -94,9 +94,13 @@ public class FiniteTorchBlock extends TorchBlock implements BlockEntityProvider,
     public boolean ignite(World world, LivingEntity entity, ItemStack stack, BlockState state, BlockPos pos) {
         if (state.isOf(this) && state.get(TORCH_FIRE) == 0)
         {
-            world.playSound(null, pos, SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+            world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.2F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
             return world.setBlockState(pos, state.with(TORCH_FIRE, 3), 11);
         }
         return false;
+    }
+
+    public boolean canIgniteItem(ItemStack stack, BlockState state) {
+        return state.getBlock() instanceof FiniteTorchBlock && state.get(TORCH_FIRE) > 1;
     }
 }

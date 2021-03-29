@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin.entity.passive;
 
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.HorseBaseEntity;
@@ -27,9 +27,9 @@ public abstract class HorseBaseEntityMixin extends Entity {
             for (int i = 0; i < this.items.size(); i++)
             {
                 ItemStack stack = this.items.getStack(i);
-                if (stack.getItem() instanceof TickDamageItem)
+                if (stack.getItem() instanceof ItemTickable)
                 {
-                    ((TickDamageItem)stack.getItem()).tick(stack, this.world, this.getBlockPos());
+                    ((ItemTickable)stack.getItem()).tick(stack, this.world, this.getBlockPos(), null);
                 }
             }
         }

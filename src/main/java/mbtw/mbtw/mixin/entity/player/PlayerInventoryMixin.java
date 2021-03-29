@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin.entity.player;
 
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -64,9 +64,9 @@ public abstract class PlayerInventoryMixin {
 
             for (ItemStack stack : tickableStacks)
             {
-                if (stack.getItem() instanceof TickDamageItem)
+                if (stack.getItem() instanceof ItemTickable)
                 {
-                    ((TickDamageItem)stack.getItem()).tick(stack, this.player.world, this.player.getBlockPos());
+                    ((ItemTickable)stack.getItem()).tick(stack, this.player.world, this.player.getBlockPos(), this.player);
                 }
             }
             /*

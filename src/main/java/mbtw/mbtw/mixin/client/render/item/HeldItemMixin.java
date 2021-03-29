@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin.client.render.item;
 
-import mbtw.mbtw.item.TickDamageItem;
+import mbtw.mbtw.item.ItemTickable;
 import mbtw.mbtw.item.UseDamageItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -62,7 +62,7 @@ public abstract class HeldItemMixin {
         if (this.client.player != null)
         {
             ItemStack mainHandStack = this.client.player.getMainHandStack();
-            if ((mainHandStack.getItem() instanceof UseDamageItem || mainHandStack.getItem() instanceof TickDamageItem) && mainHandStack.getItem() == mainHand.getItem())
+            if ((mainHandStack.getItem() instanceof UseDamageItem || mainHandStack.getItem() instanceof ItemTickable) && mainHandStack.getItem() == mainHand.getItem())
             {
                 this.mainHand = mainHandStack;
             }

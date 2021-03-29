@@ -32,7 +32,9 @@ public abstract class EntityMixin {
 
     @Shadow public float pitch;
 
-    @Inject(method = "extinguish", at = @At("HEAD"))
+    @Shadow public abstract boolean isTouchingWater();
+
+    @Inject(method = "checkWaterState", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;extinguish()V"))
     protected void changeExtinguish(CallbackInfo ci)
     {
 
