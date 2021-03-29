@@ -1,10 +1,12 @@
 package mbtw.mbtw;
 
 import mbtw.mbtw.block.*;
-import mbtw.mbtw.block.entity.BrickBlockEntity;
 import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
+import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
+import mbtw.mbtw.block.entity.FiniteTorchBlockEntity;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.item.FiniteTorchItem;
 import mbtw.mbtw.item.FireStarterItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
@@ -97,9 +99,6 @@ public class Mbtw implements ModInitializer {
     public static final Item BOW_DRILL = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 900, ItemStack.EMPTY, 150);
     public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings().group(ItemGroup.TOOLS), 700, ItemStack.EMPTY, 600);
 
-    public static final Block FINITE_TORCH = new FiniteTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
-    public static final Block FINITE_WALL_TORCH = new FiniteWallTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
-
     public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
     public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
     public static final Block BIRCH_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -121,8 +120,14 @@ public class Mbtw implements ModInitializer {
 
     public static final Block DAMAGED_COBWEB = new DamagedCobwebBlock(FabricBlockSettings.of(Material.COBWEB).noCollision().ticksRandomly().requiresTool().strength(4.0F));
 
-    public static final Block CLAY_BRICK = new BrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
-    public static BlockEntityType<BrickBlockEntity> CLAY_BRICK_ENTITY;
+    public static final Block FINITE_TORCH = new FiniteTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
+    public static final Block FINITE_WALL_TORCH = new FiniteWallTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH).luminance(FiniteTorchBlock.createLightLevelFromTorchFire()), ParticleTypes.FLAME);
+    public static BlockEntityType<FiniteTorchBlockEntity> FINITE_TORCH_BLOCK_ENTITY;
+
+    public static final Item FINITE_TORCH_ITEM = new FiniteTorchItem(FINITE_TORCH, FINITE_WALL_TORCH, new FabricItemSettings().group(ItemGroup.DECORATIONS), 3100);
+
+    public static final Block CLAY_BRICK = new ClayBrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
+    public static BlockEntityType<ClayBrickBlockEntity> CLAY_BRICK_ENTITY;
 
     public static final Block VARIABLE_CAMPFIRE = new VariableCampfireBlock(true, 1, FabricBlockSettings.copyOf(Blocks.CAMPFIRE).luminance(VariableCampfireBlock.createLightLevelFromFireSize()));
     public static BlockEntityType<VariableCampfireBlockEntity> VARIABLE_CAMPFIRE_ENTITY;
@@ -241,9 +246,14 @@ public class Mbtw implements ModInitializer {
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "finite_torch"), FINITE_TORCH);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "finite_torch"), (BlockItem)FINITE_TORCH_ITEM);
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "finite_wall_torch"), FINITE_WALL_TORCH);
+        FINITE_TORCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "finite_torch"), BlockEntityType.Builder.create(() -> new FiniteTorchBlockEntity(FINITE_TORCH_BLOCK_ENTITY), FINITE_TORCH, FINITE_WALL_TORCH).build(null));
+
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "clay_brick"), CLAY_BRICK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "clay_brick"), new BlockItem(CLAY_BRICK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "clay_brick"), BlockEntityType.Builder.create(BrickBlockEntity::new, CLAY_BRICK).build(null));
+        CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "clay_brick"), BlockEntityType.Builder.create(ClayBrickBlockEntity::new, CLAY_BRICK).build(null));
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "variable_campfire"), VARIABLE_CAMPFIRE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "variable_campfire"), new BlockItem(VARIABLE_CAMPFIRE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));

@@ -1,16 +1,16 @@
 package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.BrickBlock;
+import mbtw.mbtw.block.ClayBrickBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
-public class BrickBlockEntity extends BlockEntity implements Tickable {
+public class ClayBrickBlockEntity extends BlockEntity implements Tickable {
     private int bakeStageTime;
     
-    public BrickBlockEntity() {
+    public ClayBrickBlockEntity() {
         super(Mbtw.CLAY_BRICK_ENTITY);
     }
 
@@ -32,14 +32,14 @@ public class BrickBlockEntity extends BlockEntity implements Tickable {
     public void tick() {
         if (this.world != null && !this.world.isClient && this.world.getTime() % 20L == 0L)
         {
-            int bake_progress = this.world.getBlockState(this.pos).get(BrickBlock.BAKE_PROGRESS);
+            int bake_progress = this.world.getBlockState(this.pos).get(ClayBrickBlock.BAKE_PROGRESS);
             if (bake_progress != 8) {
                 BlockState state = this.world.getBlockState(this.pos);
 
-                if (((this.world.isRaining() && this.world.isSkyVisible(this.pos)) || state.get(BrickBlock.WATERLOGGED))) {
+                if (((this.world.isRaining() && this.world.isSkyVisible(this.pos)) || state.get(ClayBrickBlock.WATERLOGGED))) {
                     if (bakeStageTime != 0 || bake_progress != 0) {
                         bakeStageTime = 0;
-                        this.world.setBlockState(this.pos, state.with(BrickBlock.BAKE_PROGRESS, 0), 3);
+                        this.world.setBlockState(this.pos, state.with(ClayBrickBlock.BAKE_PROGRESS, 0), 3);
                         this.markDirty();
                     }
                 }
@@ -49,7 +49,7 @@ public class BrickBlockEntity extends BlockEntity implements Tickable {
                         if (state.isOf(Mbtw.CLAY_BRICK)) {
                             if (bakeStageTime > 75) {
                                 bakeStageTime = 0;
-                                this.world.setBlockState(this.pos, state.with(BrickBlock.BAKE_PROGRESS, bake_progress+1), 3);
+                                this.world.setBlockState(this.pos, state.with(ClayBrickBlock.BAKE_PROGRESS, bake_progress+1), 3);
                             }
                             else {
                                 bakeStageTime++;

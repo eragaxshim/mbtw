@@ -1,8 +1,10 @@
 package mbtw.mbtw.mixin.world;
 
-import mbtw.mbtw.world.*;
+import mbtw.mbtw.world.BlockSchedulable;
+import mbtw.mbtw.world.BlockScheduleManager;
+import mbtw.mbtw.world.ChunkedPersistentState;
+import mbtw.mbtw.world.ServerWorldMixinAccessor;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
@@ -24,9 +26,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
@@ -42,14 +41,12 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
     @Shadow public abstract PersistentStateManager getPersistentStateManager();
 
     private BlockScheduleManager blockScheduleManager;
-    private ItemTickManager itemTickManager;
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getWorldBorder()Lnet/minecraft/world/border/WorldBorder;"))
     protected void initBlockScheduleManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci)
     {
 
         this.blockScheduleManager = this.getPersistentStateManager().getOrCreate(() -> new BlockScheduleManager(((ServerWorld) (Object) this)), ChunkedPersistentState.nameFor(this.getDimension(), BlockScheduleManager.key));
-        //this.itemTickManager = this.getPersistentStateManager().getOrCreate(() -> new ItemTickManager(((ServerWorld) (Object) this)), ChunkedPersistentState.nameFor(this.getDimension(), ItemTickManager.key));
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -65,20 +62,16 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
     }
 
     @Inject(method = "onBlockChanged", at = @At(value = "HEAD"))
-    protected void cancelChanged(BlockPos pos, BlockState oldBlock, BlockState newBlock, CallbackInfo ci)
+    protected void cancelChanged(BlockPos pos, BlockState oldState, BlockState newState, CallbackInfo ci)
     {
-        if (oldBlock.getBlock() != newBlock.getBlock() && oldBlock.getBlock() instanceof BlockSchedulable)
+        if (oldState.getBlock() != newState.getBlock() && oldState.getBlock() instanceof BlockSchedulable)
         {
-            blockScheduleManager.onBlockChanged(pos);
+            blockScheduleManager.onBlockChanged(pos, newState);
         }
     }
 
     public BlockScheduleManager getChunkedScheduleManager()
     {
         return this.blockScheduleManager;
-    }
-
-    public ItemTickManager getItemTickManager() {
-        return this.itemTickManager;
     }
 }

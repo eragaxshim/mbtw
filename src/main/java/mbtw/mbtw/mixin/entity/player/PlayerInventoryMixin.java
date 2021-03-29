@@ -1,6 +1,7 @@
 package mbtw.mbtw.mixin.entity.player;
 
 import mbtw.mbtw.item.TickDamageItem;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,7 @@ public abstract class PlayerInventoryMixin {
     @Inject(method = "updateItems", at = @At("HEAD"))
     protected void changeUpdateItems(CallbackInfo ci)
     {
-        if (this.player.world.getTime() % 10 == 0)
+        if (this.player.world.getTime() % 23 == 0)
         {
             Field inventoryField = null;
 
@@ -47,16 +48,18 @@ public abstract class PlayerInventoryMixin {
                 }
             }
 
-            DefaultedList<ItemStack> initial = DefaultedList.of();
-            initial.add(cursorStack);
-            DefaultedList<ItemStack> tickableStacks = this.combinedInventory.stream().reduce(initial, (subTotal, element) -> {
-                subTotal.addAll(element);
-                return subTotal;
-            });
+            DefaultedList<ItemStack> tickableStacks = DefaultedList.of();
+            tickableStacks.add(cursorStack);
 
-            if (inventoryField == null)
+            if (inventoryField == null && !(this.player.currentScreenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler))
             {
                 tickableStacks.addAll(this.player.currentScreenHandler.slots.stream().map((Slot::getStack)).collect(Collectors.toList()));
+            }
+            else {
+                tickableStacks = this.combinedInventory.stream().reduce(tickableStacks, (subTotal, element) -> {
+                    subTotal.addAll(element);
+                    return subTotal;
+                });
             }
 
             for (ItemStack stack : tickableStacks)

@@ -9,7 +9,7 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface Igniteable {
+public interface Ignitable {
     default boolean attemptFireStart(World world, LivingEntity user, ItemStack stack, int meanStartTick, int remainingUseTick, BlockState block, BlockPos pos)
     {
         if (stack.getItem() instanceof FireStarterItem)
@@ -35,7 +35,8 @@ public interface Igniteable {
 
             if (!stackTag.contains("RequiredTemp"))
             {
-                requiredTemp = Math.min((int) Math.max(world.getRandom().nextGaussian()*((float) meanStartTick / 6 + 1) + (float) meanStartTick, 0), stack.getMaxDamage() - 5);
+                float adjustedStartTick = meanStartTick * getStartTickFactor(block);
+                requiredTemp = Math.min((int) Math.max(world.getRandom().nextGaussian()*(adjustedStartTick / 6 + 1) + adjustedStartTick, 0), stack.getMaxDamage() - 5);
                 stackTag.putInt("RequiredTemp", requiredTemp);
             }
             else if (clear) {
@@ -56,5 +57,7 @@ public interface Igniteable {
         return false;
     }
 
-    void ignite(World world, LivingEntity entity, ItemStack stack, BlockState block, BlockPos pos);
+    float getStartTickFactor(BlockState state);
+
+    boolean ignite(World world, LivingEntity entity, ItemStack stack, BlockState block, BlockPos pos);
 }

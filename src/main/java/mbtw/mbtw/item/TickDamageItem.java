@@ -8,17 +8,22 @@ import net.minecraft.world.World;
 public interface TickDamageItem {
     default void tick(ItemStack stack, World world, BlockPos pos)
     {
-        boolean doesDamageDecrease = stack.getOrCreateTag().getBoolean("DecreaseDamageTick");
-        if (stack.getDamage() == (doesDamageDecrease? 1 : stack.getMaxDamage() - 1))
+        int damage = stack.getDamage();
+        int maxDamage = stack.getMaxDamage();
+        if (stack.getOrCreateTag().getBoolean("TickDamage"))
         {
-            this.onFinalDamage(stack, world);
-        }
-        else if (stack.getDamage() != 0)
-        {
-            stack.setDamage(MathHelper.clamp(stack.getDamage() + (doesDamageDecrease ? -23 : 23), 1, stack.getMaxDamage() - 1));
-        }
-        else {
-            stack.setDamage(doesDamageDecrease ? stack.getMaxDamage() - 1 : 1);
+            boolean doesDamageDecrease = stack.getOrCreateTag().getBoolean("DecreaseDamageTick");
+            if (damage == (doesDamageDecrease? 1 : stack.getMaxDamage() - 1))
+            {
+                this.onFinalDamage(stack, world);
+            }
+            else if (damage != 0)
+            {
+                stack.setDamage(MathHelper.clamp(damage + (doesDamageDecrease ? -23 : 23), 1, maxDamage - 1));
+            }
+            else {
+                stack.setDamage(doesDamageDecrease ? maxDamage - 1 : 1);
+            }
         }
     }
 

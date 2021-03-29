@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "BurningTime",
+                  "target": "Damage",
+                  "op": "replace"
+                },
+                {
+                  "source": "BurningTime",
+                  "target": "BlockEntityTag.BurningTime",
+                  "op": "replace"
+                },
+                {
+                  "source": "TorchFire",
+                  "target": "BlockStateTag.torch_fire",
+                  "op": "replace"
+                },
+                {
+                  "source": "TickDamage",
+                  "target": "TickDamage",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
+          "name": "mbtw:finite_torch"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

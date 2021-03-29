@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mbtw:block/finite_torch_off"
+  },
+  "overrides": [
+    { "predicate": { "torch_size": 0 }, "model": "mbtw:item/finite_torch" },
+    { "predicate": { "torch_size": 1 }, "model": "mbtw:item/finite_torch_burned" },
+    { "predicate": { "torch_size": 2 }, "model": "mbtw:item/finite_torch_sputtering" },
+    { "predicate": { "torch_size": 3 }, "model": "minecraft:item/torch" }
+  ]
+}

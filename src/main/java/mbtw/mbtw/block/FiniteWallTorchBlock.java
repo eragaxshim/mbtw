@@ -78,15 +78,22 @@ public class FiniteWallTorchBlock extends FiniteTorchBlock {
 
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        Direction direction = (Direction)state.get(FACING);
-        double d = (double)pos.getX() + 0.5D;
-        double e = (double)pos.getY() + 0.7D;
-        double f = (double)pos.getZ() + 0.5D;
-        double g = 0.22D;
-        double h = 0.27D;
-        Direction direction2 = direction.getOpposite();
-        world.addParticle(ParticleTypes.SMOKE, d + 0.27D * (double)direction2.getOffsetX(), e + 0.22D, f + 0.27D * (double)direction2.getOffsetZ(), 0.0D, 0.0D, 0.0D);
-        world.addParticle(this.particle, d + 0.27D * (double)direction2.getOffsetX(), e + 0.22D, f + 0.27D * (double)direction2.getOffsetZ(), 0.0D, 0.0D, 0.0D);
+        int torch_fire = state.get(FiniteTorchBlock.TORCH_FIRE);
+        if (torch_fire > 1)
+        {
+            Direction direction = (Direction)state.get(FACING);
+            double d = (double)pos.getX() + 0.5D;
+            double e = (double)pos.getY() + 0.7D;
+            double f = (double)pos.getZ() + 0.5D;
+            double g = 0.22D;
+            double h = 0.27D;
+            Direction direction2 = direction.getOpposite();
+            if (torch_fire == 3 || random.nextFloat() < 0.2F)
+            {
+                world.addParticle(ParticleTypes.SMOKE, d + 0.27D * (double)direction2.getOffsetX(), e + 0.22D, f + 0.27D * (double)direction2.getOffsetZ(), 0.0D, 0.0D, 0.0D);
+            }
+            world.addParticle(this.particle, d + 0.27D * (double)direction2.getOffsetX(), e + 0.22D, f + 0.27D * (double)direction2.getOffsetZ(), 0.0D, 0.0D, 0.0D);
+        }
     }
 
     public BlockState rotate(BlockState state, BlockRotation rotation) {

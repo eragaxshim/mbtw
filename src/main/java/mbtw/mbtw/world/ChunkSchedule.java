@@ -1,19 +1,18 @@
 package mbtw.mbtw.world;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
     private TreeMap<Long, HashSet<BlockSchedule>> scheduledBlocks = new TreeMap<>();
-    private final TreeMap<BlockPos, Long> posTimeMap = new TreeMap<>();
+    private HashMap<BlockPos, List<Long>> posTimesMap = new HashMap<>();
     private long chunkTime;
 
     public ChunkSchedule()
@@ -27,10 +26,11 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
         schedule(time, blockSchedule);
     }
 
-    public ChunkSchedule(long chunkTime, TreeMap<Long, HashSet<BlockSchedule>> scheduledBlocks)
+    public ChunkSchedule(long chunkTime, TreeMap<Long, HashSet<BlockSchedule>> scheduledBlocks, HashMap<BlockPos, List<Long>> posTimesMap)
     {
         this.chunkTime = chunkTime;
         this.scheduledBlocks = scheduledBlocks;
+        this.posTimesMap = posTimesMap;
     }
 
     public void schedule(long time, BlockSchedule blockSchedule)
@@ -41,8 +41,8 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
         {
             this.scheduledBlocks.put(newTime, timeToSchedule);
         }
-        timeToSchedule.add(blockSchedule);
-        this.posTimeMap.put(blockSchedule.getBlockPos(), newTime);
+        List<Long> posTimes = this.posTimesMap.getOrDefault(blockSchedule.getBlockPos(), new ArrayList<>());
+        this.posTimesMap.put(blockSchedule.getBlockPos(), posTimes);
     }
 
     public void tick(ServerWorld world, ChunkPos chunkPos, ChunkedPersistentState<ChunkSchedule> chunkedPersistentState) {
@@ -52,7 +52,12 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
             for (BlockSchedule blockSchedule : blockSchedules)
             {
                 blockSchedule.runSchedule(world);
-                posTimeMap.remove(blockSchedule.getBlockPos());
+                List<Long> posTimes = this.posTimesMap.get(blockSchedule.getBlockPos());
+                posTimes.remove(this.chunkTime);
+                if (posTimes.isEmpty())
+                {
+                    this.posTimesMap.remove(blockSchedule.getBlockPos());
+                }
             }
             this.scheduledBlocks.remove(this.scheduledBlocks.firstKey());
             if (this.scheduledBlocks.isEmpty())
@@ -65,10 +70,11 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
     }
 
     public ChunkSchedule buildFromTag(CompoundTag tag) {
-        long chunkTime = tag.getLong("Tick");
+        long tagChunkTime = tag.getLong("Tick");
         ListTag listTag = tag.getList("ScheduledBlocks", 10);
 
-        TreeMap<Long, HashSet<BlockSchedule>> scheduledBlocks = new TreeMap<>();
+        TreeMap<Long, HashSet<BlockSchedule>> tagScheduledBlocks = new TreeMap<>();
+        HashMap<BlockPos, List<Long>> tagPosTimesMap = new HashMap<>();
         for (int i = 0; i < listTag.size(); ++i)
         {
             CompoundTag tickSchedulesEntry = listTag.getCompound(i);
@@ -77,11 +83,14 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
             HashSet<BlockSchedule> tickSchedule = new HashSet<>();
             for (int j = 0; j < tickSchedules.size(); j++)
             {
-                tickSchedule.add(BlockSchedule.scheduleFromTag(tickSchedules.getCompound(j)));
+                BlockSchedule blockSchedule = BlockSchedule.scheduleFromTag(tickSchedules.getCompound(j));
+                List<Long> posTimes = tagPosTimesMap.getOrDefault(blockSchedule.getBlockPos(), new ArrayList<>());
+                tagPosTimesMap.put(blockSchedule.getBlockPos(), posTimes);
+                tickSchedule.add(blockSchedule);
             }
             scheduledBlocks.put(scheduleTime, tickSchedule);
         }
-        return new ChunkSchedule(chunkTime, scheduledBlocks);
+        return new ChunkSchedule(tagChunkTime, tagScheduledBlocks, tagPosTimesMap);
     }
 
 
@@ -105,16 +114,30 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
         return tag;
     }
 
-    public void onBlockChanged(BlockPos pos)
+    public void onBlockChanged(BlockPos pos, BlockState newState)
     {
-        long posTime = posTimeMap.getOrDefault(pos, -1L);
-        if (posTime != -1L)
+        List<Long> posTimes = this.posTimesMap.getOrDefault(pos, null);
+        if (posTimes != null)
         {
-            HashSet<BlockSchedule> tickSchedule = scheduledBlocks.get(posTime);
-            Optional<BlockSchedule> o = tickSchedule.stream().
-                    filter(bs -> bs.getBlockPos() == pos)
-                    .findAny();
-            o.ifPresent(tickSchedule::remove);
+            List<Long> removedLongs = new ArrayList<>();
+            for (long posTime : posTimes)
+            {
+                HashSet<BlockSchedule> tickSchedules = this.scheduledBlocks.get(posTime);
+                List<BlockSchedule> removedSchedules = tickSchedules.stream()
+                        .filter(blockSchedule -> blockSchedule.getBlockPos() == pos && !blockSchedule.compliesToProperties(newState))
+                        .collect(Collectors.toList());
+                tickSchedules.removeAll(removedSchedules);
+                if (tickSchedules.isEmpty())
+                {
+                    removedLongs.add(posTime);
+                    this.scheduledBlocks.remove(posTime);
+                }
+            }
+            posTimes.removeAll(removedLongs);
+            if (posTimes.isEmpty())
+            {
+                this.posTimesMap.remove(pos);
+            }
         }
     }
 }

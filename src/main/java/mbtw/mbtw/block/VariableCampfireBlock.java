@@ -43,7 +43,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
-public class VariableCampfireBlock extends CampfireBlock implements Igniteable {
+public class VariableCampfireBlock extends CampfireBlock implements Ignitable {
     /* fire size 0 is used for the temporarily extinguished flame near end of lifetime
         and also for the special case when it was embers but fuel was added, which allows quicker ignition */
     public static final IntProperty FIRE_SIZE = IntProperty.of("fire_size", 0, 4);
@@ -84,22 +84,25 @@ public class VariableCampfireBlock extends CampfireBlock implements Igniteable {
                 return ActionResult.CONSUME;
             }
             else if ((state.get(Properties.LIT) || state.get(EMBERS)) && (fuelTime = getFuelTime(itemStack.getItem())) > 0) {
-                if (!state.get(Properties.LIT) && !world.isClient) {
-                    world.setBlockState(pos, state.with(EMBERS, false).with(FIRE_SIZE, 0), 3);
-                    campfireBlockEntity.resetEmbers();
-                    campfireBlockEntity.markDirty();
-                    world.playSound(null, pos, SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+                if (world.isClient)
+                {
+                    return ActionResult.CONSUME;
                 }
-                else if (!world.isClient){
-                    world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
-                }
+                else {
+                    if (!state.get(Properties.LIT)) {
+                        world.setBlockState(pos, state.with(EMBERS, false).with(FIRE_SIZE, 0), 3);
+                        campfireBlockEntity.resetEmbers();
+                        campfireBlockEntity.markDirty();
+                        world.playSound(null, pos, SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+                    }
+                    else {
+                        world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+                    }
 
-                if (!world.isClient) {
                     campfireBlockEntity.addFuel(player.abilities.creativeMode ? itemStack.copy() : itemStack, fuelTime);
                     player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
                     return ActionResult.SUCCESS;
                 }
-                return ActionResult.CONSUME;
             }
         }
 
@@ -182,28 +185,21 @@ public class VariableCampfireBlock extends CampfireBlock implements Igniteable {
         };
     }
 
-    public boolean attemptFireStart(World world, LivingEntity entity, ItemStack stack, int meanStartTick, int remainingUseTick, BlockState block, BlockPos pos)
+    public boolean attemptFireStart(World world, LivingEntity entity, ItemStack stack, int meanStartTick, int remainingUseTick, BlockState state, BlockPos pos)
     {
-        if (block.isOf(this))
-        {
-            if (block.get(WATERLOGGED))
-            {
-                return false;
-            }
-
-            if (block.get(FIRE_SIZE) == 0)
-            {
-                meanStartTick /=  3;
-            }
-            return Igniteable.super.attemptFireStart(world, entity, stack, meanStartTick, remainingUseTick, block, pos);
-        }
-        else return false;
+        return state.getBlock() instanceof VariableCampfireBlock && !state.get(LIT) && !state.get(WATERLOGGED) && Ignitable.super.attemptFireStart(world, entity, stack, meanStartTick, remainingUseTick, state, pos);
     }
 
-    public void ignite(World world, LivingEntity entity, ItemStack stack, BlockState state, BlockPos pos) {
+    public float getStartTickFactor(BlockState state) {
+        return state.get(FIRE_SIZE) == 0 ? 0.33F : 1.0F;
+    }
+
+    public boolean ignite(World world, LivingEntity entity, ItemStack stack, BlockState state, BlockPos pos) {
         if (state.isOf(this) && !state.get(LIT) && !state.get(EMBERS))
         {
-            world.setBlockState(pos, state.with(LIT, true), 11);
+            world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+            return world.setBlockState(pos, state.with(LIT, true), 11);
         }
+        return false;
     }
 }

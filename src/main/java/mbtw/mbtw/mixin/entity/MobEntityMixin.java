@@ -1,17 +1,14 @@
 package mbtw.mbtw.mixin.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import mbtw.mbtw.item.Extinguishable;
+import mbtw.mbtw.item.TickDamageItem;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,17 +17,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Random;
-
 @Mixin(MobEntity.class)
-public abstract class MobEntityMixin extends LivingEntity {
+public abstract class MobEntityMixin extends LivingEntityMixin {
     @Shadow
     @Final
     protected GoalSelector goalSelector;
 
-    protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
-    }
+    @Shadow @Final private DefaultedList<ItemStack> handItems;
+
+    @Shadow @Final private DefaultedList<ItemStack> armorItems;
 
     @Inject(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;remove()V"))
     public void createCobwebAtDespawn(CallbackInfo ci)
@@ -47,5 +42,38 @@ public abstract class MobEntityMixin extends LivingEntity {
     protected void changeInteraction(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
 
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    protected void changeMobTick(CallbackInfo ci)
+    {
+        if (!this.world.isClient && this.world.getTime() % 23 == 0)
+        {
+            DefaultedList<ItemStack> combinedStacks = DefaultedList.of();
+            combinedStacks.addAll(this.handItems);
+            combinedStacks.addAll(this.armorItems);
+            for (ItemStack stack : combinedStacks)
+            {
+                if (stack.getItem() instanceof TickDamageItem)
+                {
+                    ((TickDamageItem)stack.getItem()).tick(stack, this.world, this.getBlockPos());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void changeExtinguish(CallbackInfo ci)
+    {
+        if (!this.world.isClient)
+        {
+            for (ItemStack stack : this.handItems)
+            {
+                if (stack.getItem() instanceof Extinguishable)
+                {
+                    ((Extinguishable) stack.getItem()).extinguish(stack, this.world);
+                }
+            }
+        }
     }
 }

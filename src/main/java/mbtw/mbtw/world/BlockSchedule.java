@@ -51,18 +51,24 @@ public class BlockSchedule {
     public void runSchedule(ServerWorld world)
     {
         BlockState nowState = world.getBlockState(this.blockPos);
+        if (this.compliesToProperties(nowState))
+        {
+            ((BlockSchedulable) nowState.getBlock()).runScheduled(world, nowState, this.blockPos);
+        }
+    }
+
+    public boolean compliesToProperties(BlockState nowState)
+    {
         if (Registry.BLOCK.getId(nowState.getBlock()).toString().equals(this.blockName) && nowState.getBlock() instanceof BlockSchedulable)
         {
             boolean complies = true;
-            for (Property.Value<?> propertyValue : requiredProperties)
+            for (Property.Value<?> propertyValue : this.requiredProperties)
             {
-                complies = complies(nowState, propertyValue);
+                complies = compliesToProperty(nowState, propertyValue);
             }
-            if (complies)
-            {
-                ((BlockSchedulable) nowState.getBlock()).runScheduled(world, nowState, this.blockPos);
-            }
+            return complies;
         }
+        return false;
     }
 
     public BlockPos getBlockPos()
@@ -70,7 +76,7 @@ public class BlockSchedule {
         return this.blockPos;
     }
 
-    private static <T extends Comparable<T>> boolean complies(BlockState state, Property.Value<T> propertyValue)
+    private static <T extends Comparable<T>> boolean compliesToProperty(BlockState state, Property.Value<T> propertyValue)
     {
         return state.get(state.getBlock().getStateManager().getProperty(propertyValue.getProperty().getName())).equals(propertyValue.getValue());
     }

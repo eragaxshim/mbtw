@@ -1,7 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.entity.BrickBlockEntity;
+import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -14,8 +14,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -28,19 +26,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class BrickBlock extends Block implements Waterloggable, BlockEntityProvider {
+public class ClayBrickBlock extends Block implements Waterloggable, BlockEntityProvider {
     public static final BooleanProperty WATERLOGGED;
     protected static final VoxelShape SHAPE;
     public static final IntProperty BAKE_PROGRESS = IntProperty.of("bake_progress", 0, 8);
 
-    public BrickBlock(Settings settings) {
+    public ClayBrickBlock(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false).with(BAKE_PROGRESS, 0));
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockView blockView) {
-        return new BrickBlockEntity();
+        return new ClayBrickBlockEntity();
     }
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -51,7 +49,7 @@ public class BrickBlock extends Block implements Waterloggable, BlockEntityProvi
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         long time = world.getTimeOfDay();
         if (state.get(BAKE_PROGRESS) != 8 && (time < 12500 || time > 23500) && world.isSkyVisible(pos) && !world.isRaining() && !state.get(WATERLOGGED)) {
-            for(int i = 0; i < random.nextInt(2) + 2; ++i) {
+            for(int i = 0; i < random.nextInt(2) + 1; ++i) {
                 world.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + 0.5D + (random.nextFloat() - 0.5), (double)pos.getY() + 0.5D  + (random.nextFloat() - 0.5), (double)pos.getZ() + 0.5D + (random.nextFloat() - 0.5), (double)((random.nextFloat() - 0.5F) / 9.0F), (double)(random.nextFloat() / 6.0F), (double)((random.nextFloat() - 0.5) / 9.0F));
             }
         }

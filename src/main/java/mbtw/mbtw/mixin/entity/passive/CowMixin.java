@@ -3,12 +3,9 @@ package mbtw.mbtw.mixin.entity.passive;
 import mbtw.mbtw.entity.QuadrupedMixinAccess;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.EatGrassGoal;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,10 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CowMixin extends AnimalMixin implements QuadrupedMixinAccess {
     private int eatGrassTimer;
     private EatGrassGoal eatGrassGoal;
-
-    protected CowMixin(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
-    }
 
     @Inject(method = "initGoals", at = @At("HEAD"))
     protected void initGrassGoal(CallbackInfo ci) {

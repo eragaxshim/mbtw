@@ -28,6 +28,8 @@ public abstract class WorldMixin implements WorldAccess {
 
     @Shadow @Final protected List<BlockEntity> unloadedBlockEntities;
     @Shadow protected boolean iteratingTickingBlockEntities;
+    @Shadow private int ambientDarkness;
+    @Shadow @Final public boolean isClient;
     private final List<BlockEntity> containerBlockEntities = Lists.newArrayList();
 
     @Inject(method = "tickBlockEntities", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;unloadedBlockEntities:Ljava/util/List;"))

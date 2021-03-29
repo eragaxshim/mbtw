@@ -2,7 +2,6 @@ package mbtw.mbtw.tag;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.InnerLogBlock;
 import net.fabricmc.fabric.api.tag.TagRegistry;
@@ -15,8 +14,6 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
-import java.util.Map;
-
 public class MbtwTagsMaps {
     public static final Tag<Block> DEEP_STONE_OVERWORLD = registerBlockTag("deep_stone_overworld");
     public static final Tag<Block> BREAK_INTERCEPTABLES = registerBlockTag("break_interceptables");
@@ -25,7 +22,6 @@ public class MbtwTagsMaps {
     public static final Tag<Block> EASY_HAND_BREAKABLES = registerBlockTag("easy_hand_breakables");
     public static final Tag<Block> HAND_UNBREAKABLES = registerBlockTag("hand_unbreakables");
     public static final Tag<Block> TOOL_REDUCED_EFFECTIVENESS = registerBlockTag("tool_reduced_effectiveness");
-    public static final Tag<Block> IGNITEABLES = registerBlockTag("igniteables");
 
     public static final Tag<Item> CHISELS = registerItemTag("chisels");
     public static final Tag<Item> BARK = registerItemTag("bark");

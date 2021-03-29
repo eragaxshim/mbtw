@@ -1,7 +1,6 @@
 package mbtw.mbtw.item;
 
-import mbtw.mbtw.block.Igniteable;
-import mbtw.mbtw.tag.MbtwTagsMaps;
+import mbtw.mbtw.block.Ignitable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -37,19 +36,15 @@ public class FireStarterItem extends UseDamageItem {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
     {
         BlockPos pos = raycastIgnoreAir(world, user, 4.5D, 1.0F, false);
-        //System.out.println(world.getBlockState(new BlockPos(hitResult.getPos())));
-        //System.out.println(blockState);
         if (pos != null && stack.getItem() instanceof FireStarterItem)
         {
             BlockState targetBlock = world.getBlockState(pos);
-            if (targetBlock.getBlock() instanceof Igniteable)
+            if (targetBlock.getBlock() instanceof Ignitable)
             {
-                ((Igniteable) targetBlock.getBlock()).attemptFireStart(world, user, stack, this.meanStartTick, remainingUseTicks, targetBlock, pos);
-                super.usageTick(world, user, stack, remainingUseTicks);
-            }
-            else if (targetBlock.getBlock().isIn(MbtwTagsMaps.IGNITEABLES))
-            {
-
+                if (((Ignitable) targetBlock.getBlock()).attemptFireStart(world, user, stack, this.meanStartTick, remainingUseTicks, targetBlock, pos))
+                {
+                    super.usageTick(world, user, stack, remainingUseTicks);
+                }
             }
 
         }
@@ -61,7 +56,7 @@ public class FireStarterItem extends UseDamageItem {
         Vec3d vec3d3 = vec3d.add(vec3d2.x * maxDistance, vec3d2.y * maxDistance, vec3d2.z * maxDistance);
         BlockPos pos = null;
         while (vec3d3.distanceTo(vec3d) > 0.5D) {
-            BlockHitResult result = world.raycast(new RaycastContext(vec3d, vec3d3, RaycastContext.ShapeType.COLLIDER, includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, user));
+            BlockHitResult result = world.raycast(new RaycastContext(vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, user));
             if (!(result.getType() == HitResult.Type.MISS)) {
                 pos = result.getBlockPos();
                 if (!world.getBlockState(pos).isOf(Blocks.AIR)) {

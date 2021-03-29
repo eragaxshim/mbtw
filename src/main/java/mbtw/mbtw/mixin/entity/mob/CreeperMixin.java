@@ -4,14 +4,14 @@ package mbtw.mbtw.mixin.entity.mob;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.entity.CreeperMixinAccess;
 import mbtw.mbtw.mixin.entity.MobEntityMixin;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.Shearable;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +19,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,8 +26,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Consumer;
 
 @Mixin(CreeperEntity.class)
 public abstract class CreeperMixin extends MobEntityMixin implements CreeperMixinAccess, Shearable {
@@ -38,17 +35,13 @@ public abstract class CreeperMixin extends MobEntityMixin implements CreeperMixi
 
     private static final TrackedData<Boolean> DEFUSED = DataTracker.registerData(CreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    protected CreeperMixin(EntityType<? extends MobEntity> entityType, World world) {
-        super(entityType, world);
-    }
-
     public boolean isShearable()
     {
         return this.isAlive() && !this.getDefused();
     }
 
     public void sheared(SoundCategory shearedSoundCategory) {
-        this.world.playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0F, 1.0F);
+        this.world.playSoundFromEntity(null, (CreeperEntity) (Object) this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0F, 1.0F);
         this.defuse();
         ItemEntity itemEntity = this.dropItem(Mbtw.CREEPER_OYSTER, 1);
         if (itemEntity != null) {

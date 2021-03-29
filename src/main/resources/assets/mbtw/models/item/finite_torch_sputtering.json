@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mbtw:block/finite_torch_sputtering"
+  }
+}

@@ -1,5 +1,6 @@
 package mbtw.mbtw.world;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -25,7 +26,7 @@ public class BlockScheduleManager extends ChunkedPersistentState<ChunkSchedule> 
         }
     }
 
-    public void onBlockChanged(BlockPos pos)
+    public void onBlockChanged(BlockPos pos, BlockState newState)
     {
         if (!this.tickableChunks.isEmpty())
         {
@@ -33,7 +34,7 @@ public class BlockScheduleManager extends ChunkedPersistentState<ChunkSchedule> 
             ChunkSchedule scheduleToChange = this.tickableChunks.getOrDefault(chunkPos, null);
             if (scheduleToChange != null)
             {
-                scheduleToChange.onBlockChanged(pos);
+                scheduleToChange.onBlockChanged(pos, newState);
             }
         }
 

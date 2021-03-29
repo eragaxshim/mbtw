@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "torch_fire=0": { "model": "mbtw:block/finite_torch_off" },
+    "torch_fire=1": { "model": "mbtw:block/finite_torch_burned" },
+    "torch_fire=2": { "model": "mbtw:block/finite_torch_sputtering" },
+    "torch_fire=3": { "model": "minecraft:block/torch" }
+  }
+}
