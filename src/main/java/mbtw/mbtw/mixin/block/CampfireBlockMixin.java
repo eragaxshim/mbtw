@@ -25,8 +25,8 @@ import java.util.Random;
 @Mixin(CampfireBlock.class)
 public abstract class CampfireBlockMixin implements CampfireBlockMixinAccessor {
     @Inject(method = "createBlockEntity", at = @At("HEAD"), cancellable = true)
-    protected void createBlockEntity(BlockView world, CallbackInfoReturnable<BlockEntity> cir) {
-        cir.setReturnValue(new VariableCampfireBlockEntity());
+    protected void createBlockEntity(BlockPos pos, BlockState state, CallbackInfoReturnable<BlockEntity> cir) {
+        cir.setReturnValue(new VariableCampfireBlockEntity(pos, state));
     }
 
     @Inject(method = "spawnSmokeParticle", at = @At("HEAD"), cancellable = true)

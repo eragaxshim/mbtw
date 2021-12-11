@@ -12,7 +12,7 @@ import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.ItemScatterer;
@@ -122,7 +122,7 @@ public abstract class CampfireBlockEntityMixin extends BlockEntity implements Ca
     }
 
     @Inject(method = "toTag", at = @At("TAIL"))
-    protected void addToTag(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir)
+    protected void addToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir)
     {
         byte[] byteArray = new byte[this.finishedItems.length];
         for (int i = 0; i < this.finishedItems.length; i++)
@@ -133,7 +133,7 @@ public abstract class CampfireBlockEntityMixin extends BlockEntity implements Ca
     }
 
     @Inject(method = "fromTag", at = @At("TAIL"))
-    protected void addFromTag(BlockState state, CompoundTag tag, CallbackInfo ci)
+    protected void addFromTag(BlockState state, NbtCompound tag, CallbackInfo ci)
     {
         byte[] byteArray = tag.getByteArray("FinishedItems");
         for (int i = 0; i < this.finishedItems.length; i++)

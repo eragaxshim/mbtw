@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +22,7 @@ public class FireStarterItem extends UseDamageItem {
     }
 
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        CompoundTag stackTag = stack.getOrCreateTag();
+        NbtCompound stackTag = stack.getOrCreateNbt();
         if (stackTag.contains("RequiredTemp"))
         {
             stackTag.remove("RequiredTemp");

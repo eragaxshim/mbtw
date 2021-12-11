@@ -1,8 +1,8 @@
 package mbtw.mbtw.world;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -69,17 +69,17 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
         chunkedPersistentState.markDirty();
     }
 
-    public ChunkSchedule buildFromTag(CompoundTag tag) {
+    public ChunkSchedule buildFromTag(NbtCompound tag) {
         long tagChunkTime = tag.getLong("Tick");
-        ListTag listTag = tag.getList("ScheduledBlocks", 10);
+        NbtList listTag = tag.getList("ScheduledBlocks", 10);
 
         TreeMap<Long, HashSet<BlockSchedule>> tagScheduledBlocks = new TreeMap<>();
         HashMap<BlockPos, List<Long>> tagPosTimesMap = new HashMap<>();
         for (int i = 0; i < listTag.size(); ++i)
         {
-            CompoundTag tickSchedulesEntry = listTag.getCompound(i);
+            NbtCompound tickSchedulesEntry = listTag.getCompound(i);
             long scheduleTime = tickSchedulesEntry.getLong("ScheduleTime");
-            ListTag tickSchedules = tickSchedulesEntry.getList("TickSchedules", 10);
+            NbtList tickSchedules = tickSchedulesEntry.getList("TickSchedules", 10);
             HashSet<BlockSchedule> tickSchedule = new HashSet<>();
             for (int j = 0; j < tickSchedules.size(); j++)
             {
@@ -94,15 +94,15 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
     }
 
 
-    public CompoundTag createTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound createTag() {
+        NbtCompound tag = new NbtCompound();
         tag.putLong("Tick", this.chunkTime);
-        ListTag listTag = new ListTag();
+        NbtList listTag = new NbtList();
         for (Map.Entry<Long, HashSet<BlockSchedule>> entry : scheduledBlocks.entrySet())
         {
-            CompoundTag tickSchedulesEntry = new CompoundTag();
+            NbtCompound tickSchedulesEntry = new NbtCompound();
             tickSchedulesEntry.putLong("ScheduleTime", entry.getKey());
-            ListTag tickSchedules = new ListTag();
+            NbtList tickSchedules = new NbtList();
             for (BlockSchedule blockSchedule : entry.getValue())
             {
                 tickSchedules.add(blockSchedule.createTag());

@@ -4,11 +4,10 @@ import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.FiniteTorchBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TorchBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
@@ -18,23 +17,49 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
-public class FiniteTorchBlock extends TorchBlock implements BlockEntityProvider, Ignitable, IgnitionProvider {
+public class FiniteTorchBlock extends BlockWithEntity implements BlockEntityProvider, Ignitable, IgnitionProvider {
     public static final IntProperty TORCH_FIRE = IntProperty.of("torch_fire", 0, 3);
+    protected static final VoxelShape BOUNDING_SHAPE = Block.createCuboidShape(6.0, 0.0, 6.0, 10.0, 10.0, 10.0);
+    protected final ParticleEffect particle;
 
     public FiniteTorchBlock(Settings settings, ParticleEffect particle) {
-        super(settings, particle);
+        super(settings);
+        this.particle = particle;
         this.setDefaultState(this.getDefaultState().with(TORCH_FIRE, 0));
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new FiniteTorchBlockEntity(Mbtw.FINITE_TORCH_BLOCK_ENTITY);
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return BOUNDING_SHAPE;
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (direction == Direction.DOWN && !this.canPlaceAt(state, world, pos)) {
+            return Blocks.AIR.getDefaultState();
+        }
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        return TorchBlock.sideCoversSmallSquare(world, pos.down(), Direction.UP);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Environment(EnvType.CLIENT)
@@ -102,5 +127,17 @@ public class FiniteTorchBlock extends TorchBlock implements BlockEntityProvider,
 
     public boolean canIgniteItem(ItemStack stack, BlockState state) {
         return state.getBlock() instanceof FiniteTorchBlock && state.get(TORCH_FIRE) > 1;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new FiniteTorchBlockEntity(Mbtw.FINITE_TORCH_BLOCK_ENTITY, pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, Mbtw.FINITE_TORCH_BLOCK_ENTITY, FiniteTorchBlockEntity::tick);
     }
 }

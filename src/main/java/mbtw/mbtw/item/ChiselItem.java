@@ -72,14 +72,14 @@ public class ChiselItem extends MiningToolItem {
         return ActionResult.PASS;
     }
 
-    public boolean isEffectiveOn(BlockState state) {
-        return EFFECTIVE_MATERIALS.contains(state.getMaterial()) || EFFECTIVE_BLOCKS.contains(state.getBlock()) || super.isEffectiveOn(state);
+    public boolean isSuitableFor(BlockState state) {
+        return EFFECTIVE_MATERIALS.contains(state.getMaterial()) || EFFECTIVE_BLOCKS.contains(state.getBlock()) || super.isSuitableFor(state);
     }
 
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         float slowModifier = this.getMaterial().getMiningLevel() < 2 ? 1.5F : 0.75F;
         slowModifier = state.getMaterial() == Material.COBWEB ? slowModifier / 2 : slowModifier;
-        return isEffectiveOn(state) ? Math.max(this.miningSpeed / slowModifier, 1.0F) : 1.0F;
+        return isSuitableFor(state) ? Math.max(this.miningSpeed / slowModifier, 1.0F) : 1.0F;
     }
 
     private int getDamageAmount(float base)

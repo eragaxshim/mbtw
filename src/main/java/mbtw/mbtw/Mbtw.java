@@ -17,6 +17,7 @@ import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.impl.content.registry.FuelRegistryImpl;
 import net.minecraft.block.*;
@@ -126,13 +127,13 @@ public class Mbtw implements ModInitializer {
 
     public static final Item FINITE_TORCH_ITEM = new FiniteTorchItem(FINITE_TORCH, FINITE_WALL_TORCH, new FabricItemSettings().group(ItemGroup.DECORATIONS).maxCount(16), 3100);
 
-    public static final Block CLAY_BRICK = new ClayBrickBlock(FabricBlockSettings.of(Material.SUPPORTED).breakInstantly().sounds(BlockSoundGroup.SLIME));
+    public static final Block CLAY_BRICK = new ClayBrickBlock(FabricBlockSettings.of(Material.DECORATION).breakInstantly().sounds(BlockSoundGroup.SLIME));
     public static BlockEntityType<ClayBrickBlockEntity> CLAY_BRICK_ENTITY;
 
     public static final Block VARIABLE_CAMPFIRE = new VariableCampfireBlock(true, 1, FabricBlockSettings.copyOf(Blocks.CAMPFIRE).luminance(VariableCampfireBlock.createLightLevelFromFireSize()));
     public static BlockEntityType<VariableCampfireBlockEntity> VARIABLE_CAMPFIRE_ENTITY;
 
-    public static final Block BRICK_OVEN = new BrickOvenBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).requiresTool().strength(2.0F, 6.0F).luminance((LitStateInvoker.invokeCreateLightLevelFromBlockState(13))));
+    public static final Block BRICK_OVEN = new BrickOvenBlock(FabricBlockSettings.of(Material.STONE, MapColor.RED).requiresTool().strength(2.0F, 6.0F).luminance((LitStateInvoker.invokeCreateLightLevelFromBlockState(13))));
     public static BlockEntityType<BrickOvenBlockEntity> BRICK_OVEN_ENTITY;
     public static final RecipeType<BrickOvenRecipe> BRICK_SMELTING = new RecipeType<BrickOvenRecipe>() {
         @Override
@@ -141,14 +142,14 @@ public class Mbtw implements ModInitializer {
     public static final RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER = new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100);
     public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "brick_oven"), BrickOvenScreenHandler::new);
 
-    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
-    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
-    public static final ConfiguredFeature<?, ?> ORE_COAL = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, COAL_ORE.getDefaultState(), 17)).rangeOf(128).spreadHorizontally().repeat(13);
-    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(5);
-    public static final ConfiguredFeature<?, ?> ORE_COAL_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_COAL_ORE.getDefaultState(), 17)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(4);
-    public static final ConfiguredFeature<?, ?> ORE_IRON = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRON_ORE.getDefaultState(), 9)).rangeOf(64).spreadHorizontally().repeat(14);
-    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(6);
-    public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(5);
+//    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
+//    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
+//    public static final ConfiguredFeature<?, ?> ORE_COAL = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, COAL_ORE.getDefaultState(), 17)).rangeOf(128).spreadHorizontally().repeat(13);
+//    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(5);
+//    public static final ConfiguredFeature<?, ?> ORE_COAL_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_COAL_ORE.getDefaultState(), 17)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(4);
+//    public static final ConfiguredFeature<?, ?> ORE_IRON = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRON_ORE.getDefaultState(), 9)).rangeOf(64).spreadHorizontally().repeat(14);
+//    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(6);
+//    public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(5);
 
     @Override
     public void onInitialize() {
@@ -249,29 +250,30 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "finite_torch"), FINITE_TORCH);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "finite_torch"), (BlockItem)FINITE_TORCH_ITEM);
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "finite_wall_torch"), FINITE_WALL_TORCH);
-        FINITE_TORCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "finite_torch"), BlockEntityType.Builder.create(() -> new FiniteTorchBlockEntity(FINITE_TORCH_BLOCK_ENTITY), FINITE_TORCH, FINITE_WALL_TORCH).build(null));
+        FINITE_TORCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "finite_torch"), FabricBlockEntityTypeBuilder.create((pos, state) -> new FiniteTorchBlockEntity(FINITE_TORCH_BLOCK_ENTITY, pos, state), FINITE_TORCH, FINITE_WALL_TORCH).build(null));
+
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "clay_brick"), CLAY_BRICK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "clay_brick"), new BlockItem(CLAY_BRICK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "clay_brick"), BlockEntityType.Builder.create(ClayBrickBlockEntity::new, CLAY_BRICK).build(null));
+        CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "clay_brick"), FabricBlockEntityTypeBuilder.create(ClayBrickBlockEntity::new, CLAY_BRICK).build(null));
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "variable_campfire"), VARIABLE_CAMPFIRE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "variable_campfire"), new BlockItem(VARIABLE_CAMPFIRE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        VARIABLE_CAMPFIRE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "variable_campfire"), BlockEntityType.Builder.create(VariableCampfireBlockEntity::new, VARIABLE_CAMPFIRE, Blocks.SOUL_CAMPFIRE, Blocks.CAMPFIRE).build(null));
+        VARIABLE_CAMPFIRE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "variable_campfire"), FabricBlockEntityTypeBuilder.create(VariableCampfireBlockEntity::new, VARIABLE_CAMPFIRE).build(null));
 
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "brick_oven"), new BlockItem(BRICK_OVEN, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
-        BRICK_OVEN_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "brick_oven"), BlockEntityType.Builder.create(BrickOvenBlockEntity::new, BRICK_OVEN).build(null));
+        BRICK_OVEN_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "brick_oven"), FabricBlockEntityTypeBuilder.create(BrickOvenBlockEntity::new, BRICK_OVEN).build(null));
 
         Registry.register(Registry.RECIPE_TYPE, new Identifier(MOD_ID, "brick_smelting"), BRICK_SMELTING);
         Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "brick_smelting"), BRICK_SMELTING_SERIALIZER);
 
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal"), ORE_COAL);
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_hard"), ORE_COAL_HARD);
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_deep"), ORE_COAL_DEEP);
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron"), ORE_IRON);
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_hard"), ORE_IRON_HARD);
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_deep"), ORE_IRON_DEEP);
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal"), ORE_COAL);
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_hard"), ORE_COAL_HARD);
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_deep"), ORE_COAL_DEEP);
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron"), ORE_IRON);
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_hard"), ORE_IRON_HARD);
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_deep"), ORE_IRON_DEEP);
 
         FuelRegistryImpl.INSTANCE.add(SAW_DUST, 100);
         FuelRegistryImpl.INSTANCE.add(POINTY_STICK, 100);

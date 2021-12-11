@@ -65,7 +65,7 @@ public class SerializerMixin {
         DefaultedList<ItemStack> defaultedList = DefaultedList.of();
 
         for(int i = 0; i < json.size(); ++i) {
-            ItemStack itemStack = ShapedRecipe.getItemStack((JsonObject) json.get(i));
+            ItemStack itemStack = ShapedRecipe.getItem((JsonObject) json.get(i));
             if (!itemStack.isEmpty()) {
                 defaultedList.add(itemStack);
             }

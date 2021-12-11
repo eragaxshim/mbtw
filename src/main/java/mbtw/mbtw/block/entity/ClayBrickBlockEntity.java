@@ -4,62 +4,59 @@ import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.ClayBrickBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tickable;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class ClayBrickBlockEntity extends BlockEntity implements Tickable {
+public class ClayBrickBlockEntity extends BlockEntity {
     private int bakeStageTime;
     
-    public ClayBrickBlockEntity() {
-        super(Mbtw.CLAY_BRICK_ENTITY);
+    public ClayBrickBlockEntity(BlockPos pos, BlockState state) {
+        super(Mbtw.CLAY_BRICK_ENTITY, pos, state);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt("bakeStageTime", bakeStageTime);
-
-        return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         bakeStageTime = tag.getInt("bakeStageTime");
     }
 
-    @Override
-    public void tick() {
-        if (this.world != null && !this.world.isClient && this.world.getTime() % 20L == 0L)
+    public static void tick(World world, BlockPos pos, BlockState state, ClayBrickBlockEntity be) {
+        if (world != null && !world.isClient && world.getTime() % 20L == 0L)
         {
-            int bake_progress = this.world.getBlockState(this.pos).get(ClayBrickBlock.BAKE_PROGRESS);
+            int bake_progress = world.getBlockState(pos).get(ClayBrickBlock.BAKE_PROGRESS);
             if (bake_progress != 8) {
-                BlockState state = this.world.getBlockState(this.pos);
 
-                if (((this.world.isRaining() && this.world.isSkyVisible(this.pos)) || state.get(ClayBrickBlock.WATERLOGGED))) {
-                    if (bakeStageTime != 0 || bake_progress != 0) {
-                        bakeStageTime = 0;
-                        this.world.setBlockState(this.pos, state.with(ClayBrickBlock.BAKE_PROGRESS, 0), 3);
-                        this.markDirty();
+                if (((world.isRaining() && world.isSkyVisible(pos)) || state.get(ClayBrickBlock.WATERLOGGED))) {
+                    if (be.bakeStageTime != 0 || bake_progress != 0) {
+                        be.bakeStageTime = 0;
+                        world.setBlockState(pos, state.with(ClayBrickBlock.BAKE_PROGRESS, 0), 3);
+                        be.markDirty();
                     }
                 }
                 else {
-                    long time = this.world.getTimeOfDay();
-                    if ((time < 12500 || time > 23500) && this.world.isSkyVisible(this.pos)) {
+                    long time = world.getTimeOfDay();
+                    if ((time < 12500 || time > 23500) && world.isSkyVisible(pos)) {
                         if (state.isOf(Mbtw.CLAY_BRICK)) {
-                            if (bakeStageTime > 75) {
-                                bakeStageTime = 0;
-                                this.world.setBlockState(this.pos, state.with(ClayBrickBlock.BAKE_PROGRESS, bake_progress+1), 3);
+                            if (be.bakeStageTime > 75) {
+                                be.bakeStageTime = 0;
+                                world.setBlockState(pos, state.with(ClayBrickBlock.BAKE_PROGRESS, bake_progress+1), 3);
                             }
                             else {
-                                bakeStageTime++;
+                                be.bakeStageTime++;
                             }
-                            this.markDirty();
+                            be.markDirty();
                         }
                     }
-                    else if (bakeStageTime != 0) {
-                        bakeStageTime = 0;
-                        this.markDirty();
+                    else if (be.bakeStageTime != 0) {
+                        be.bakeStageTime = 0;
+                        be.markDirty();
                     }
                 }
             }

@@ -20,8 +20,8 @@ public abstract class ItemRendererMixin {
     @Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getInstance()Lnet/minecraft/client/MinecraftClient;"))
     protected void changeRenderGuiItemOverlay(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci) {
 
-        float progress = stack.getOrCreateTag().getInt("Progress");
-        float maxProgress = stack.getOrCreateTag().getInt("MaxProgress");
+        float progress = stack.getOrCreateNbt().getInt("Progress");
+        float maxProgress = stack.getOrCreateNbt().getInt("MaxProgress");
         if (progress > 0 && maxProgress > 0) {
             RenderSystem.disableDepthTest();
             RenderSystem.disableTexture();

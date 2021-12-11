@@ -5,21 +5,22 @@ import mbtw.mbtw.item.FiniteTorchItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class FiniteTorchBlockEntity extends BlockEntity implements Tickable {
+public class FiniteTorchBlockEntity extends BlockEntity {
     private int burnTime;
 
-    public <T extends FiniteTorchBlockEntity> FiniteTorchBlockEntity(BlockEntityType<T> type) {
-        super(type);
+    public <T extends FiniteTorchBlockEntity> FiniteTorchBlockEntity(BlockEntityType<T> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt("BurnTime", this.burnTime);
         if (this.getCachedState().getBlock() instanceof FiniteTorchBlock)
         {
@@ -27,55 +28,51 @@ public class FiniteTorchBlockEntity extends BlockEntity implements Tickable {
             tag.putInt("MaxProgress", ((FiniteTorchItem) this.getCachedState().getBlock().asItem()).getMaxProgress());
         }
         tag.putBoolean("TickProgress", this.burnTime != 0);
-
-        return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.burnTime = tag.getInt("BurnTime");
     }
 
 
-    @Override
-    public void tick() {
-        BlockState state = this.getCachedState();
-        if (this.world != null && this.world.getTime() % 11 == 0 && !this.world.isClient && state.getBlock() instanceof FiniteTorchBlock)
+    public static void tick(World world, BlockPos pos, BlockState state, FiniteTorchBlockEntity be) {
+        if (world != null && world.getTime() % 11 == 0 && !world.isClient && state.getBlock() instanceof FiniteTorchBlock)
         {
             int torchFire = state.get(FiniteTorchBlock.TORCH_FIRE);
             if (torchFire > 1)
             {
                 int maxBurnTime = ((FiniteTorchItem) state.getBlock().asItem()).getMaxProgress();
-                if (this.burnTime == 0)
+                if (be.burnTime == 0)
                 {
-                    this.burnTime = maxBurnTime;
+                    be.burnTime = maxBurnTime;
                 }
                 boolean isRaining = false;
-                if (this.world.isRaining() && this.world.isSkyVisible(this.pos))
+                if (world.isRaining() && world.isSkyVisible(pos))
                 {
                     isRaining = true;
-                    if (this.world.getRandom().nextFloat() < 0.01F)
+                    if (world.getRandom().nextFloat() < 0.01F)
                     {
-                        this.world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.2F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
+                        world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.2F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
                     }
                 }
 
-                this.burnTime -= isRaining ? 33 : 11;
-                int newTorchFire = calculateTorchFire(this.burnTime, maxBurnTime);
+                be.burnTime -= isRaining ? 33 : 11;
+                int newTorchFire = calculateTorchFire(be.burnTime, maxBurnTime);
                 if (newTorchFire != torchFire)
                 {
                     if (newTorchFire < torchFire && isRaining)
                     {
-                        world.playSound(null, this.pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
+                        world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
                     }
-                    this.world.setBlockState(this.pos, state.with(FiniteTorchBlock.TORCH_FIRE, newTorchFire));
+                    world.setBlockState(pos, state.with(FiniteTorchBlock.TORCH_FIRE, newTorchFire));
                 }
-                if (this.burnTime != 0 && newTorchFire <= 1)
+                if (be.burnTime != 0 && newTorchFire <= 1)
                 {
-                    this.burnTime = 0;
+                    be.burnTime = 0;
                 }
-                this.markDirty();
+                be.markDirty();
             }
         }
     }

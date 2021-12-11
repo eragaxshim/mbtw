@@ -43,9 +43,8 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
     public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
     {
         Item handItem = handStack.getItem();
-        if (handItem instanceof MiningToolItem)
+        if (handItem instanceof MiningToolItem toolItem)
         {
-            MiningToolItem toolItem = (MiningToolItem) handItem;
             int miningEffect = sourceBlock.getMiningEffect(toolItem);
 
             if (toolItem instanceof ChiselItem)

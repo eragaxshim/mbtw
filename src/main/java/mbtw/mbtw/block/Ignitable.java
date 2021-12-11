@@ -4,7 +4,7 @@ import mbtw.mbtw.item.FireStarterItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ public interface Ignitable {
             int fireStartTemp = stack.getMaxUseTime() - remainingUseTick;
             int requiredTemp;
 
-            CompoundTag stackTag = stack.getOrCreateTag();
+            NbtCompound stackTag = stack.getOrCreateNbt();
 
             boolean clear = false;
             if (!stackTag.contains("StartPos"))

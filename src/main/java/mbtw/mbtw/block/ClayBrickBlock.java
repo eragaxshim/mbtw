@@ -6,6 +6,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.BatEntity;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class ClayBrickBlock extends Block implements Waterloggable, BlockEntityProvider {
+public class ClayBrickBlock extends BlockWithEntity implements Waterloggable, BlockEntityProvider {
     public static final BooleanProperty WATERLOGGED;
     protected static final VoxelShape SHAPE;
     public static final IntProperty BAKE_PROGRESS = IntProperty.of("bake_progress", 0, 8);
@@ -37,8 +39,8 @@ public class ClayBrickBlock extends Block implements Waterloggable, BlockEntityP
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
-        return new ClayBrickBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new ClayBrickBlockEntity(pos, state);
     }
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -62,7 +64,7 @@ public class ClayBrickBlock extends Block implements Waterloggable, BlockEntityP
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
         return direction == Direction.DOWN && !this.canPlaceAt(state, world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
@@ -76,14 +78,14 @@ public class ClayBrickBlock extends Block implements Waterloggable, BlockEntityP
         return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
-    public void onSteppedOn(World world, BlockPos pos, Entity entity) {
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         this.tryBreakBrick(world, pos, entity);
-        super.onSteppedOn(world, pos, entity);
+        super.onSteppedOn(world, pos, state, entity);
     }
 
-    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         this.tryBreakBrick(world, pos, entity);
-        super.onLandedUpon(world, pos, entity, distance);
+        super.onLandedUpon(world, state, pos, entity, fallDistance);
     }
 
     private void tryBreakBrick(World world, BlockPos pos, Entity entity)
@@ -124,5 +126,15 @@ public class ClayBrickBlock extends Block implements Waterloggable, BlockEntityP
         boolean bl = fluidState.getFluid() == Fluids.WATER;
         BlockState superState = super.getPlacementState(ctx);
         return superState != null ? superState.with(WATERLOGGED, bl) : null;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        // With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
+        return BlockRenderType.MODEL;
+    }
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, Mbtw.CLAY_BRICK_ENTITY, (world1, pos, state1, be) -> ClayBrickBlockEntity.tick(world1, pos, state1, be));
     }
 }

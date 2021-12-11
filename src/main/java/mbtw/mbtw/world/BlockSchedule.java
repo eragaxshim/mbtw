@@ -2,7 +2,7 @@ package mbtw.mbtw.world;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Property;
@@ -30,18 +30,18 @@ public class BlockSchedule {
         this.requiredProperties = requiredProperties;
     }
     
-    public CompoundTag createTag()
+    public NbtCompound createTag()
     {
-        CompoundTag tag = new CompoundTag();
+        NbtCompound tag = new NbtCompound();
         tag.put("BlockPos", NbtHelper.fromBlockPos(this.blockPos));
         tag.putString("BlockName", this.blockName);
 
         if (!requiredProperties.isEmpty())
         {
-            CompoundTag propertiesTag = new CompoundTag();
+            NbtCompound propertiesTag = new NbtCompound();
             for (Property.Value<?> propertyValue : requiredProperties)
             {
-                propertiesTag.putString(propertyValue.getProperty().getName(), nameValue(propertyValue));
+                propertiesTag.putString(propertyValue.property().getName(), nameValue(propertyValue));
             }
             tag.put("RequiredProperties", propertiesTag);
         }
@@ -78,16 +78,16 @@ public class BlockSchedule {
 
     private static <T extends Comparable<T>> boolean compliesToProperty(BlockState state, Property.Value<T> propertyValue)
     {
-        return state.get(state.getBlock().getStateManager().getProperty(propertyValue.getProperty().getName())).equals(propertyValue.getValue());
+        return state.get(state.getBlock().getStateManager().getProperty(propertyValue.property().getName())).equals(propertyValue.value());
     }
 
-    public static BlockSchedule scheduleFromTag(CompoundTag tag) {
+    public static BlockSchedule scheduleFromTag(NbtCompound tag) {
         BlockPos pos = NbtHelper.toBlockPos(tag.getCompound("BlockPos"));
         Block block = Registry.BLOCK.get(new Identifier(tag.getString("BlockName")));
         HashSet<Property.Value<?>> requiredProperties = new HashSet<>();
 
         if (tag.contains("RequiredProperties", 10)) {
-            CompoundTag propertiesTag = tag.getCompound("RequiredProperties");
+            NbtCompound propertiesTag = tag.getCompound("RequiredProperties");
             for (String key : propertiesTag.getKeys())
             {
                 Property<?> property = block.getStateManager().getProperty(key);
@@ -108,7 +108,7 @@ public class BlockSchedule {
     }
 
     private static <T extends Comparable<T>> String nameValue(Property.Value<T> propertyValue) {
-        return propertyValue.getProperty().name(propertyValue.getValue());
+        return propertyValue.property().name(propertyValue.value());
     }
     
     public static class Builder {

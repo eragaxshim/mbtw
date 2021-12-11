@@ -12,13 +12,15 @@ group = project.maven_group
 
 repositories {
     maven {
-        name = "dblsaiko"
-        url = "https://maven.dblsaiko.net/"
+        name = "vram"
+        url = "https://maven.vram.io/"
     }
     maven {
         name "Siphalor's Maven"
         url "https://maven.siphalor.de"
     }
+    maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 dependencies {
@@ -31,16 +33,13 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // optional dev env annotation support
-    compileOnly "org.apiguardian:apiguardian-api:1.0.0"
+    compileOnly 'org.apiguardian:apiguardian-api:1.1.2'
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-    modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false}
+    modImplementation ("io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.+")
+    include "io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.+:fat"
 
-    modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false}
-    // remove next line if you want JMX to be an optional dependency
-    include "grondag:jmx-${project.mc_tag}:${project.jmx_version}.+"
-
-    modImplementation "de.siphalor:nbtcrafting-1.16:2+"
+    modImplementation "de.siphalor:nbtcrafting-1.18:2+"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.

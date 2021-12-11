@@ -8,7 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -22,8 +22,8 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
     private int burnPower;
     private int embersTime;
 
-    public VariableCampfireBlockEntity() {
-        super();
+    public VariableCampfireBlockEntity(BlockPos pos, BlockState state) {
+        super(pos, state);
         this.burnableTime = 1600;
         this.calculateBurnPower();
     }
@@ -140,8 +140,8 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
         this.embersTime = 0;
     }
 
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.burnTime = tag.getInt("BurnTime");
         this.burnableTime = tag.getInt("BurnableTime");
         this.calculateBurnPower();
@@ -149,13 +149,12 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
         this.embersTime = tag.getInt("EmbersTime");
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt("BurnTime", this.burnTime);
         tag.putInt("BurnableTime", this.burnableTime);
         tag.putInt("TempWhileFueling", this.tempWhileFueling);
         tag.putInt("EmbersTime", this.embersTime);
-        return tag;
     }
 
     private void updateFireSize(World world, boolean isRaining)

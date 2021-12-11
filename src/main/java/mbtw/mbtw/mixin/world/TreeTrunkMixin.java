@@ -4,7 +4,6 @@ import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ModifiableTestableWorld;

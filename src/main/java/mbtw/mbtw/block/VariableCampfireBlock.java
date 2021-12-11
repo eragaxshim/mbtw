@@ -10,6 +10,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -58,8 +61,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof VariableCampfireBlockEntity) {
-            VariableCampfireBlockEntity campfireBlockEntity = (VariableCampfireBlockEntity)blockEntity;
+        if (blockEntity instanceof VariableCampfireBlockEntity campfireBlockEntity) {
             ItemStack itemStack = player.getStackInHand(hand);
 
             ItemStack finishedStack;
@@ -76,7 +78,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
             Optional<CampfireCookingRecipe> optional = campfireBlockEntity.getRecipeFor(itemStack);
             int fuelTime;
             if (optional.isPresent()) {
-                if (!world.isClient && campfireBlockEntity.addItem(player.abilities.creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                if (!world.isClient && campfireBlockEntity.addItem(player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
                     player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
                     return ActionResult.SUCCESS;
                 }
@@ -99,7 +101,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
                         world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
                     }
 
-                    campfireBlockEntity.addFuel(player.abilities.creativeMode ? itemStack.copy() : itemStack, fuelTime);
+                    campfireBlockEntity.addFuel(player.isCreative() ? itemStack.copy() : itemStack, fuelTime);
                     player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
                     return ActionResult.SUCCESS;
                 }
@@ -149,8 +151,8 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new VariableCampfireBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new VariableCampfireBlockEntity(pos, state);
     }
 
     public static int getFuelTime(Item item)
@@ -183,6 +185,22 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
             }
             return 0;
         };
+    }
+
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (world.isClient) {
+            if (state.get(LIT)) {
+                return CampfireBlock.checkType(type, BlockEntityType.CAMPFIRE, VariableCampfireBlockEntity::clientTick);
+            }
+        } else {
+            if (state.get(LIT)) {
+                return CampfireBlock.checkType(type, BlockEntityType.CAMPFIRE, VariableCampfireBlockEntity::litServerTick);
+            }
+            return CampfireBlock.checkType(type, BlockEntityType.CAMPFIRE, VariableCampfireBlockEntity::unlitServerTick);
+        }
+        return null;
     }
 
     public boolean attemptFireStart(World world, LivingEntity entity, ItemStack stack, int meanStartTick, int remainingUseTick, BlockState state, BlockPos pos)

@@ -14,7 +14,7 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -75,12 +75,12 @@ public abstract class CreeperMixin extends MobEntityMixin implements CreeperMixi
     }
 
     @Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
-    public void writeExtraData(CompoundTag tag, CallbackInfo ci) {
+    public void writeExtraData(NbtCompound tag, CallbackInfo ci) {
         tag.putBoolean("Defused", this.getDefused());
     }
 
     @Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
-    public void readExtraData(CompoundTag tag, CallbackInfo ci) {
+    public void readExtraData(NbtCompound tag, CallbackInfo ci) {
         this.dataTracker.set(DEFUSED, tag.getBoolean("Defused"));
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.WallStandingBlockItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -27,17 +27,17 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
 
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockState useState = context.getWorld().getBlockState(context.getBlockPos());
-        if (context.getStack().getOrCreateSubTag("BlockStateTag").getInt("torch_fire") > 1 && useState.getBlock() instanceof Ignitable && ((Ignitable) useState.getBlock()).ignite(context.getWorld(), context.getPlayer(), context.getStack(), useState, context.getBlockPos()))
+        if (context.getStack().getOrCreateSubNbt("BlockStateTag").getInt("torch_fire") > 1 && useState.getBlock() instanceof Ignitable && ((Ignitable) useState.getBlock()).ignite(context.getWorld(), context.getPlayer(), context.getStack(), useState, context.getBlockPos()))
         {
             return ActionResult.success(context.getWorld().isClient);
         }
-        else if (context.getStack().getOrCreateSubTag("BlockStateTag").getInt("torch_fire") == 0 && useState.getBlock() instanceof IgnitionProvider && ((IgnitionProvider) useState.getBlock()).canIgniteItem(context.getStack(), useState))
+        else if (context.getStack().getOrCreateSubNbt("BlockStateTag").getInt("torch_fire") == 0 && useState.getBlock() instanceof IgnitionProvider && ((IgnitionProvider) useState.getBlock()).canIgniteItem(context.getStack(), useState))
         {
             if (!context.getWorld().isClient)
             {
                 ItemStack litTorch = context.getStack().split(1);
-                litTorch.getOrCreateSubTag("BlockStateTag").putInt("torch_fire", 3);
-                litTorch.getOrCreateTag().putInt("Progress", this.getMaxProgress());
+                litTorch.getOrCreateSubNbt("BlockStateTag").putInt("torch_fire", 3);
+                litTorch.getOrCreateNbt().putInt("Progress", this.getMaxProgress());
                 this.tick(litTorch, context.getWorld(), context.getBlockPos(), 1.0F, null);
                 context.getWorld().playSound(null, context.getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (context.getWorld().getRandom().nextFloat() - context.getWorld().getRandom().nextFloat()) * 0.2F + 1.0F);
                 if (context.getPlayer() != null)
@@ -57,7 +57,7 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
     {
         if (stack.getItem() instanceof FiniteTorchItem)
         {
-            CompoundTag stackTag = stack.getOrCreateTag();
+            NbtCompound stackTag = stack.getOrCreateNbt();
 
             if (!stackTag.contains("TickProgress"))
             {
@@ -70,7 +70,7 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
 
             TickProgressable.super.tick(stack, world, pos, tickModifier, holder);
 
-            CompoundTag blockStateTag = stack.getOrCreateSubTag("BlockStateTag");
+            NbtCompound blockStateTag = stack.getOrCreateSubNbt("BlockStateTag");
             int torchFire = blockStateTag.getInt("torch_fire");
 
             int newTorchFire = torchFire;
@@ -83,7 +83,7 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
             }
             blockStateTag.putInt("torch_fire", newTorchFire);
             stackTag.put("BlockStateTag", blockStateTag);
-            stack.getOrCreateSubTag("BlockEntityTag").putInt("BurnTime", stackTag.getInt("Progress"));
+            stack.getOrCreateSubNbt("BlockEntityTag").putInt("BurnTime", stackTag.getInt("Progress"));
         }
     }
 
@@ -95,15 +95,15 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
     public void onFinalProgress(ItemStack stack, World world, BlockPos pos, boolean doesProgressDecrease, int maxProgress)
     {
         TickProgressable.super.onFinalProgress(stack, world, pos, doesProgressDecrease, maxProgress);
-        stack.getOrCreateSubTag("BlockStateTag").putInt("torch_fire", 1);
-        stack.getOrCreateSubTag("BlockEntityTag").putInt("BurnTime", 0);
+        stack.getOrCreateSubNbt("BlockStateTag").putInt("torch_fire", 1);
+        stack.getOrCreateSubNbt("BlockEntityTag").putInt("BurnTime", 0);
         world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
     }
 
     @Override
     public void extinguish(ItemStack stack, World world, BlockPos pos) {
-        CompoundTag stackTag = stack.getOrCreateTag();
-        if (stackTag.getInt("Progress") != 0 || stack.getOrCreateSubTag("BlockStateTag").getInt("torch_fire") > 1)
+        NbtCompound stackTag = stack.getOrCreateNbt();
+        if (stackTag.getInt("Progress") != 0 || stack.getOrCreateSubNbt("BlockStateTag").getInt("torch_fire") > 1)
         {
             this.onFinalProgress(stack, world, pos, stackTag.getBoolean("DecreaseProgressTick"), stackTag.getInt("MaxProgress"));
         }

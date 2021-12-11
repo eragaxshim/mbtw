@@ -23,6 +23,6 @@ public class MbtwClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.FINITE_TORCH);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.FINITE_WALL_TORCH);
         BlockEntityRendererRegistry.INSTANCE.register(Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntityRenderer::new);
-        FabricModelPredicateProviderRegistry.register(Mbtw.FINITE_TORCH_ITEM, new Identifier("torch_size"), (itemStack, clientWorld, livingEntity) -> (float)itemStack.getOrCreateSubTag("BlockStateTag").getInt("torch_fire"));
+        FabricModelPredicateProviderRegistry.register(Mbtw.FINITE_TORCH_ITEM, new Identifier("torch_size"), (itemStack, clientWorld, livingEntity) -> (float)itemStack.getOrCreateSubNbt("BlockStateTag").getInt("torch_fire"));
     }
 }

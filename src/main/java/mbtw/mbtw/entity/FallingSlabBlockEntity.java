@@ -12,9 +12,9 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.AutomaticItemPlacementContext;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.Tag;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.FluidTags;
@@ -28,6 +28,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.entity.Entity.RemovalReason;
 
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +54,7 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
     public void tick() {
         int tt = this.timeFalling;
         if (((FallingBlockMixin)this).getBlock().isAir()) {
-            this.remove();
+            this.discard();
         } else {
             Block block = ((FallingBlockMixin)this).getBlock().getBlock();
             BlockPos blockPos2;
@@ -62,7 +63,7 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                 if (this.world.getBlockState(blockPos2).isOf(sourceBlock.getBlock())) {
                     this.world.removeBlock(blockPos2, false);
                 } else if (!this.world.isClient) {
-                    this.remove();
+                    this.discard();
                     return;
                 }
             }
@@ -91,14 +92,14 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                             this.dropItem(sourceBlock.getBlock());
                             System.out.println("dropp3");
                         }
-                        this.remove();
+                        this.discard();
                     }
                     System.out.println("next tick moving");
                 } else {
                     BlockState blockState = this.world.getBlockState(blockPos2);
                     this.setVelocity(this.getVelocity().multiply(0.7D, -0.5D, 0.7D));
                     if (!blockState.isOf(Blocks.MOVING_PISTON)) {
-                        this.remove();
+                        this.discard();
                         if (!((FallingBlockMixin)this).getDestroyedOnLanding()) {
                             boolean bl3 = blockState.canReplace(new AutomaticItemPlacementContext(this.world, blockPos2, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
                             boolean bl4 = FallingBlock.canFallThrough(this.world.getBlockState(blockPos2.down())) && (!bl || !bl2);
@@ -116,16 +117,16 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
                                     if (this.blockEntityData != null && block instanceof BlockEntityProvider) {
                                         BlockEntity blockEntity = this.world.getBlockEntity(blockPos2);
                                         if (blockEntity != null) {
-                                            CompoundTag compoundTag = blockEntity.toTag(new CompoundTag());
+                                            NbtCompound compoundTag = new NbtCompound();
 
                                             for (String string : this.blockEntityData.getKeys()) {
-                                                Tag tag = this.blockEntityData.get(string);
+                                                NbtElement tag = this.blockEntityData.get(string);
                                                 if (!"x".equals(string) && !"y".equals(string) && !"z".equals(string)) {
                                                     compoundTag.put(string, tag.copy());
                                                 }
                                             }
 
-                                            blockEntity.fromTag(((FallingBlockMixin)this).getBlock(), compoundTag);
+                                            blockEntity.readNbt(compoundTag);
                                             blockEntity.markDirty();
                                         }
                                     }
@@ -148,13 +149,13 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
         }
     }
 
-    protected void writeCustomDataToTag(CompoundTag tag) {
+    protected void writeCustomDataToNbt(NbtCompound tag) {
         tag.put("SourceBlockState", NbtHelper.fromBlockState(sourceBlock));
-        super.writeCustomDataToTag(tag);
+        super.writeCustomDataToNbt(tag);
     }
 
-    protected void readCustomDataFromTag(CompoundTag tag) {
+    protected void readCustomDataFromNbt(NbtCompound tag) {
         this.sourceBlock = NbtHelper.toBlockState(tag.getCompound("SourceBlockState"));
-        super.readCustomDataFromTag(tag);
+        super.readCustomDataFromNbt(tag);
     }
 }

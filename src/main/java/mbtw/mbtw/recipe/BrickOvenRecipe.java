@@ -17,7 +17,7 @@ public class BrickOvenRecipe extends AbstractCookingRecipe {
     }
 
     @Environment(EnvType.CLIENT)
-    public ItemStack getRecipeKindIcon() {
+    public ItemStack createIcon() {
         return new ItemStack(Mbtw.BRICK_OVEN);
     }
 

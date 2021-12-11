@@ -2,8 +2,8 @@ package mbtw.mbtw.world;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -58,13 +58,13 @@ public class ChunkedPersistentState<T extends ChunkedTickable<T>> extends Persis
         return key + dimensionType.getSuffix();
     }
 
-    public void fromTag(CompoundTag tag) {
-        ListTag listTag = tag.getList("TickableChunks", 10);
+    public void fromNbt(NbtCompound tag) {
+        NbtList listTag = tag.getList("TickableChunks", 10);
 
         Object2ObjectOpenHashMap<ChunkPos, T> tagTickableChunks = new Object2ObjectOpenHashMap<>();
         for (int i = 0; i < listTag.size(); ++i)
         {
-            CompoundTag scheduledChunkEntry = listTag.getCompound(i);
+            NbtCompound scheduledChunkEntry = listTag.getCompound(i);
 
             int chunkX = scheduledChunkEntry.getInt("X");
             int chunkY = scheduledChunkEntry.getInt("Z");
@@ -74,11 +74,11 @@ public class ChunkedPersistentState<T extends ChunkedTickable<T>> extends Persis
         this.tickableChunks = tagTickableChunks;
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
-        ListTag listTag = new ListTag();
+    public NbtCompound writeNbt(NbtCompound tag) {
+        NbtList listTag = new NbtList();
         for (Map.Entry<ChunkPos, T> entry : this.tickableChunks.entrySet())
         {
-            CompoundTag scheduledChunkEntry = new CompoundTag();
+            NbtCompound scheduledChunkEntry = new NbtCompound();
             scheduledChunkEntry.putInt("X", entry.getKey().x);
             scheduledChunkEntry.putInt("Z", entry.getKey().z);
 

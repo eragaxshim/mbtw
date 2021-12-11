@@ -1,7 +1,7 @@
 package mbtw.mbtw.mixin.entity.mob;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.CowEntity;
@@ -21,6 +21,6 @@ public class ZombieMixin extends MobEntity {
     @Inject(method = "initCustomGoals", at = @At("TAIL"))
     protected void changeCustomGoals(CallbackInfo ci)
     {
-        this.targetSelector.add(5, new FollowTargetGoal<>(((ZombieEntity) (Object) this), CowEntity.class, true));
+        this.targetSelector.add(5, new ActiveTargetGoal<>(((ZombieEntity) (Object) this), CowEntity.class, true));
     }
 }
