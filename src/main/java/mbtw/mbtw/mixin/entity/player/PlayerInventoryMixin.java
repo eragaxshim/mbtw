@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin {
-    @Shadow private ItemStack cursorStack;
-
     @Shadow @Final public PlayerEntity player;
 
     @Shadow @Final private List<DefaultedList<ItemStack>> combinedInventory;
@@ -49,11 +47,11 @@ public abstract class PlayerInventoryMixin {
             }
 
             DefaultedList<ItemStack> tickableStacks = DefaultedList.of();
-            tickableStacks.add(cursorStack);
+            tickableStacks.add(this.player.currentScreenHandler.getCursorStack());
 
             if (inventoryField == null && !(this.player.currentScreenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler))
             {
-                tickableStacks.addAll(this.player.currentScreenHandler.slots.stream().map((Slot::getStack)).collect(Collectors.toList()));
+                tickableStacks.addAll(this.player.currentScreenHandler.slots.stream().map((Slot::getStack)).toList());
             }
             else {
                 tickableStacks = this.combinedInventory.stream().reduce(tickableStacks, (subTotal, element) -> {

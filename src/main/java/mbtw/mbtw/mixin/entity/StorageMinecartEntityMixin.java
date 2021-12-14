@@ -19,7 +19,7 @@ public abstract class StorageMinecartEntityMixin extends AbstractMinecartEntityM
     @Override
     protected void changeTick(CallbackInfo ci)
     {
-        if (!this.removed && this.world.getTime() % 23 == 0)
+        if (!this.isRemoved() && this.world.getTime() % 23 == 0)
         {
             for (ItemStack stack : this.inventory)
             {

@@ -19,17 +19,19 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CampfireBlockEntity.class)
-public abstract class CampfireBlockEntityMixin extends BlockEntity implements CampfireBlockEntityMixinAccessor {
+public abstract class CampfireBlockEntityMixin extends BlockEntity implements CampfireBlockEntityAccessor {
     @Mutable
     @Shadow @Final private DefaultedList<ItemStack> itemsBeingCooked;
 
@@ -43,8 +45,8 @@ public abstract class CampfireBlockEntityMixin extends BlockEntity implements Ca
 
     private boolean[] finishedItems;
 
-    public CampfireBlockEntityMixin(BlockEntityType<?> type) {
-        super(type);
+    public CampfireBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -56,22 +58,23 @@ public abstract class CampfireBlockEntityMixin extends BlockEntity implements Ca
         this.finishedItems = new boolean[2];
     }
 
-    @Inject(method = "spawnSmokeParticles", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Direction;getHorizontal()I"), cancellable = true)
-    protected void changeSmoke(CallbackInfo ci)
+    @Inject(method = "clientTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Direction;getHorizontal()I"), cancellable = true)
+    private static void changeSmoke(World world, BlockPos pos, BlockState state, CampfireBlockEntity campfire, CallbackInfo ci)
     {
-        if ((Object) this instanceof VariableCampfireBlockEntity && this.world != null)
+        if (campfire instanceof VariableCampfireBlockEntity && world != null)
         {
-            Direction direction = this.getCachedState().get(CampfireBlock.FACING);
+            Direction direction = state.get(CampfireBlock.FACING);
 
-            for(int k = 0; k < this.itemsBeingCooked.size(); ++k) {
-                if (!((ItemStack)this.itemsBeingCooked.get(k)).isEmpty() && this.world.getRandom().nextFloat() < 0.2F) {
+            DefaultedList<ItemStack> itemsBeingCooked = ((CampfireBlockEntityAccessor)campfire).getItemsBeingCooked();
+            for(int k = 0; k < itemsBeingCooked.size(); ++k) {
+                if (!((ItemStack)itemsBeingCooked.get(k)).isEmpty() && world.getRandom().nextFloat() < 0.2F) {
                     int d = k == 0 ? 1 : -1;
-                    double x = (double)this.pos.getX() + 0.5D + (double)((float)direction.getOffsetX() * 0.3125F * d);
-                    double y = (double)this.pos.getY() + 0.5D;
-                    double z = (double)this.pos.getZ() + 0.5D + (double)((float)direction.getOffsetZ() * 0.3125F) * d;
+                    double x = (double)pos.getX() + 0.5D + (double)((float)direction.getOffsetX() * 0.3125F * d);
+                    double y = (double)pos.getY() + 0.5D;
+                    double z = (double)pos.getZ() + 0.5D + (double)((float)direction.getOffsetZ() * 0.3125F) * d;
 
                     for(int l = 0; l < 4; ++l) {
-                        this.world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, 5.0E-4D, 0.0D);
+                        world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, 5.0E-4D, 0.0D);
                     }
                 }
             }
@@ -79,63 +82,21 @@ public abstract class CampfireBlockEntityMixin extends BlockEntity implements Ca
         }
     }
 
-    @Inject(method = "updateItemsBeingCooked", at = @At("HEAD"), cancellable = true)
-    protected void changeUpdateItems(CallbackInfo ci)
-    {
-        BlockState state = this.getCachedState();
-
-        if ((Object) this instanceof VariableCampfireBlockEntity && state.getBlock() instanceof VariableCampfireBlock)
-        {
-            for(int i = 0; i < this.itemsBeingCooked.size(); ++i) {
-                ItemStack itemStack = (ItemStack)this.itemsBeingCooked.get(i);
-                if (!itemStack.isEmpty()) {
-                    int fireSize = state.get(VariableCampfireBlock.FIRE_SIZE);
-                    this.cookingTimes[i] += 1 - (fireSize == 1 ? this.world.getRandom().nextInt(1) : 0) + (fireSize == 4 ? 1 : 0);
-
-
-                    if (this.finishedItems[i] && this.cookingTimes[i] > 2 * this.cookingTotalTimes[i])
-                    {
-                        BlockPos blockPos = this.getPos();
-                        ItemScatterer.spawn(this.world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), Mbtw.ASH_PILE.getDefaultStack());
-                        this.finishedItems[i] = false;
-                        this.itemsBeingCooked.set(i, ItemStack.EMPTY);
-                    }
-                    else if (!this.finishedItems[i] && this.cookingTimes[i] >= this.cookingTotalTimes[i]) {
-                        Inventory inventory = new SimpleInventory(itemStack);
-                        ItemStack craftedStack = (ItemStack)this.world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, this.world).map((campfireCookingRecipe) -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
-                        if (craftedStack != itemStack)
-                        {
-                            this.finishedItems[i] = true;
-                            this.itemsBeingCooked.set(i, craftedStack);
-                        }
-                        else {
-                            BlockPos blockPos = this.getPos();
-                            ItemScatterer.spawn(this.world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), craftedStack);
-                            this.itemsBeingCooked.set(i, ItemStack.EMPTY);
-                        }
-                    }
-                    this.updateListeners();
-                }
-            }
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "toTag", at = @At("TAIL"))
-    protected void addToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir)
+    @Inject(method = "writeNbt", at = @At("TAIL"))
+    protected void addToTag(NbtCompound nbt, CallbackInfo ci)
     {
         byte[] byteArray = new byte[this.finishedItems.length];
         for (int i = 0; i < this.finishedItems.length; i++)
         {
             byteArray[i] = (byte) (this.finishedItems[i] ? 1 : 0);
         }
-        tag.putByteArray("FinishedItems", byteArray);
+        nbt.putByteArray("FinishedItems", byteArray);
     }
 
-    @Inject(method = "fromTag", at = @At("TAIL"))
-    protected void addFromTag(BlockState state, NbtCompound tag, CallbackInfo ci)
+    @Inject(method = "readNbt", at = @At("TAIL"))
+    protected void addFromTag(NbtCompound nbt, CallbackInfo ci)
     {
-        byte[] byteArray = tag.getByteArray("FinishedItems");
+        byte[] byteArray = nbt.getByteArray("FinishedItems");
         for (int i = 0; i < this.finishedItems.length; i++)
         {
             if (byteArray.length > i)
@@ -159,5 +120,9 @@ public abstract class CampfireBlockEntityMixin extends BlockEntity implements Ca
 
         }
         return null;
+    }
+
+    public boolean[] getFinishedItems() {
+        return finishedItems;
     }
 }

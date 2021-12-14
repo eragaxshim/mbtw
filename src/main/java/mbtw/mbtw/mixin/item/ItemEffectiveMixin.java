@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
 public class ItemEffectiveMixin {
-    @Inject(method = "isEffectiveOn", at = @At("HEAD"), cancellable = true)
-    protected void changeEffectiveOn(BlockState state, CallbackInfoReturnable<Boolean> cir) {
-
-    }
+//    @Inject(method = "isEffectiveOn", at = @At("HEAD"), cancellable = true)
+//    protected void changeEffectiveOn(BlockState state, CallbackInfoReturnable<Boolean> cir) {
+//
+//    }
 }

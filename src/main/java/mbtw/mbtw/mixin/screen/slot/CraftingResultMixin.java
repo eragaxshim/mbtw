@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ public class CraftingResultMixin {
     @Shadow @Final private CraftingInventory input;
 
     @Inject(method = "onTakeItem", at = @At("HEAD"))
-    protected void dropOutputResult(PlayerEntity player, ItemStack stack, CallbackInfoReturnable<ItemStack> cir)
+    protected void dropOutputResult(PlayerEntity player, ItemStack stack, CallbackInfo ci)
     {
         MinecraftServer server = player.world.getServer();
         if (server != null)

@@ -22,6 +22,7 @@ public class MbtwTagsMaps {
     public static final Tag<Block> EASY_HAND_BREAKABLES = registerBlockTag("easy_hand_breakables");
     public static final Tag<Block> HAND_UNBREAKABLES = registerBlockTag("hand_unbreakables");
     public static final Tag<Block> TOOL_REDUCED_EFFECTIVENESS = registerBlockTag("tool_reduced_effectiveness");
+    public static final Tag<Block> CHISEL_MINEABLE = registerBlockTag("mineable/chisel");
 
     public static final Tag<Item> CHISELS = registerItemTag("chisels");
     public static final Tag<Item> BARK = registerItemTag("bark");

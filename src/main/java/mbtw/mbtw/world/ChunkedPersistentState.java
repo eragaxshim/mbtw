@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class ChunkedPersistentState<T extends ChunkedTickable<T>> extends PersistentState {
+public abstract class ChunkedPersistentState<T extends ChunkedTickable<T>> extends PersistentState {
     private final ServerWorld world;
     public Object2ObjectOpenHashMap<ChunkPos, T> tickableChunks = new Object2ObjectOpenHashMap<>();
     private final ObjectOpenHashSet<ChunkPos> removedChunks = new ObjectOpenHashSet<>();
@@ -22,7 +22,6 @@ public class ChunkedPersistentState<T extends ChunkedTickable<T>> extends Persis
     private final T tickableUnit;
 
     public ChunkedPersistentState(String key, ServerWorld world, T tickableUnit, String chunkedTickableKey) {
-        super(key);
         this.tickableUnit = tickableUnit;
         this.chunkedTickableKey = chunkedTickableKey;
         this.world = world;
@@ -58,7 +57,7 @@ public class ChunkedPersistentState<T extends ChunkedTickable<T>> extends Persis
         return key + dimensionType.getSuffix();
     }
 
-    public void fromNbt(NbtCompound tag) {
+    public void persistFromNbt(NbtCompound tag) {
         NbtList listTag = tag.getList("TickableChunks", 10);
 
         Object2ObjectOpenHashMap<ChunkPos, T> tagTickableChunks = new Object2ObjectOpenHashMap<>();

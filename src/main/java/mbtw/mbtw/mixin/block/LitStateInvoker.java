@@ -11,7 +11,7 @@ import java.util.function.ToIntFunction;
 
 @Mixin(Blocks.class)
 public interface LitStateInvoker {
-    @Invoker("createLightLevelFromBlockState")
+    @Invoker("createLightLevelFromLitBlockState")
     static ToIntFunction<BlockState> invokeCreateLightLevelFromBlockState(int litLevel) {
         throw new AssertionError();
     }

@@ -10,6 +10,7 @@
     "block.LitStateInvoker",
     "block.entity.BlockEntityMixin",
     "block.entity.CampfireBlockEntityMixin",
+    "block.entity.CampfireBlockEntityAccessor",
     "client.render.entity.CreeperRendererMixin",
     "client.render.entity.model.CowModelMixin",
     "client.render.entity.model.EntityModelMixin",
@@ -53,9 +54,7 @@
     "screen.SlotIndexAccessor",
     "screen.slot.CraftingResultMixin",
     "world.ClientWorldMixin",
-    "world.GenerationStepStratifierMixin",
     "world.HugeFungusTrunkMixin",
-    "world.ReplaceUndergroundOreFeatureMixin",
     "world.ServerWorldMixin",
     "world.TreeTrunkMixin",
     "world.WorldMixin"

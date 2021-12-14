@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ModifiableTestableWorld;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.gen.feature.TreeFeature;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.trunk.StraightTrunkPlacer;
@@ -23,21 +24,20 @@ import java.util.stream.Collectors;
 
 @Mixin(TreeFeature.class)
 public class TreeTrunkMixin {
-    @Inject(method = "generate(Lnet/minecraft/world/ModifiableTestableWorld;Ljava/util/Random;Lnet/minecraft/util/math/BlockPos;Ljava/util/Set;Ljava/util/Set;Lnet/minecraft/util/math/BlockBox;Lnet/minecraft/world/gen/feature/TreeFeatureConfig;)Z", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/gen/trunk/TrunkPlacer;generate(Lnet/minecraft/world/ModifiableTestableWorld;Ljava/util/Random;ILnet/minecraft/util/math/BlockPos;Ljava/util/Set;Lnet/minecraft/util/math/BlockBox;Lnet/minecraft/world/gen/feature/TreeFeatureConfig;)Ljava/util/List;"), locals = LocalCapture.NO_CAPTURE)
-    protected void addTrunk(ModifiableTestableWorld world, Random random, BlockPos pos, Set<BlockPos> logPositions, Set<BlockPos> leavesPositions, BlockBox box, TreeFeatureConfig config, CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "placeLogsAndLeaves", at = @At(value = "TAIL"))
+    private static void addTrunk(WorldAccess world, BlockBox box, Set<BlockPos> trunkPositions, Set<BlockPos> decorationPositions, CallbackInfoReturnable<Boolean> cir)
     {
         try {
-            int minY = logPositions.stream()
+            int minY = trunkPositions.stream()
                     .min(Comparator.comparing(BlockPos::getY))
                     .orElseThrow(NoSuchElementException::new)
                     .getY();
-            List<BlockPos> minYPositions = logPositions.stream()
-                    .filter(p -> p.getY() == minY)
-                    .collect(Collectors.toList());
+            List<BlockPos> minYPositions = trunkPositions.stream()
+                    .filter(p -> p.getY() == minY).toList();
 
             for (BlockPos minYPos : minYPositions)
             {
-                BlockState logState = config.trunkProvider.getBlockState(random, minYPos);
+                BlockState logState = world.getBlockState(minYPos);
                 BlockState trunkState = MbtwTagsMaps.LOG_TRUNK_MAP.get(logState.getBlock());
                 world.setBlockState(minYPos, trunkState != null ? trunkState : logState, 19);
             }

@@ -24,7 +24,8 @@ public class TrunkWorkbenchScreenHandler extends CraftingScreenHandler {
         ScreenHandlerContext context = ((CraftingContextAccessor)this).getContext();
 
         Block block = ((BlockState) context.get(World::getBlockState, false)).getBlock();
-        if (block.isIn(MbtwTagsMaps.TRUNKS))
+
+        if (MbtwTagsMaps.TRUNKS.contains(block))
         {
             return canUse(context, player, block);
         }

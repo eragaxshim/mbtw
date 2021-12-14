@@ -42,7 +42,7 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
                 context.getWorld().playSound(null, context.getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (context.getWorld().getRandom().nextFloat() - context.getWorld().getRandom().nextFloat()) * 0.2F + 1.0F);
                 if (context.getPlayer() != null)
                 {
-                    context.getPlayer().inventory.offerOrDrop(context.getWorld(), litTorch);
+                    context.getPlayer().getInventory().offerOrDrop(litTorch);
                 }
                 else {
                     Block.dropStack(context.getWorld(), context.getBlockPos(), litTorch);

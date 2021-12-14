@@ -2,6 +2,7 @@ package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -9,10 +10,11 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 
 public class BrickOvenBlockEntity extends AbstractFurnaceBlockEntity {
-    public BrickOvenBlockEntity() {
-        super(Mbtw.BRICK_OVEN_ENTITY, Mbtw.BRICK_SMELTING);
+    public BrickOvenBlockEntity(BlockPos pos, BlockState state) {
+        super(Mbtw.BRICK_OVEN_ENTITY, pos, state, Mbtw.BRICK_SMELTING);
     }
 
     @Override

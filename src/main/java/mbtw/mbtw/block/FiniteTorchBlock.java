@@ -90,20 +90,12 @@ public class FiniteTorchBlock extends BlockWithEntity implements BlockEntityProv
     }
 
     public static ToIntFunction<BlockState> createLightLevelFromTorchFire() {
-        return (blockState) -> {
-            switch (blockState.get(TORCH_FIRE))
-            {
-                case 2:
-                    return 8;
-                case 3:
-                    return 14;
-                default:
-                    return 0;
-            }
+        return (blockState) -> switch (blockState.get(TORCH_FIRE)) {
+            case 2 -> 8;
+            case 3 -> 14;
+            default -> 0;
         };
     }
-
-
 
     @Override
     public boolean attemptFireStart(World world, LivingEntity user, ItemStack stack, int meanStartTick, int remainingUseTick, BlockState state, BlockPos pos) {

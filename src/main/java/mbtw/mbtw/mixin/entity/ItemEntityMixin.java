@@ -18,7 +18,7 @@ public abstract class ItemEntityMixin extends EntityMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     protected void itemTick(CallbackInfo ci)
     {
-        if (!this.removed && this.world.getTime() % 23 == 0)
+        if (!this.isRemoved() && this.world.getTime() % 23 == 0)
         {
             ItemStack stack = this.getStack();
             if (stack.getItem() instanceof ItemTickable)

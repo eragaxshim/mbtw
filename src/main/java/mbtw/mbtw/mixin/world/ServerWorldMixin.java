@@ -5,12 +5,14 @@ import mbtw.mbtw.world.BlockScheduleManager;
 import mbtw.mbtw.world.ChunkedPersistentState;
 import mbtw.mbtw.world.ServerWorldMixinAccessor;
 import net.minecraft.block.BlockState;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.village.raid.RaidManager;
 import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
@@ -29,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mixin(ServerWorld.class)
@@ -45,8 +48,7 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getWorldBorder()Lnet/minecraft/world/border/WorldBorder;"))
     protected void initBlockScheduleManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci)
     {
-
-        this.blockScheduleManager = this.getPersistentStateManager().getOrCreate(() -> new BlockScheduleManager(((ServerWorld) (Object) this)), ChunkedPersistentState.nameFor(this.getDimension(), BlockScheduleManager.key));
+        this.blockScheduleManager = this.getPersistentStateManager().getOrCreate(nbt -> BlockScheduleManager.fromNbt((ServerWorld) (Object) this, nbt), () -> new BlockScheduleManager((ServerWorld) (Object) this), BlockScheduleManager.key);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

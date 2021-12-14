@@ -43,9 +43,6 @@ public class RecipeCopyMixin {
             }
         }
 
-        for (Map.Entry<Identifier, JsonElement> entry : newMap.entrySet())
-        {
-            map.put(entry.getKey(), entry.getValue());
-        }
+        map.putAll(newMap);
     }
 }

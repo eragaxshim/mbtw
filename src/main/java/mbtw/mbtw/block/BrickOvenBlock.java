@@ -27,7 +27,7 @@ public class BrickOvenBlock extends AbstractFurnaceBlock {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new BrickOvenBlockEntity();
+        return new BrickOvenBlockEntity(pos, state);
     }
 
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {

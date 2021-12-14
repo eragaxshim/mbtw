@@ -7,7 +7,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
@@ -22,7 +22,7 @@ public class MbtwClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.VARIABLE_CAMPFIRE);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.FINITE_TORCH);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.FINITE_WALL_TORCH);
-        BlockEntityRendererRegistry.INSTANCE.register(Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntityRenderer::new);
-        FabricModelPredicateProviderRegistry.register(Mbtw.FINITE_TORCH_ITEM, new Identifier("torch_size"), (itemStack, clientWorld, livingEntity) -> (float)itemStack.getOrCreateSubNbt("BlockStateTag").getInt("torch_fire"));
+        BlockEntityRendererRegistry.register(Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntityRenderer::new);
+        FabricModelPredicateProviderRegistry.register(Mbtw.FINITE_TORCH_ITEM, new Identifier("torch_size"), (itemStack, clientWorld, livingEntity, i) -> (float)itemStack.getOrCreateSubNbt("BlockStateTag").getInt("torch_fire"));
     }
 }

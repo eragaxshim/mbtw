@@ -17,11 +17,13 @@ import java.util.function.Supplier;
 @Mixin(ClientWorld.class)
 public abstract class ClientWorldMixin extends World {
 
-    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DimensionType dimensionType, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) { super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed); }
-
-    @Inject(method = "method_23783", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    protected void changeLightMethod(float f, CallbackInfoReturnable<Float> cir, float g, float h) {
-        float moonEffect = 0.2F*(1-this.getMoonSize())*(1-h);
-        cir.setReturnValue(cir.getReturnValue() - moonEffect);
+    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DimensionType dimensionType, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
+        super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed);
     }
+//
+//    @Inject(method = "method_23783", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+//    protected void changeLightMethod(float f, CallbackInfoReturnable<Float> cir, float g, float h) {
+//        float moonEffect = 0.2F*(1-this.getMoonSize())*(1-h);
+//        cir.setReturnValue(cir.getReturnValue() - moonEffect);
+//    }
 }

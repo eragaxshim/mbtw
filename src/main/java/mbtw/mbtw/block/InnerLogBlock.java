@@ -105,11 +105,11 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         int b = state.get(BREAK_LEVEL);
 
         int d = state.get(PillarBlock.AXIS) == Direction.Axis.Z ? -1 : 1;
-        if (state.get(UP) && !world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), d)).getBlock().isIn(BlockTags.LOGS))
+        if (state.get(UP) && !BlockTags.LOGS.contains(world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), d)).getBlock()))
         {
             state = state.with(UP, false);
         }
-        if (state.get(DOWN) && !world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -d)).getBlock().isIn(BlockTags.LOGS))
+        if (state.get(DOWN) && !BlockTags.LOGS.contains(world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -d)).getBlock()))
         {
             state = state.with(DOWN, false);
         }
@@ -139,18 +139,27 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         Double[] coordsB3 = {3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D};
         Double[] coordsB4 = {4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D};
 
+        //TODO
         SHAPE_B1 = createCuboidShapeFromArray(coordsB1);
-        SHAPE_B1_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 0));
-        SHAPE_B1_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 1));
+        SHAPE_B1_X = createCuboidShapeFromArray(coordsB1);
+        SHAPE_B1_Z = createCuboidShapeFromArray(coordsB1);
+//        SHAPE_B1_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 0));
+//        SHAPE_B1_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 1));
         SHAPE_B2 = createCuboidShapeFromArray(coordsB2);
-        SHAPE_B2_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 0));
-        SHAPE_B2_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 1));
+        SHAPE_B2_X = createCuboidShapeFromArray(coordsB2);
+        SHAPE_B2_Z = createCuboidShapeFromArray(coordsB2);
+//        SHAPE_B2_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 0));
+//        SHAPE_B2_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 1));
         SHAPE_B3 = createCuboidShapeFromArray(coordsB3);
-        SHAPE_B3_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 0));
-        SHAPE_B3_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 1));
+        SHAPE_B3_X = createCuboidShapeFromArray(coordsB3);
+        SHAPE_B3_Z = createCuboidShapeFromArray(coordsB3);
+//        SHAPE_B3_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 0));
+//        SHAPE_B3_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 1));
         SHAPE_B4 = createCuboidShapeFromArray(coordsB4);
-        SHAPE_B4_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 0));
-        SHAPE_B4_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 1));
+        SHAPE_B4_X = createCuboidShapeFromArray(coordsB4);
+        SHAPE_B4_Z = createCuboidShapeFromArray(coordsB4);
+//        SHAPE_B4_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 0));
+//        SHAPE_B4_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 1));
         UP = Properties.UP;
         DOWN = Properties.DOWN;
     }

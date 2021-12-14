@@ -23,17 +23,17 @@ public class BlockBreakingDeltaMixin {
         {
             // non-effective / 200 vs effective / 80 (i.e. tool is 2.5 times faster)
             float newDelta = calculatedDelta / (player.canHarvest(state) ? 60.0F / 30.0F : 200.0F / 100.0F);
-            boolean usingEffective = player.inventory.getMainHandStack().isSuitableFor(state);
+            boolean usingEffective = player.getInventory().getMainHandStack().isSuitableFor(state);
             Block block = state.getBlock();
 
             if (!usingEffective)
             {
                 newDelta /= 1.25F;
-                if (block.isIn(MbtwTagsMaps.EASY_HAND_BREAKABLES))
+                if (MbtwTagsMaps.EASY_HAND_BREAKABLES.contains(block))
                 {
                     newDelta *= 3.0F;
                 }
-                else if (block.isIn(MbtwTagsMaps.HAND_UNBREAKABLES))
+                else if (MbtwTagsMaps.HAND_UNBREAKABLES.contains(block))
                 {
                     newDelta /= 2.0F;
                 }
@@ -42,7 +42,7 @@ public class BlockBreakingDeltaMixin {
                     newDelta *= 2.0F;
                 }
             }
-            else if (block.isIn(MbtwTagsMaps.TOOL_REDUCED_EFFECTIVENESS)) {
+            else if (MbtwTagsMaps.TOOL_REDUCED_EFFECTIVENESS.contains(block)) {
                 newDelta /= 1.5F;
             }
 

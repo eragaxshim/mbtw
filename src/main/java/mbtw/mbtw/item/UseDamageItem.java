@@ -51,7 +51,7 @@ public class UseDamageItem extends Item {
         {
             spawnUseEffects(world, user, stack);
         }
-        if (!(user instanceof PlayerEntity) || !((PlayerEntity)user).abilities.creativeMode) {
+        if (!(user instanceof PlayerEntity) || !((PlayerEntity)user).isCreative()) {
             if (stack.getDamage() == (this.doesDamageDecrease ? 1 : this.getMaxDamage() - 1))
             {
                 ((LivingEntityAccessor)user).setItemUseTimeLeft(1);

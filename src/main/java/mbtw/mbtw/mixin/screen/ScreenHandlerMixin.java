@@ -19,7 +19,7 @@ import java.util.List;
 
 @Mixin(ScreenHandler.class)
 public abstract class ScreenHandlerMixin implements ScreenHandlerMixinAccessor {
-    @Shadow @Final public List<Slot> slots;
+    @Shadow @Final public DefaultedList<Slot> slots;
 
     @Inject(method = "insertItem", at = @At("HEAD"), cancellable = true)
     protected void changeInsertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast, CallbackInfoReturnable<Boolean> cir) {
@@ -44,7 +44,7 @@ public abstract class ScreenHandlerMixin implements ScreenHandlerMixinAccessor {
                 slot2 = (Slot)this.slots.get(i);
                 slotStack = slot2.getStack();
 
-                if (!slotStack.isEmpty() && ScreenHandler.canStacksCombine(stack, slotStack) && slotStack.getCount() < slot2.getMaxItemCount()) {
+                if (!slotStack.isEmpty() && ItemStack.canCombine(stack, slotStack) && slotStack.getCount() < slot2.getMaxItemCount()) {
                     int j = slotStack.getCount() + stack.getCount();
                     int maxSlotCount = Math.min(stack.getMaxCount(), slot2.getMaxItemCount());
                     if (j <= maxSlotCount) {

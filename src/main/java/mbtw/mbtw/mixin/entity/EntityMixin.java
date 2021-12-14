@@ -20,8 +20,6 @@ import java.util.Random;
 public abstract class EntityMixin {
     @Shadow public World world;
 
-    @Shadow public boolean removed;
-
     @Shadow public abstract BlockPos getBlockPos();
 
     @Shadow @Nullable public abstract ItemEntity dropItem(ItemConvertible item, int yOffset);
@@ -30,13 +28,20 @@ public abstract class EntityMixin {
 
     @Shadow @Final protected DataTracker dataTracker;
 
-    @Shadow public float pitch;
+    @Shadow
+    private float pitch;
 
     @Shadow public abstract boolean isTouchingWater();
+
+    @Shadow public abstract boolean isRemoved();
 
     @Inject(method = "checkWaterState", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;extinguish()V"))
     protected void changeExtinguish(CallbackInfo ci)
     {
 
+    }
+
+    public float getPitch() {
+        return pitch;
     }
 }

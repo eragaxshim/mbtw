@@ -124,9 +124,8 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
             {
                 HashSet<BlockSchedule> tickSchedules = this.scheduledBlocks.get(posTime);
                 List<BlockSchedule> removedSchedules = tickSchedules.stream()
-                        .filter(blockSchedule -> blockSchedule.getBlockPos() == pos && !blockSchedule.compliesToProperties(newState))
-                        .collect(Collectors.toList());
-                tickSchedules.removeAll(removedSchedules);
+                        .filter(blockSchedule -> blockSchedule.getBlockPos() == pos && !blockSchedule.compliesToProperties(newState)).toList();
+                removedSchedules.forEach(tickSchedules::remove);
                 if (tickSchedules.isEmpty())
                 {
                     removedLongs.add(posTime);

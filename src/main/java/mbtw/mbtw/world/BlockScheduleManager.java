@@ -1,6 +1,7 @@
 package mbtw.mbtw.world;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -38,5 +39,11 @@ public class BlockScheduleManager extends ChunkedPersistentState<ChunkSchedule> 
             }
         }
 
+    }
+
+    public static BlockScheduleManager fromNbt(ServerWorld world, NbtCompound nbt) {
+        var manager = new BlockScheduleManager(world);
+        manager.persistFromNbt(nbt);
+        return manager;
     }
 }

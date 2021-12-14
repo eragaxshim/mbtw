@@ -27,7 +27,7 @@ public abstract class MobEntityMixin extends LivingEntityMixin {
 
     @Shadow @Final private DefaultedList<ItemStack> armorItems;
 
-    @Inject(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;remove()V"))
+    @Inject(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;discard()V"))
     public void createCobwebAtDespawn(CallbackInfo ci)
     {
 

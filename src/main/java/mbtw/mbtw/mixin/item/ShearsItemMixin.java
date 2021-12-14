@@ -32,12 +32,12 @@ public class ShearsItemMixin {
         }
     }
 
-    @Inject(method = "isEffectiveOn", at = @At("HEAD"), cancellable = true)
-    protected void changeEffectiveOn(BlockState state, CallbackInfoReturnable<Boolean> cir)
-    {
-        if (state.isOf(Mbtw.DAMAGED_COBWEB))
-        {
-            cir.setReturnValue(true);
-        }
-    }
+//    @Inject(method = "isEffectiveOn", at = @At("HEAD"), cancellable = true)
+//    protected void changeEffectiveOn(BlockState state, CallbackInfoReturnable<Boolean> cir)
+//    {
+//        if (state.isOf(Mbtw.DAMAGED_COBWEB))
+//        {
+//            cir.setReturnValue(true);
+//        }
+//    }
 }

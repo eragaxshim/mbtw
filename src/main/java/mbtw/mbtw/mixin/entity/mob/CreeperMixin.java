@@ -74,12 +74,12 @@ public abstract class CreeperMixin extends MobEntityMixin implements CreeperMixi
         }
     }
 
-    @Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     public void writeExtraData(NbtCompound tag, CallbackInfo ci) {
         tag.putBoolean("Defused", this.getDefused());
     }
 
-    @Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     public void readExtraData(NbtCompound tag, CallbackInfo ci) {
         this.dataTracker.set(DEFUSED, tag.getBoolean("Defused"));
     }
