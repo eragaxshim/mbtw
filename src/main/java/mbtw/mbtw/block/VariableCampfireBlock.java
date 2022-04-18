@@ -131,7 +131,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
         else if (state.get(EMBERS) || state.get(FIRE_SIZE) == 0)
         {
             for(int i = 0; i < random.nextInt(2) + 1; ++i) {
-                world.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + 0.5D + (random.nextFloat() - 0.5), (double)pos.getY() + 0.5D  + (random.nextFloat() - 0.5), (double)pos.getZ() + 0.5D + (random.nextFloat() - 0.5), (double)((random.nextFloat() - 0.5F) / 7.0F), (double)(random.nextFloat() / 8.0F), (double)((random.nextFloat() - 0.5) / 7.0F));
+                world.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + 0.5D + (random.nextFloat() - 0.5), (double)pos.getY() + 0.5D  + (random.nextFloat() - 0.5), (double)pos.getZ() + 0.5D + (random.nextFloat() - 0.5), (double)((random.nextFloat() - 0.5F) / 7.0F), random.nextFloat() / 8.0F, (random.nextFloat() - 0.5) / 7.0F);
             }
         }
     }
@@ -158,7 +158,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
     public static int getFuelTime(Item item)
     {
         Integer fuelTime = FuelRegistryImpl.INSTANCE.get(item);
-        int modifier = ItemTags.LOGS.contains(item) ? 3 : 1;
+        int modifier = item.getDefaultStack().isIn(ItemTags.LOGS) ? 3 : 1;
 
         return fuelTime != null ? modifier * fuelTime : 0;
     }

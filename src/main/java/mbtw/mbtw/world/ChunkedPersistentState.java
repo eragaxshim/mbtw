@@ -54,7 +54,7 @@ public abstract class ChunkedPersistentState<T extends ChunkedTickable<T>> exten
     }
 
     public static String nameFor(DimensionType dimensionType, String key) {
-        return key + dimensionType.getSuffix();
+        return key + dimensionType.toString();
     }
 
     public void persistFromNbt(NbtCompound tag) {

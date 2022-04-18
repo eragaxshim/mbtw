@@ -4,28 +4,29 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.InnerLogBlock;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
+import net.minecraft.util.registry.Registry;
 
 public class MbtwTagsMaps {
-    public static final Tag<Block> DEEP_STONE_OVERWORLD = registerBlockTag("deep_stone_overworld");
-    public static final Tag<Block> BREAK_INTERCEPTABLES = registerBlockTag("break_interceptables");
-    public static final Tag<Block> TRUNKS = registerBlockTag("trunks");
-    public static final Tag<Block> STRIPPABLES = registerBlockTag("strippables");
-    public static final Tag<Block> EASY_HAND_BREAKABLES = registerBlockTag("easy_hand_breakables");
-    public static final Tag<Block> HAND_UNBREAKABLES = registerBlockTag("hand_unbreakables");
-    public static final Tag<Block> TOOL_REDUCED_EFFECTIVENESS = registerBlockTag("tool_reduced_effectiveness");
-    public static final Tag<Block> CHISEL_MINEABLE = registerBlockTag("mineable/chisel");
+    public static final TagKey<Block> DEEP_STONE_OVERWORLD = registerBlockTagKey("deep_stone_overworld");
+    public static final TagKey<Block> BREAK_INTERCEPTABLES = registerBlockTagKey("break_interceptables");
+    public static final TagKey<Block> TRUNKS = registerBlockTagKey("trunks");
+    public static final TagKey<Block> STRIPPABLES = registerBlockTagKey("strippables");
+    public static final TagKey<Block> EASY_HAND_BREAKABLES = registerBlockTagKey("easy_hand_breakables");
+    public static final TagKey<Block> HAND_UNBREAKABLES = registerBlockTagKey("hand_unbreakables");
+    public static final TagKey<Block> TOOL_REDUCED_EFFECTIVENESS = registerBlockTagKey("tool_reduced_effectiveness");
+    public static final TagKey<Block> CHISEL_MINEABLE = registerBlockTagKey("mineable/chisel");
 
-    public static final Tag<Item> CHISELS = registerItemTag("chisels");
-    public static final Tag<Item> BARK = registerItemTag("bark");
+    public static final TagKey<Item> CHISELS = registerItemTagKey("chisels");
+    public static final TagKey<Item> BARK = registerItemTagKey("bark");
 
     public static final ImmutableMap<Block, BlockState> INNER_LOG_MAP = ImmutableMap.<Block, BlockState>builder()
             .put(Blocks.OAK_LOG, Mbtw.OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
@@ -142,13 +143,13 @@ public class MbtwTagsMaps {
             .add(Material.CACTUS)
             .build();
 
-    private MbtwTagsMaps() { }
+    private void MbtwTagKeysMaps() { }
 
-    private static Tag<Item> registerItemTag(String id) {
-        return TagRegistry.item(new Identifier(Mbtw.MOD_ID, id));
+    private static TagKey<Item> registerItemTagKey(String id) {
+        return TagKey.of(Registry.ITEM_KEY, new Identifier(Mbtw.MOD_ID, id));
     }
 
-    private static Tag<Block> registerBlockTag(String id) {
-        return TagRegistry.block(new Identifier(Mbtw.MOD_ID, id));
+    private static TagKey<Block> registerBlockTagKey(String id) {
+        return TagKey.of(Registry.BLOCK_KEY, new Identifier(Mbtw.MOD_ID, id));
     }
 }

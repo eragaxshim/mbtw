@@ -52,51 +52,31 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         }
         else if (connected || b == 1)
         {
-            switch (state.get(PillarBlock.AXIS))
-            {
-                case X:
-                    return SHAPE_B1_X;
-                default:
-                    return SHAPE_B1;
-                case Z:
-                    return SHAPE_B1_Z;
-            }
+            return switch (state.get(PillarBlock.AXIS)) {
+                case X -> SHAPE_B1_X;
+                default -> SHAPE_B1;
+                case Z -> SHAPE_B1_Z;
+            };
         }
         else {
-            switch (b)
-            {
-                case 2:
-                    switch (state.get(PillarBlock.AXIS))
-                    {
-                        case X:
-                            return SHAPE_B2_X;
-                        default:
-                            return SHAPE_B2;
-                        case Z:
-                            return SHAPE_B2_Z;
-                    }
-                case 3:
-                    switch (state.get(PillarBlock.AXIS))
-                    {
-                        case X:
-                            return SHAPE_B3_X;
-                        default:
-                            return SHAPE_B3;
-                        case Z:
-                            return SHAPE_B3_Z;
-                    }
-                case 4:
-                    switch (state.get(PillarBlock.AXIS))
-                    {
-                        case X:
-                            return SHAPE_B4_X;
-                        default:
-                            return SHAPE_B4;
-                        case Z:
-                            return SHAPE_B4_Z;
-                    }
-            }
-            return VoxelShapes.fullCube();
+            return switch (b) {
+                case 2 -> switch (state.get(PillarBlock.AXIS)) {
+                    case X -> SHAPE_B2_X;
+                    default -> SHAPE_B2;
+                    case Z -> SHAPE_B2_Z;
+                };
+                case 3 -> switch (state.get(PillarBlock.AXIS)) {
+                    case X -> SHAPE_B3_X;
+                    default -> SHAPE_B3;
+                    case Z -> SHAPE_B3_Z;
+                };
+                case 4 -> switch (state.get(PillarBlock.AXIS)) {
+                    case X -> SHAPE_B4_X;
+                    default -> SHAPE_B4;
+                    case Z -> SHAPE_B4_Z;
+                };
+                default -> VoxelShapes.fullCube();
+            };
         }
     }
 
@@ -105,11 +85,13 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         int b = state.get(BREAK_LEVEL);
 
         int d = state.get(PillarBlock.AXIS) == Direction.Axis.Z ? -1 : 1;
-        if (state.get(UP) && !BlockTags.LOGS.contains(world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), d)).getBlock()))
+        if (state.get(UP) && !world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), d)).isIn(BlockTags.LOGS))
+//                !BlockTags.LOGS.
+//                .contains())
         {
             state = state.with(UP, false);
         }
-        if (state.get(DOWN) && !BlockTags.LOGS.contains(world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -d)).getBlock()))
+        if (state.get(DOWN) && world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -d)).isIn(BlockTags.LOGS))
         {
             state = state.with(DOWN, false);
         }

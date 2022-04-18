@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SurvivesExplosionLootCondition.class)
 class SurvivesExplosionMixin {
-    @Inject(method = "test", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "test(Lnet/minecraft/loot/context/LootContext;)Z", at = @At("HEAD"), cancellable = true)
     protected void changeTest(LootContext lootContext, CallbackInfoReturnable<Boolean> cir)
     {
         BlockState blockState = lootContext.get(LootContextParameters.BLOCK_STATE);

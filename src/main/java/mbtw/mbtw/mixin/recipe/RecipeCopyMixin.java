@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Mixin(RecipeManager.class)
 public class RecipeCopyMixin {
-    @Inject(method = "apply", at = @At(value = "HEAD"))
+    @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)V", at = @At(value = "HEAD"))
     protected void copyRecipes(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci)
     {
         Map<Identifier, JsonElement> newMap = new HashMap<>();

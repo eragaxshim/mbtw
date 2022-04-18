@@ -37,7 +37,7 @@ public abstract class InterceptBreakBlockMixin {
         {
             boolean isInterceptable = block instanceof BreakInterceptable;
 
-            if (isInterceptable || MbtwTagsMaps.BREAK_INTERCEPTABLES.contains(block))
+            if (isInterceptable || block.getDefaultState().isIn(MbtwTagsMaps.BREAK_INTERCEPTABLES))
             {
                 ServerWorld world = this.world;
                 ServerPlayerEntity player = this.player;
@@ -50,7 +50,7 @@ public abstract class InterceptBreakBlockMixin {
                     if (block == Blocks.STONE) {
                         newState = ((BreakInterceptable) Mbtw.STONE).processBreakAttempt(world, pos, Mbtw.STONE.getDefaultState(), player, handStack);
                     }
-                    else if (BlockTags.LOGS.contains(block)) {
+                    else if (block.getDefaultState().isIn(BlockTags.LOGS)) {
                         BlockState possibleInnerLogState = MbtwTagsMaps.INNER_LOG_MAP.get(block);
                         if (possibleInnerLogState != null && possibleInnerLogState.getBlock() instanceof InnerLogBlock)
                         {

@@ -23,11 +23,11 @@ public class TrunkWorkbenchScreenHandler extends CraftingScreenHandler {
     public boolean canUse(PlayerEntity player) {
         ScreenHandlerContext context = ((CraftingContextAccessor)this).getContext();
 
-        Block block = ((BlockState) context.get(World::getBlockState, false)).getBlock();
+        BlockState blockState = ((BlockState) context.get(World::getBlockState, false));
 
-        if (MbtwTagsMaps.TRUNKS.contains(block))
+        if (blockState.isIn(MbtwTagsMaps.TRUNKS))
         {
-            return canUse(context, player, block);
+            return canUse(context, player, blockState.getBlock());
         }
         else {
             return canUse(context, player, Mbtw.OAK_TRUNK);

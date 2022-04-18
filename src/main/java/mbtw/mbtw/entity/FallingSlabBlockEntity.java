@@ -2,6 +2,7 @@ package mbtw.mbtw.entity;
 
 import com.google.common.collect.Lists;
 import mbtw.mbtw.block.FallingSlabBlock;
+import mbtw.mbtw.mixin.block.entity.FallingBlockEntityAccessor;
 import mbtw.mbtw.mixin.entity.FallingBlockMixin;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,7 +38,15 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
     private BlockState sourceBlock;
 
     public FallingSlabBlockEntity(World world, double x, double y, double z, BlockState block, BlockState sourceBlock) {
-        super(world, x, y, z, block);
+        super(EntityType.FALLING_BLOCK, world);
+        ((FallingBlockEntityAccessor) this).setBlock(block);
+        this.intersectionChecked = true;
+        this.setPosition(x, y, z);
+        this.setVelocity(Vec3d.ZERO);
+        this.prevX = x;
+        this.prevY = y;
+        this.prevZ = z;
+        this.setFallingBlockPos(this.getBlockPos());
         this.sourceBlock = sourceBlock;
     }
     

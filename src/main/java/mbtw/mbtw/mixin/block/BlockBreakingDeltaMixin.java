@@ -29,11 +29,11 @@ public class BlockBreakingDeltaMixin {
             if (!usingEffective)
             {
                 newDelta /= 1.25F;
-                if (MbtwTagsMaps.EASY_HAND_BREAKABLES.contains(block))
+                if (state.isIn(MbtwTagsMaps.EASY_HAND_BREAKABLES))
                 {
                     newDelta *= 3.0F;
                 }
-                else if (MbtwTagsMaps.HAND_UNBREAKABLES.contains(block))
+                else if (state.isIn(MbtwTagsMaps.HAND_UNBREAKABLES))
                 {
                     newDelta /= 2.0F;
                 }
@@ -42,7 +42,7 @@ public class BlockBreakingDeltaMixin {
                     newDelta *= 2.0F;
                 }
             }
-            else if (MbtwTagsMaps.TOOL_REDUCED_EFFECTIVENESS.contains(block)) {
+            else if (state.isIn(MbtwTagsMaps.TOOL_REDUCED_EFFECTIVENESS)) {
                 newDelta /= 1.5F;
             }
 
