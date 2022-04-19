@@ -45,6 +45,7 @@ public class Mbtw implements ModInitializer {
     public static int DEEP_STONE_MAX = 25;
     public static int HARD_STONE_MAX = 45;
 
+    public static final Item MBTW_EMPTY = new Item(new FabricItemSettings());
     public static final Item LOOSE_STONE = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
     public static final Item SAW_DUST = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
     public static final Item FUNGAL_DUST = new Item(new FabricItemSettings().group(ItemGroup.MATERIALS));
@@ -153,6 +154,7 @@ public class Mbtw implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty"), MBTW_EMPTY);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "loose_stone"), LOOSE_STONE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore_pile"), IRON_ORE_PILE);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "iron_ore_chunk"), IRON_ORE_CHUNK);
