@@ -37,33 +37,42 @@ public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
     {
         long newTime = this.chunkTime + time;
         HashSet<BlockSchedule> timeToSchedule = scheduledBlocks.getOrDefault(newTime, new HashSet<>());
-        if (timeToSchedule.isEmpty())
-        {
-            this.scheduledBlocks.put(newTime, timeToSchedule);
-        }
+        timeToSchedule.add(blockSchedule);
+        this.scheduledBlocks.put(newTime, timeToSchedule);
         List<Long> posTimes = this.posTimesMap.getOrDefault(blockSchedule.getBlockPos(), new ArrayList<>());
+        posTimes.add(newTime);
         this.posTimesMap.put(blockSchedule.getBlockPos(), posTimes);
     }
 
     public void tick(ServerWorld world, ChunkPos chunkPos, ChunkedPersistentState<ChunkSchedule> chunkedPersistentState) {
-        if (!this.scheduledBlocks.isEmpty() && this.chunkTime == this.scheduledBlocks.firstKey())
+        System.out.println("Ticking THIS Chunk");
+        Long firstKey;
+        if (this.scheduledBlocks.isEmpty()) {
+            chunkedPersistentState.setRemove(chunkPos);
+        }
+        else if ((firstKey = this.scheduledBlocks.firstKey()).equals(this.chunkTime))
         {
-            HashSet<BlockSchedule> blockSchedules = this.scheduledBlocks.firstEntry().getValue();
+            System.out.println("equal");
+            HashSet<BlockSchedule> blockSchedules = this.scheduledBlocks.get(firstKey);
+            System.out.println(blockSchedules);
             for (BlockSchedule blockSchedule : blockSchedules)
             {
-                blockSchedule.runSchedule(world);
+                System.out.println(blockSchedule.toString());
+
                 List<Long> posTimes = this.posTimesMap.get(blockSchedule.getBlockPos());
                 posTimes.remove(this.chunkTime);
                 if (posTimes.isEmpty())
                 {
                     this.posTimesMap.remove(blockSchedule.getBlockPos());
                 }
+                blockSchedule.runSchedule(world);
             }
-            this.scheduledBlocks.remove(this.scheduledBlocks.firstKey());
-            if (this.scheduledBlocks.isEmpty())
-            {
-                chunkedPersistentState.setRemove(chunkPos);
-            }
+            this.scheduledBlocks.remove(firstKey);
+        }
+        else {
+            System.out.println(this.chunkTime);
+            System.out.println((firstKey = this.scheduledBlocks.firstKey()).equals(this.chunkTime));
+            System.out.println(firstKey);
         }
         this.chunkTime++;
         chunkedPersistentState.markDirty();

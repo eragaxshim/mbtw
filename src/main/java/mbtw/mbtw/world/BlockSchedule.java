@@ -50,6 +50,7 @@ public class BlockSchedule {
 
     public void runSchedule(ServerWorld world)
     {
+        System.out.println("Running schedule");
         BlockState nowState = world.getBlockState(this.blockPos);
         if (this.compliesToProperties(nowState))
         {

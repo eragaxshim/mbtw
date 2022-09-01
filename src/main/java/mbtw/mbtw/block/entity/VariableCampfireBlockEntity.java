@@ -94,7 +94,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
                 world.setBlockState(pos, Mbtw.ASH.getDefaultState());
                 world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 0.1F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
                 BlockSchedule blockSchedule = new BlockSchedule(pos, Mbtw.ASH);
-                ((ServerWorldMixinAccessor)world).getChunkedScheduleManager().schedule(4500, blockSchedule);
+                ((ServerWorldMixinAccessor)world).getChunkedScheduleManager().schedule(360, blockSchedule);
                 campfire.updateListeners();
                 return;
             }

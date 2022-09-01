@@ -102,7 +102,6 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
 
     @Override
     public void extinguish(ItemStack stack, World world, BlockPos pos) {
-        System.out.println("extin");
         NbtCompound stackTag = stack.getOrCreateNbt();
         if (stackTag.getInt("Progress") != 0 || stack.getOrCreateSubNbt("BlockStateTag").getInt("torch_fire") > 1)
         {
