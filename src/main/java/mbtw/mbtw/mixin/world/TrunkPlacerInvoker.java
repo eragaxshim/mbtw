@@ -8,7 +8,7 @@ import net.minecraft.world.gen.trunk.TrunkPlacer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 import java.util.function.BiConsumer;
 
 @Mixin(TrunkPlacer.class)
@@ -19,7 +19,6 @@ public interface TrunkPlacerInvoker {
     }
 
     @Invoker("getAndSetState")
-    static boolean invokeGetAndSetState(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, BlockPos pos, TreeFeatureConfig config) {
-        throw new AssertionError();
-    }
+    boolean invokeGetAndSetState(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, BlockPos pos, TreeFeatureConfig config);
+
 }

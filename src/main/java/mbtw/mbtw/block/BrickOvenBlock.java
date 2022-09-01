@@ -1,11 +1,15 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -17,7 +21,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class BrickOvenBlock extends AbstractFurnaceBlock {
 
@@ -28,6 +32,12 @@ public class BrickOvenBlock extends AbstractFurnaceBlock {
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new BrickOvenBlockEntity(pos, state);
+    }
+
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return BrickOvenBlock.checkType(world, type, Mbtw.BRICK_OVEN_ENTITY);
     }
 
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {

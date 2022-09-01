@@ -16,7 +16,7 @@ import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 
 public class TrunkBlock extends Block implements BreakInterceptable{
     private final InnerTrunkBlock innerBlock;
-    private static final Text TITLE = new TranslatableText("container.mbtw.trunk_workbench");
+    private static final Text TITLE = Text.translatable("container.mbtw.trunk_workbench");
     public static final BooleanProperty WORKBENCH = BooleanProperty.of("workbench");
 
     public TrunkBlock(Settings settings, Block innerBlock) {

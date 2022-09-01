@@ -1,8 +1,7 @@
 package mbtw.mbtw.loot;
 
 import mbtw.mbtw.Mbtw;
-import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
@@ -22,22 +21,21 @@ public class MbtwLootModifier {
 
     public static void modifyLootTables()
     {
-        LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
-            if (CREEPER_LOOT_TABLE_ID.equals(id)) {
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if (source.isBuiltin() && CREEPER_LOOT_TABLE_ID.equals(id)) {
                 NbtCompound ct = new NbtCompound();
                 ct.putBoolean("Defused", false);
                 EntityPredicate.Builder predicateBuilder = EntityPredicate.Builder.create()
                         .type(EntityType.CREEPER)
                         .nbt(new NbtPredicate(ct));
 
-                LootPool lootPool = FabricLootPoolBuilder.builder()
+                LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
                         .with(ItemEntry.builder(Mbtw.CREEPER_OYSTER))
                         .conditionally(RandomChanceLootCondition.builder((float) 0.2))
-                        .conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS, predicateBuilder))
-                        .build();
+                        .conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS, predicateBuilder));
 
-                supplier.withPool(lootPool);
+                tableBuilder.pool(poolBuilder);
             }
         });
     }

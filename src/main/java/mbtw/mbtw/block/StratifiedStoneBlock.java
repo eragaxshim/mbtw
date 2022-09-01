@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Map;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class StratifiedStoneBlock extends Block implements BreakInterceptable {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 9);
@@ -73,7 +73,7 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
                 int count = Math.max(Math.min(breakingPoint - b - 1, Math.max(brokenDelta - 1, 1)), 0);
                 if (toolItem instanceof ChiselItem && toolItem.getMaterial().getMiningLevel() < 2)
                 {
-                    count = Math.max(count - new Random().nextInt(3), 0);
+                    count = Math.max(count -  Random.create().nextInt(3), 0);
                 }
                 Block.dropStack(world, pos, new ItemStack(itemDrop, count));
             }

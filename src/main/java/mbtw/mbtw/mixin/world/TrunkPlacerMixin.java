@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -36,7 +36,7 @@ public class TrunkPlacerMixin {
             replacer.accept(startPos, stateProvider.apply(trunkBlock));
         }
         for (int i = 1; i < height; ++i) {
-            TrunkPlacerInvoker.invokeGetAndSetState(world, replacer, random, startPos.up(i), config);
+            ((TrunkPlacerInvoker) this).invokeGetAndSetState(world, replacer, random, startPos.up(i), config);
         }
         cir.setReturnValue(ImmutableList.of(new FoliagePlacer.TreeNode(startPos.up(height), 0, false)));
     }

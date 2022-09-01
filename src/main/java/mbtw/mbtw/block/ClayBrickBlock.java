@@ -26,7 +26,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class ClayBrickBlock extends BlockWithEntity implements Waterloggable, BlockEntityProvider {
     public static final BooleanProperty WATERLOGGED;

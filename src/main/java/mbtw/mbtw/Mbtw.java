@@ -24,11 +24,10 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.CookingRecipeSerializer;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.*;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.StonecutterScreenHandler;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.structure.rule.BlockMatchRuleTest;
 import net.minecraft.structure.rule.RuleTest;
@@ -136,14 +135,18 @@ public class Mbtw implements ModInitializer {
 
     public static final Block BRICK_OVEN = new BrickOvenBlock(FabricBlockSettings.of(Material.STONE, MapColor.RED).requiresTool().strength(2.0F, 6.0F).luminance((LitStateInvoker.invokeCreateLightLevelFromBlockState(13))));
     public static BlockEntityType<BrickOvenBlockEntity> BRICK_OVEN_ENTITY;
-    public static final RecipeType<BrickOvenRecipe> BRICK_SMELTING = new RecipeType<BrickOvenRecipe>() {
-        @Override
-        public String toString() {return "brick_smelting";}
-    };
-    public static final RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER = new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100);
-    public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "brick_oven"), BrickOvenScreenHandler::new);
+//    public static final RecipeType<BrickOvenRecipe> BRICK_SMELTING = new RecipeType<BrickOvenRecipe>() {
+//        @Override
+//        public String toString() {return "brick_smelting";}
+//    };
+    public static RecipeType<BrickOvenRecipe> BRICK_SMELTING;
 
-//    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
+    //public static final RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER = new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100);
+    public static RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER;
+    //public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "brick_oven"), BrickOvenScreenHandler::new);
+    public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new);
+
+    //    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
 //    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
 //    public static final ConfiguredFeature<?, ?> ORE_COAL = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, COAL_ORE.getDefaultState(), 17)).rangeOf(128).spreadHorizontally().repeat(13);
 //    public static final ConfiguredFeature<?, ?> ORE_COAL_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_COAL_ORE.getDefaultState(), 17)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(5);
@@ -151,6 +154,16 @@ public class Mbtw implements ModInitializer {
 //    public static final ConfiguredFeature<?, ?> ORE_IRON = Feature.ORE.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRON_ORE.getDefaultState(), 9)).rangeOf(64).spreadHorizontally().repeat(14);
 //    public static final ConfiguredFeature<?, ?> ORE_IRON_HARD = Feature.ORE.configure(new OreFeatureConfig(RULE_HARD_STONE, HARD_IRON_ORE.getDefaultState(), 9)).rangeOf(HARD_STONE_MAX).spreadHorizontally().repeat(6);
 //    public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(5);
+
+    static {
+        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "brick_smelting"), new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100));
+        BRICK_SMELTING = Registry.register(Registry.RECIPE_TYPE, new Identifier(MOD_ID, "brick_smelting"), new RecipeType<BrickOvenRecipe>() {
+            @Override
+            public String toString() {
+                return "brick_smelting";
+            }
+        });
+    }
 
     @Override
     public void onInitialize() {
@@ -254,7 +267,6 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "finite_wall_torch"), FINITE_WALL_TORCH);
         FINITE_TORCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "finite_torch"), FabricBlockEntityTypeBuilder.create((pos, state) -> new FiniteTorchBlockEntity(FINITE_TORCH_BLOCK_ENTITY, pos, state), FINITE_TORCH, FINITE_WALL_TORCH).build(null));
 
-
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "clay_brick"), CLAY_BRICK);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "clay_brick"), new BlockItem(CLAY_BRICK, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         CLAY_BRICK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "clay_brick"), FabricBlockEntityTypeBuilder.create(ClayBrickBlockEntity::new, CLAY_BRICK).build(null));
@@ -267,8 +279,9 @@ public class Mbtw implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "brick_oven"), new BlockItem(BRICK_OVEN, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         BRICK_OVEN_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "brick_oven"), FabricBlockEntityTypeBuilder.create(BrickOvenBlockEntity::new, BRICK_OVEN).build(null));
 
-        Registry.register(Registry.RECIPE_TYPE, new Identifier(MOD_ID, "brick_smelting"), BRICK_SMELTING);
-        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "brick_smelting"), BRICK_SMELTING_SERIALIZER);
+        //BRICK_SMELTING = RecipeType.register("mbtw:brick_smelting");
+        //RecipeSerializer.register("mbtw:brick_smelting", BRICK_SMELTING_SERIALIZER);
+        Registry.register(Registry.SCREEN_HANDLER, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN_SCREEN_HANDLER);
 
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal"), ORE_COAL);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_hard"), ORE_COAL_HARD);

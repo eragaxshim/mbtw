@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -36,10 +36,10 @@ dependencies {
     compileOnly 'org.apiguardian:apiguardian-api:1.1.2'
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-    modImplementation ("io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.247")
-    include "io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.247:fat"
+    modImplementation ("io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.253")
+    include "io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.253:fat"
 
-    modImplementation "de.siphalor:nbtcrafting-1.18:2.1.3+"
+    modImplementation "de.siphalor:nbtcrafting-1.19:2.1.4+"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.

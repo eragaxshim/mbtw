@@ -10,6 +10,7 @@ import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 
 @Mixin(CampfireBlock.class)
 public abstract class CampfireBlockMixin implements CampfireBlockMixinAccessor {
@@ -47,6 +46,6 @@ public abstract class CampfireBlockMixin implements CampfireBlockMixinAccessor {
         }
     }
 
-    @Invoker("doesBlockCauseSignalFire")
-    public abstract boolean invokeDoesBlockCauseSignalFire(BlockState state);
+    @Invoker("isSignalFireBaseBlock")
+    public abstract boolean invokeIsSignalFireBaseBlock(BlockState state);
 }

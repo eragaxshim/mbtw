@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class FiniteWallTorchBlock extends FiniteTorchBlock {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;

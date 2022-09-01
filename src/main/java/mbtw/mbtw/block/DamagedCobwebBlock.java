@@ -14,7 +14,7 @@ import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class DamagedCobwebBlock extends CobwebBlock implements BreakInterceptable {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 3);

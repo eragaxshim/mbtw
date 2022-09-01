@@ -7,7 +7,7 @@ import net.minecraft.world.Difficulty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 @Mixin(SpiderEntity.class)
 public abstract class SpiderCreateCobwebMixin extends MobEntityMixin {
@@ -17,7 +17,7 @@ public abstract class SpiderCreateCobwebMixin extends MobEntityMixin {
     {
         if (!world.isClient && this.world.getDifficulty() != Difficulty.PEACEFUL)
         {
-            float f = new Random().nextFloat();
+            float f = Random.create().nextFloat();
             if (f > 0.6f && (world.getTimeOfDay() > 22800 || world.getTimeOfDay() < 12000))
             {
                 BlockPos.Mutable mutable = this.getBlockPos().mutableCopy();

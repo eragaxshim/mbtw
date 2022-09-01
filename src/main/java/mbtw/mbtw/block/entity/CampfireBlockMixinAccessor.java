@@ -4,6 +4,5 @@ import net.minecraft.block.BlockState;
 
 public interface CampfireBlockMixinAccessor {
 
-
-    boolean invokeDoesBlockCauseSignalFire(BlockState state);
+    boolean invokeIsSignalFireBaseBlock(BlockState blockState);
 }

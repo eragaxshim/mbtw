@@ -1,5 +1,6 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.CampfireBlockEntityMixinAccessor;
 import mbtw.mbtw.block.entity.CampfireBlockMixinAccessor;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
@@ -37,13 +38,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.ToIntFunction;
 
 public class VariableCampfireBlock extends CampfireBlock implements Ignitable, IgnitionProvider {
@@ -78,7 +79,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
             Optional<CampfireCookingRecipe> optional = campfireBlockEntity.getRecipeFor(itemStack);
             int fuelTime;
             if (optional.isPresent()) {
-                if (!world.isClient && campfireBlockEntity.addItem(player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                if (!world.isClient && campfireBlockEntity.addItem(player, player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
                     player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
                     return ActionResult.SUCCESS;
                 }
@@ -115,8 +116,8 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         WorldAccess worldAccess = ctx.getWorld();
         BlockPos blockPos = ctx.getBlockPos();
-        boolean inWater = worldAccess.getFluidState(blockPos).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, inWater).with(SIGNAL_FIRE, ((CampfireBlockMixinAccessor)this).invokeDoesBlockCauseSignalFire(worldAccess.getBlockState(blockPos.down()))).with(FACING, ctx.getPlayerFacing());
+        boolean bl = worldAccess.getFluidState(blockPos).getFluid() == Fluids.WATER;
+        return this.getDefaultState().with(WATERLOGGED, bl).with(SIGNAL_FIRE, ((CampfireBlockMixinAccessor)this).invokeIsSignalFireBaseBlock(worldAccess.getBlockState(blockPos.down()))).with(FACING, ctx.getPlayerFacing());
     }
 
     @Override
@@ -192,13 +193,10 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient) {
             if (state.get(LIT)) {
-                return CampfireBlock.checkType(type, BlockEntityType.CAMPFIRE, VariableCampfireBlockEntity::clientTick);
+                return VariableCampfireBlock.checkType(type, Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntity::clientTick);
             }
         } else {
-            if (state.get(LIT)) {
-                return CampfireBlock.checkType(type, BlockEntityType.CAMPFIRE, VariableCampfireBlockEntity::litServerTick);
-            }
-            return CampfireBlock.checkType(type, BlockEntityType.CAMPFIRE, VariableCampfireBlockEntity::unlitServerTick);
+            return VariableCampfireBlock.checkType(type, Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntity::serverTick);
         }
         return null;
     }

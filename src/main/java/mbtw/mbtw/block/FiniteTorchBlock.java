@@ -25,7 +25,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 import java.util.function.ToIntFunction;
 
 public class FiniteTorchBlock extends BlockWithEntity implements BlockEntityProvider, Ignitable, IgnitionProvider {

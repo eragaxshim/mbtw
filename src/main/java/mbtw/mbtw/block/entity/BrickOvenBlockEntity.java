@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class BrickOvenBlockEntity extends AbstractFurnaceBlockEntity {
@@ -19,7 +18,7 @@ public class BrickOvenBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Override
     public Text getContainerName() {
-        return new TranslatableText("container.mbtw.brick_oven");
+        return Text.translatable("container.mbtw.brick_oven");
     }
 
     //public int getFuelTime(ItemStack fuel) {

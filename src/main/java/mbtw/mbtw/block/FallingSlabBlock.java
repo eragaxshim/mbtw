@@ -25,7 +25,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class FallingSlabBlock extends FallingBlock implements Waterloggable {
     private final BlockState slabBlock;

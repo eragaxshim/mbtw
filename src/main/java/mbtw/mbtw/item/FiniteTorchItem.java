@@ -37,6 +37,7 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
             {
                 ItemStack litTorch = context.getStack().split(1);
                 litTorch.getOrCreateSubNbt("BlockStateTag").putInt("torch_fire", 3);
+                litTorch.getOrCreateNbt().putBoolean("DecreaseProgressTick", true);
                 litTorch.getOrCreateNbt().putInt("Progress", this.getMaxProgress());
                 this.tick(litTorch, context.getWorld(), context.getBlockPos(), 1.0F, null);
                 context.getWorld().playSound(null, context.getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (context.getWorld().getRandom().nextFloat() - context.getWorld().getRandom().nextFloat()) * 0.2F + 1.0F);
@@ -72,7 +73,6 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
 
             NbtCompound blockStateTag = stack.getOrCreateSubNbt("BlockStateTag");
             int torchFire = blockStateTag.getInt("torch_fire");
-
             int newTorchFire = torchFire;
             if (stackTag.getBoolean("TickProgress"))
             {
@@ -102,6 +102,7 @@ public class FiniteTorchItem extends WallStandingBlockItem implements TickProgre
 
     @Override
     public void extinguish(ItemStack stack, World world, BlockPos pos) {
+        System.out.println("extin");
         NbtCompound stackTag = stack.getOrCreateNbt();
         if (stackTag.getInt("Progress") != 0 || stack.getOrCreateSubNbt("BlockStateTag").getInt("torch_fire") > 1)
         {

@@ -4,9 +4,9 @@
     "layer0": "mbtw:block/finite_torch_off"
   },
   "overrides": [
-    { "predicate": { "torch_size": 0 }, "model": "mbtw:item/finite_torch" },
-    { "predicate": { "torch_size": 1 }, "model": "mbtw:item/finite_torch_burned" },
-    { "predicate": { "torch_size": 2 }, "model": "mbtw:item/finite_torch_sputtering" },
-    { "predicate": { "torch_size": 3 }, "model": "minecraft:item/torch" }
+    { "predicate": { "torch_size": 0.0 }, "model": "mbtw:item/finite_torch" },
+    { "predicate": { "torch_size": 0.33 }, "model": "mbtw:item/finite_torch_burned" },
+    { "predicate": { "torch_size": 0.66 }, "model": "mbtw:item/finite_torch_sputtering" },
+    { "predicate": { "torch_size": 1.0 }, "model": "minecraft:item/torch" }
   ]
 }

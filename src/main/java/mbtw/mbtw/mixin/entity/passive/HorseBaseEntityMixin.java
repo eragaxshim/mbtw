@@ -3,7 +3,7 @@ package mbtw.mbtw.mixin.entity.passive;
 import mbtw.mbtw.item.ItemTickable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(HorseBaseEntity.class)
+@Mixin(AbstractHorseEntity.class)
 public abstract class HorseBaseEntityMixin extends Entity {
     @Shadow protected SimpleInventory items;
 
