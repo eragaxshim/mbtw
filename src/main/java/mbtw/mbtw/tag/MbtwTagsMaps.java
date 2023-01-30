@@ -10,10 +10,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.item.Item;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
-import net.minecraft.util.registry.Registry;
 
 public class MbtwTagsMaps {
     public static final TagKey<Block> DEEP_STONE_OVERWORLD = registerBlockTagKey("deep_stone_overworld");
@@ -146,10 +148,10 @@ public class MbtwTagsMaps {
     private void MbtwTagKeysMaps() { }
 
     private static TagKey<Item> registerItemTagKey(String id) {
-        return TagKey.of(Registry.ITEM_KEY, new Identifier(Mbtw.MOD_ID, id));
+        return TagKey.of(RegistryKeys.ITEM, new Identifier(Mbtw.MOD_ID, id));
     }
 
     private static TagKey<Block> registerBlockTagKey(String id) {
-        return TagKey.of(Registry.BLOCK_KEY, new Identifier(Mbtw.MOD_ID, id));
+        return TagKey.of(RegistryKeys.BLOCK, new Identifier(Mbtw.MOD_ID, id));
     }
 }

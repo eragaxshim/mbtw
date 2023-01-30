@@ -16,9 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.state.property.Properties;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.FluidTags;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -164,7 +164,7 @@ public class FallingSlabBlockEntity extends FallingBlockEntity {
     }
 
     protected void readCustomDataFromNbt(NbtCompound tag) {
-        this.sourceBlock = NbtHelper.toBlockState(tag.getCompound("SourceBlockState"));
+        this.sourceBlock = NbtHelper.toBlockState(this.world.createCommandRegistryWrapper(RegistryKeys.BLOCK), tag.getCompound("SourceBlockState"));
         super.readCustomDataFromNbt(tag);
     }
 }

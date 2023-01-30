@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 public class VariableCampfireBlockEntityRenderer implements BlockEntityRenderer<VariableCampfireBlockEntity> {
     public VariableCampfireBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -32,10 +32,10 @@ public class VariableCampfireBlockEntityRenderer implements BlockEntityRenderer<
                 matrixStack.translate(direction.getOffsetX()*0.3375D*d, 0D, direction.getOffsetZ()*0.3375D*d);
                 Direction direction2 = Direction.fromHorizontal((k + direction.getHorizontal()) % 4);
                 float g = -direction2.asRotation();
-                matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
-                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.0F));
-                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(45.0F));
-                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(k*90.0F));
+                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
+                matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
+                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(45.0F));
+                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(k*90.0F));
                 matrixStack.scale(0.375F, 0.375F, 0.375F);
                 // TODO check if seed is used correctly
                 MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrixStack, vertexConsumerProvider, k + l);

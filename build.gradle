@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.1-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -11,15 +11,6 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    maven {
-        name = "vram"
-        url = "https://maven.vram.io/"
-    }
-    maven {
-        name "Siphalor's Maven"
-        url "https://maven.siphalor.de"
-    }
-    maven { url "https://jitpack.io" }
     mavenCentral()
 }
 
@@ -35,11 +26,6 @@ dependencies {
     // optional dev env annotation support
     compileOnly 'org.apiguardian:apiguardian-api:1.1.2'
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-
-    modImplementation ("io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.253")
-    include "io.vram:jmx-fabric-${project.mc_tag}:${project.jmx_version}.253:fat"
-
-    modImplementation "de.siphalor:nbtcrafting-1.19:2.1.4+"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
@@ -82,13 +68,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            from components.java
         }
     }
 

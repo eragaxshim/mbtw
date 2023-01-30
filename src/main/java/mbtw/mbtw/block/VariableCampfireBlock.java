@@ -25,6 +25,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -32,7 +33,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -168,16 +168,19 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
         return (blockState) -> {
             if (blockState.get(Properties.LIT))
             {
-                switch (blockState.get(VariableCampfireBlock.FIRE_SIZE))
-                {
-                    case 1:
+                switch (blockState.get(VariableCampfireBlock.FIRE_SIZE)) {
+                    case 1 -> {
                         return 4;
-                    case 2:
+                    }
+                    case 2 -> {
                         return 10;
-                    case 3:
+                    }
+                    case 3 -> {
                         return 13;
-                    case 4:
+                    }
+                    case 4 -> {
                         return 15;
+                    }
                 }
             }
             else if (blockState.get(EMBERS) || blockState.get(FIRE_SIZE) == 0)

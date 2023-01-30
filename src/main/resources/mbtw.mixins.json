@@ -57,8 +57,7 @@
     "world.ClientWorldMixin",
     "world.HugeFungusTrunkMixin",
     "world.ServerWorldMixin",
-    "world.TrunkPlacerInvoker",
-    "world.TrunkPlacerMixin",
+    "world.TreeFeatureMixin",
     "world.WorldMixin"
   ],
   "client": [

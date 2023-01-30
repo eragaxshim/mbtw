@@ -4,12 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -20,13 +20,13 @@ public class BlockSchedule {
 
     public BlockSchedule(BlockPos blockPos, Block block) {
         this.blockPos = blockPos;
-        this.blockName = Registry.BLOCK.getId(block).toString();
+        this.blockName = Registries.BLOCK.getId(block).toString();
         this.requiredProperties = new HashSet<>();
     }
 
     private BlockSchedule(BlockPos blockPos, Block block, HashSet<Property.Value<?>> requiredProperties) {
         this.blockPos = blockPos;
-        this.blockName = Registry.BLOCK.getId(block).toString();
+        this.blockName = Registries.BLOCK.getId(block).toString();
         this.requiredProperties = requiredProperties;
     }
     
@@ -60,7 +60,7 @@ public class BlockSchedule {
 
     public boolean compliesToProperties(BlockState nowState)
     {
-        if (Registry.BLOCK.getId(nowState.getBlock()).toString().equals(this.blockName) && nowState.getBlock() instanceof BlockSchedulable)
+        if (Registries.BLOCK.getId(nowState.getBlock()).toString().equals(this.blockName) && nowState.getBlock() instanceof BlockSchedulable)
         {
             boolean complies = true;
             for (Property.Value<?> propertyValue : this.requiredProperties)
@@ -84,7 +84,7 @@ public class BlockSchedule {
 
     public static BlockSchedule scheduleFromTag(NbtCompound tag) {
         BlockPos pos = NbtHelper.toBlockPos(tag.getCompound("BlockPos"));
-        Block block = Registry.BLOCK.get(new Identifier(tag.getString("BlockName")));
+        Block block = Registries.BLOCK.get(new Identifier(tag.getString("BlockName")));
         HashSet<Property.Value<?>> requiredProperties = new HashSet<>();
 
         if (tag.contains("RequiredProperties", 10)) {

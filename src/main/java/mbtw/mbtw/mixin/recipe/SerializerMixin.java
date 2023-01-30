@@ -45,14 +45,12 @@ public class SerializerMixin {
         int k = packetByteBuf.readVarInt();
         DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(k, ItemStack.EMPTY);
 
-        for(int l = 0; l < defaultedList.size(); l++) {
-            defaultedList.set(l, packetByteBuf.readItemStack());
-        }
+        defaultedList.replaceAll(ignored -> packetByteBuf.readItemStack());
         ((RecipeMixinAccess)shapelessRecipe).setDropOutput(defaultedList);
         cir.setReturnValue(shapelessRecipe);
     }
 
-    @Inject(method = "write", at = @At("TAIL"))
+    @Inject(method = "write(Lnet/minecraft/network/PacketByteBuf;Lnet/minecraft/recipe/ShapelessRecipe;)V", at = @At("TAIL"))
     protected void writeBuf(PacketByteBuf packetByteBuf, ShapelessRecipe shapelessRecipe, CallbackInfo ci)
     {
         DefaultedList<ItemStack> dropOutput = ((RecipeMixinAccess)shapelessRecipe).getDropOutput();

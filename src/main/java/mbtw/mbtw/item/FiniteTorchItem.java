@@ -8,20 +8,21 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.WallStandingBlockItem;
+import net.minecraft.item.VerticallyAttachableBlockItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class FiniteTorchItem extends WallStandingBlockItem implements TickProgressable, Extinguishable {
+public class FiniteTorchItem extends VerticallyAttachableBlockItem implements TickProgressable, Extinguishable {
     private final int burnTime;
 
     public FiniteTorchItem(Block standingBlock, Block wallBlock, Settings settings, int burnTime) {
-        super(standingBlock, wallBlock, settings);
+        super(standingBlock, wallBlock, settings, Direction.DOWN);
         this.burnTime = burnTime;
     }
 
