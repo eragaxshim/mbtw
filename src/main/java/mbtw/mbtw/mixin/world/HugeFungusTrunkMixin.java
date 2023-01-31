@@ -28,23 +28,24 @@ import java.util.stream.Collectors;
 
 @Mixin(HugeFungusFeature.class)
 public class HugeFungusTrunkMixin {
-//    @Inject(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/gen/feature/HugeFungusFeature;generateHat(Lnet/minecraft/world/WorldAccess;Ljava/util/Random;Lnet/minecraft/world/gen/feature/HugeFungusFeatureConfig;Lnet/minecraft/util/math/BlockPos;IZ)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-//    protected void addTrunk(FeatureContext<HugeFungusFeatureConfig> context, CallbackInfoReturnable<Boolean> cir, StructureWorldAccess structureWorldAccess, BlockPos blockPos, Random random, ChunkGenerator chunkGenerator, HugeFungusFeatureConfig hugeFungusFeatureConfig, Block block, BlockPos blockPos2, BlockState blockState, int i, boolean j, StructureWorldAccess structureWorldAccess, BlockPos blockPos, Random random, ChunkGenerator chunkGenerator, HugeFungusFeatureConfig hugeFungusFeatureConfig, Block block, BlockPos blockPos2, BlockState blockState, int i, boolean j, Block block, BlockPos blockPos2, int i, boolean thickStem)
-//    {
-//        BlockState trunk = MbtwTagsMaps.LOG_TRUNK_MAP.get(hugeFungusFeatureConfig.stemState.getBlock());
-//        if (trunk != null)
-//        {
-//            BlockPos.Mutable mutable = new BlockPos.Mutable();
-//            int w = thickStem ? 1 : 0;
-//            for(int j = -w; j <= w; ++j) {
-//                for (int k = -w; k <= w; ++k) {
-//                    mutable.set(blockPos, j, 0, k);
-//                    if (structureWorldAccess.getBlockState(mutable).getBlock() == hugeFungusFeatureConfig.stemState.getBlock())
-//                    {
-//                        structureWorldAccess.setBlockState(mutable, trunk, 3);
-//                    }
-//                }
-//            }
-//        }
-//    }
+    @Inject(method = "generate", at = @At(value = "RETURN"))
+    protected void addTrunk(FeatureContext<HugeFungusFeatureConfig> context, CallbackInfoReturnable<Boolean> cir)
+    {
+        if (cir.getReturnValue()) {
+            BlockPos.Mutable mutable = new BlockPos.Mutable();
+            StructureWorldAccess world = context.getWorld();
+            BlockPos pos = context.getOrigin().mutableCopy();
+
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    BlockPos newPos = mutable.set(pos, i, 0, j);
+                    BlockState state = world.getBlockState(newPos);
+                    BlockState trunkBlock = MbtwTagsMaps.LOG_TRUNK_MAP.get(state.getBlock());
+                    if (trunkBlock != null) {
+                        world.setBlockState(newPos, trunkBlock, Block.NOTIFY_ALL | Block.FORCE_STATE);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -6,8 +6,12 @@
   "mixins": [
     "InterceptBreakBlockMixin",
     "block.BlockBreakingDeltaMixin",
+    "block.BlockWithEntityAccessor",
     "block.CampfireBlockMixin",
+    "block.DirectBlockEntityTickInvokerAccessor",
+    "block.DirectBlockEntityTickInvokerMixin",
     "block.LitStateInvoker",
+    "block.WrappedBlockEntityTickInvokerAccessor",
     "block.entity.BlockEntityMixin",
     "block.entity.CampfireBlockEntityAccessor",
     "block.entity.CampfireBlockEntityMixin",
@@ -58,6 +62,7 @@
     "world.HugeFungusTrunkMixin",
     "world.ServerWorldMixin",
     "world.TreeFeatureMixin",
+    "world.WorldChunkMixin",
     "world.WorldMixin"
   ],
   "client": [

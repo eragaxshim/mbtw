@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockEntity.class)
 public class BlockEntityMixin {
+    // Do not make static
     @ModifyVariable(method = "<init>", at = @At(value = "LOAD"), argsOnly = true)
     protected BlockEntityType<?> changeType(BlockEntityType<?> type)
     {

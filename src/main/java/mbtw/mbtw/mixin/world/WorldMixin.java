@@ -2,15 +2,24 @@ package mbtw.mbtw.mixin.world;
 
 import com.google.common.collect.Lists;
 import mbtw.mbtw.item.ItemTickable;
+import mbtw.mbtw.mixin.block.DirectBlockEntityTickInvokerAccessor;
+import mbtw.mbtw.mixin.block.WrappedBlockEntityTickInvokerAccessor;
+import mbtw.mbtw.mixin.screen.CraftingContextAccessor;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.chunk.BlockEntityTickInvoker;
+import net.minecraft.world.chunk.WorldChunk;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,85 +31,65 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Mixin(World.class)
 public abstract class WorldMixin implements WorldAccess {
-//    @Shadow public abstract long getTime();
-//
-//    @Shadow @Final protected List<BlockEntity> unloadedBlockEntities;
-//    @Shadow protected boolean iteratingTickingBlockEntities;
-//    @Shadow private int ambientDarkness;
-//    @Shadow @Final public boolean isClient;
-//
-//    private final List<BlockEntity> containerBlockEntities = Lists.newArrayList();
-//
-//    @Inject(method = "tickBlockEntities", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;unloadedBlockEntities:Ljava/util/List;"))
-//    protected void tickContainerBlockEntities(CallbackInfo ci)
-//    {
-//        if (!this.unloadedBlockEntities.isEmpty())
+    @Shadow public abstract long getTime();
+    @Shadow @Final public boolean isClient;
+
+    @Shadow public abstract @Nullable BlockEntity getBlockEntity(BlockPos pos);
+
+    @Shadow @Final protected List<BlockEntityTickInvoker> blockEntityTickers;
+
+    @Shadow @Final private List<BlockEntityTickInvoker> pendingBlockEntityTickers;
+
+    @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"), locals=LocalCapture.CAPTURE_FAILEXCEPTION)
+    protected void changeTickBlockEntities(CallbackInfo ci)
+    {
+          if (!this.isClient && (this.getTime() % 43) == 0) {
+              for (BlockEntityTickInvoker tickInvoker : this.blockEntityTickers) {
+                  if (tickInvoker instanceof WorldChunk.WrappedBlockEntityTickInvoker) {
+                      tickInvoker = ((WrappedBlockEntityTickInvokerAccessor)tickInvoker).getWrapped();
+                  }
+                  if (tickInvoker instanceof WorldChunk.DirectBlockEntityTickInvoker<?>) {
+                      BlockEntity blockEntity = ((DirectBlockEntityTickInvokerAccessor<?>) tickInvoker).getBlockEntity();
+                      //System.out.println(blockEntity);
+                  } else {
+                      //System.out.println(tickInvoker);
+                  }
+
+
+              }
+
+              for (BlockEntityTickInvoker tickInvoker : this.pendingBlockEntityTickers) {
+                  if (tickInvoker instanceof WorldChunk.WrappedBlockEntityTickInvoker) {
+                      tickInvoker = ((WrappedBlockEntityTickInvokerAccessor)tickInvoker).getWrapped();
+                  }
+                  if (tickInvoker instanceof WorldChunk.DirectBlockEntityTickInvoker<?>) {
+                      BlockEntity blockEntity = ((DirectBlockEntityTickInvokerAccessor<?>) tickInvoker).getBlockEntity();
+                      System.out.println("pending ".concat(blockEntity.toString()));
+                  } else {
+                      System.out.println("pending not".concat(tickInvoker.toString()));
+                  }
+              }
+              //System.out.println(this.blockEntityTickers)
+          }
+//        if (!this.isClient && this.getTime() % 23 == 0)
 //        {
-//            this.containerBlockEntities.removeAll(this.unloadedBlockEntities);
-//        }
-//    }
-//
-//    @Inject(method = "tickBlockEntities", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;iteratingTickingBlockEntities:Z"))
-//    protected void changeTickBlockEntities(CallbackInfo ci)
-//    {
-//        if (this.getTime() % 23 == 0 && this.iteratingTickingBlockEntities)
-//        {
-//            for (BlockEntity blockEntity : this.containerBlockEntities)
-//            {
-//                if (blockEntity instanceof LockableContainerBlockEntity && !(blockEntity instanceof ShulkerBoxBlockEntity)) {
-//                    if (!blockEntity.isRemoved() && blockEntity.hasWorld()) {
-//                        BlockPos blockPos = blockEntity.getPos();
-//                        long chunkPos = new ChunkPos(blockPos).toLong();
-//                        boolean shouldTick = ((World)(Object)this).shouldTickBlocksInChunk(chunkPos);
-//                        if (shouldTick && this.getWorldBorder().contains(blockPos)) {
-//                            Field inventoryField = null;
-//
-//                            Class<?> clazz = blockEntity.getClass();
-//                            while (inventoryField == null) {
-//
-//                                if (clazz == null) {
-//                                    break;
-//                                }
-//                                try {
-//                                    inventoryField = clazz.getDeclaredField("inventory");
-//                                } catch (NoSuchFieldException ignored) {
-//                                    clazz = clazz.getSuperclass();
-//                                }
-//                            }
-//
-//                            try {
-//                                if (inventoryField != null) {
-//                                    inventoryField.setAccessible(true);
-//                                    DefaultedList<ItemStack> inventory = (DefaultedList<ItemStack>) inventoryField.get(blockEntity);
-//                                    inventory.stream()
-//                                            .filter(stack -> stack.getItem() instanceof ItemTickable)
-//                                            .forEach(stack -> ((ItemTickable) stack.getItem()).tick(stack, blockEntity.getWorld(), blockEntity.getPos(), null));
-//                                }
-//                            } catch (IllegalAccessException | ClassCastException ignored) { }
-//                        }
+//            if (blockEntityTickInvoker instanceof WorldChunk.DirectBlockEntityTickInvoker<?>) {
+//                BlockEntity blockEntity = ((DirectBlockEntityTickInvokerAccessor<?>) blockEntityTickInvoker).getBlockEntity();
+//                if (blockEntity instanceof Inventory) {
+//                    System.out.println("Found inventory");
+//                    int size = ((Inventory) blockEntity).size();
+//                    for (int i = 0; i < size; i++) {
+//                        System.out.println(((Inventory) blockEntity).getStack(i));
 //                    }
 //                }
 //            }
 //        }
-//    }
-//
-//    @Inject(method = "addBlockEntity", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;isClient:Z"))
-//    protected void changeAddBlockEntity(BlockEntity blockEntity, CallbackInfoReturnable<Boolean> cir)
-//    {
-//        if (blockEntity instanceof LockableContainerBlockEntity)
-//        {
-//            this.containerBlockEntities.add(blockEntity);
-//        }
-//    }
-//
-//    @Inject(method = "removeBlockEntity", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;blockEntities:Ljava/util/List;"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-//    protected void changeRemoveBlockEntity(BlockPos pos, CallbackInfo ci, BlockEntity blockEntity)
-//    {
-//        this.containerBlockEntities.remove(blockEntity);
-//    }
+    }
 
 }
