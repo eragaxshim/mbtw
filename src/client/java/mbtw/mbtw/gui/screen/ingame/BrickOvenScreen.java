@@ -1,11 +1,9 @@
-package mbtw.mbtw.client.gui.screen.ingame;
+package mbtw.mbtw.gui.screen.ingame;
 
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
-import net.minecraft.client.gui.screen.recipebook.BlastFurnaceRecipeBookScreen;
 import net.minecraft.client.gui.screen.recipebook.FurnaceRecipeBookScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.BlastFurnaceScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 

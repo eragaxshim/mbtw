@@ -1,9 +1,9 @@
 package mbtw.mbtw.block;
 
-import com.google.common.collect.ImmutableMap;
-import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.tag.MbtwTagsMaps;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.PillarBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;

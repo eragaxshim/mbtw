@@ -1,33 +1,42 @@
 {
-  "schemaVersion": 1,
-  "id": "mbtw",
-  "version": "${version}",
-  "name": "ModernBTW",
-  "description": "",
-  "authors": ["EradurGwath"],
-  "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/mbtw",
-    "sources": "https://github.com/eragaxshim/mbtw",
-    "issues": "https://github.com/eragaxshim/mbtw/issues"
-  },
-  "license": "CC BY 4.0",
-  "icon": "assets/mbtw/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "client": [
-      "mbtw.mbtw.client.MbtwClient"
-    ],
-    "main": [
-      "mbtw.mbtw.Mbtw"
-    ]
-  },
-  "mixins": [
-    "mbtw.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=0.11.1",
-    "fabric": "*",
-    "minecraft": "1.19.3"
-  },
-  "accessWidener" : "mbtw.accesswidener"
+	"schemaVersion": 1,
+	"id": "mbtw",
+	"version": "${version}",
+	"name": "mbtw",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/mbtw/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"mbtw.mbtw.Mbtw"
+		],
+		"client": [
+			"mbtw.mbtw.MbtwClient"
+		],
+		"fabric-datagen": [
+			"mbtw.mbtw.MbtwDataGenerator"
+		]
+	},
+	"mixins": [
+		"mbtw.mixins.json",
+		{
+			"config": "mbtw.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.14.13",
+		"minecraft": "~1.19.3",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"accessWidener" : "mbtw.accesswidener"
 }

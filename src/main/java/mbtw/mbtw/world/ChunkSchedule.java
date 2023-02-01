@@ -8,7 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ChunkSchedule implements ChunkedTickable<ChunkSchedule> {
     private TreeMap<Long, HashSet<BlockSchedule>> scheduledBlocks = new TreeMap<>();

@@ -2,7 +2,6 @@ package mbtw.mbtw.item;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import mbtw.mbtw.Mbtw;
 import net.minecraft.block.*;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -19,8 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Set;
-import java.util.function.Consumer;
-import java.lang.Math;
 
 public class ChiselItem extends MiningToolItem {
     private static final Set<Material> EFFECTIVE_MATERIALS;

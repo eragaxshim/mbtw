@@ -2,7 +2,6 @@ package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.VariableCampfireBlock;
-import mbtw.mbtw.mixin.block.entity.CampfireBlockEntityAccessor;
 import mbtw.mbtw.world.BlockSchedule;
 import mbtw.mbtw.world.ServerWorldMixinAccessor;
 import net.minecraft.block.BlockState;

@@ -3,7 +3,6 @@ package mbtw.mbtw.screen;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.mixin.screen.CraftingContextAccessor;
 import mbtw.mbtw.tag.MbtwTagsMaps;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

@@ -6,14 +6,13 @@ import mbtw.mbtw.block.entity.CampfireBlockMixinAccessor;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.impl.content.registry.FuelRegistryImpl;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +38,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
@@ -158,7 +156,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
 
     public static int getFuelTime(Item item)
     {
-        Integer fuelTime = FuelRegistryImpl.INSTANCE.get(item);
+        Integer fuelTime = FuelRegistry.INSTANCE.get(item);
         int modifier = item.getDefaultStack().isIn(ItemTags.LOGS) ? 3 : 1;
 
         return fuelTime != null ? modifier * fuelTime : 0;

@@ -1,11 +1,9 @@
 package mbtw.mbtw.mixin.entity.player;
 
 import mbtw.mbtw.item.ItemTickable;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,9 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin {
@@ -29,43 +26,24 @@ public abstract class PlayerInventoryMixin {
     @Inject(method = "updateItems", at = @At("HEAD"))
     protected void changeUpdateItems(CallbackInfo ci)
     {
-        if (this.player.world.getTime() % 23 == 0)
+        if (this.player.world.getTime() % 23 == 0 && !this.player.world.isClient)
         {
-            Field inventoryField = null;
-
-            Class<?> clazz = this.player.currentScreenHandler.getClass();
-            while (inventoryField == null) {
-
-                if (clazz == null) {
-                    break;
-                }
-                try {
-                    inventoryField = clazz.getDeclaredField("inventory");
-                } catch (NoSuchFieldException ignored) {
-                    clazz = clazz.getSuperclass();
-                }
-            }
-
             DefaultedList<ItemStack> tickableStacks = DefaultedList.of();
-            tickableStacks.add(this.player.currentScreenHandler.getCursorStack());
-
-            if (inventoryField == null && !(this.player.currentScreenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler))
-            {
-                tickableStacks.addAll(this.player.currentScreenHandler.slots.stream().map((Slot::getStack)).toList());
+            ItemStack cursorStack = this.player.currentScreenHandler.getCursorStack();
+            if (cursorStack.getItem() instanceof ItemTickable) {
+                tickableStacks.add(cursorStack);
             }
-            else {
-                tickableStacks = this.combinedInventory.stream().reduce(tickableStacks, (subTotal, element) -> {
-                    subTotal.addAll(element);
-                    return subTotal;
-                });
-            }
-
+            tickableStacks.addAll(this.player.currentScreenHandler.slots.stream().flatMap(slot -> {
+                ItemStack slotStack = slot.getStack();
+                if (slotStack.getItem() instanceof ItemTickable) {
+                    return Stream.of(slotStack);
+                } else {
+                    return Stream.empty();
+                }
+            }).toList());
             for (ItemStack stack : tickableStacks)
             {
-                if (stack.getItem() instanceof ItemTickable)
-                {
-                    ((ItemTickable)stack.getItem()).tick(stack, this.player.world, this.player.getBlockPos(), this.player);
-                }
+                ((ItemTickable)stack.getItem()).tick(stack, this.player.world, this.player.getBlockPos(), this.player);
             }
             /*
             if (!this.cursorStack.isEmpty() && this.cursorStack.getItem() instanceof TickDamageItem)

@@ -2,7 +2,6 @@ package mbtw.mbtw.util;
 
 import com.google.gson.*;
 
-import java.util.Iterator;
 import java.util.Map;
 
 public class JsonUtil {

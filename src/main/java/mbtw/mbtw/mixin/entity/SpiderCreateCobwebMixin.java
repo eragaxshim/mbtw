@@ -3,11 +3,10 @@ package mbtw.mbtw.mixin.entity;
 import mbtw.mbtw.Mbtw;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.util.math.random.Random;
 
 @Mixin(SpiderEntity.class)
 public abstract class SpiderCreateCobwebMixin extends MobEntityMixin {

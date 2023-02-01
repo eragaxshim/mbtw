@@ -1,7 +1,6 @@
 package mbtw.mbtw.mixin.loot;
 
 import mbtw.mbtw.block.BreakInterceptable;
-import mbtw.mbtw.block.StratifiedStoneBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

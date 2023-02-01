@@ -1,6 +1,5 @@
 package mbtw.mbtw.mixin.entity;
 
-import mbtw.mbtw.entity.FallingSlabBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.FallingBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;

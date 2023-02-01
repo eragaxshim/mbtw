@@ -5,13 +5,10 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.dimension.DimensionType;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public abstract class ChunkedPersistentState<T extends ChunkedTickable<T>> extends PersistentState {

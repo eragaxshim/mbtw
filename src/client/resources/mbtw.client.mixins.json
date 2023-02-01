@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"package": "mbtw.mbtw.mixin.client",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"MbtwClientMixin",
+		"render.entity.CreeperRendererMixin",
+		"render.entity.model.CowModelMixin",
+		"render.entity.model.EntityModelMixin",
+		"render.entity.model.QuadrupedMixin",
+		"render.item.HeldItemMixin",
+		"render.item.ItemRendererMixin",
+		"world.ClientWorldMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"mixins": [
+		"world.ClientWorldMixin"
+	]
+}

@@ -4,18 +4,18 @@ import mbtw.mbtw.item.ChiselItem;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.MiningToolItem;
+import net.minecraft.item.PickaxeItem;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import java.util.Map;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 public class StratifiedStoneBlock extends Block implements BreakInterceptable {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 9);

@@ -1,6 +1,5 @@
 package mbtw.mbtw.mixin.item;
 
-import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

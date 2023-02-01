@@ -21,7 +21,7 @@ public abstract class WorldChunkMixin {
         }
 
         if (blockEntityTicker == null && !blockEntity.getWorld().isClient && blockEntity instanceof LockableContainerBlockEntity && !(blockEntity instanceof ShulkerBoxBlockEntity)) {
-            return ContainerTicker::tick;
+            return ContainerTicker::emptyTick;
         }
         return blockEntityTicker;
     }

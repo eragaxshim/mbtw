@@ -1,17 +1,16 @@
 package mbtw.mbtw.entity;
 
-import com.google.common.collect.Lists;
 import mbtw.mbtw.block.FallingSlabBlock;
 import mbtw.mbtw.mixin.block.entity.FallingBlockEntityAccessor;
 import mbtw.mbtw.mixin.entity.FallingBlockMixin;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.AutomaticItemPlacementContext;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -23,16 +22,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-import net.minecraft.entity.Entity.RemovalReason;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class FallingSlabBlockEntity extends FallingBlockEntity {
     private BlockState sourceBlock;

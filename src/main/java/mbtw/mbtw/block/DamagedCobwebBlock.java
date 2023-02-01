@@ -5,16 +5,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.SweepingEnchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 public class DamagedCobwebBlock extends CobwebBlock implements BreakInterceptable {
     public static final IntProperty BREAK_LEVEL = IntProperty.of("break_level", 0, 3);
