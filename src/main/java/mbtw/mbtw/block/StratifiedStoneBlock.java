@@ -1,6 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.state.property.MbtwProperties;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,7 +27,7 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
 
     public StratifiedStoneBlock(FabricBlockSettings settings, int breakingPoint, int stratification, Block blockDrop, Item itemDrop) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(BREAK_LEVEL, 0));
+        setDefaultState(getStateManager().getDefaultState().with(MbtwProperties.BROKEN, false).with(BREAK_LEVEL, 0));
         this.breakingPoint = breakingPoint;
         this.stratification = stratification;
         this.blockDrop = blockDrop;
@@ -48,7 +49,7 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
             {
                 if (EnchantmentHelper.get(handStack).containsKey(Enchantments.SILK_TOUCH))
                 {
-                    return state.with(BreakInterceptable.BROKEN, true);
+                    return state.with(MbtwProperties.BROKEN, true);
                 }
 
                 brokenDelta = miningEffect * 3 + 1;
@@ -84,7 +85,7 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
         }
         else
         {
-            return state.with(BreakInterceptable.BROKEN, true);
+            return state.with(MbtwProperties.BROKEN, true);
         }
     }
 
@@ -96,6 +97,6 @@ public class StratifiedStoneBlock extends Block implements BreakInterceptable {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(BREAK_LEVEL);
-        stateManager.add(BreakInterceptable.BROKEN);
+        stateManager.add(MbtwProperties.BROKEN);
     }
 }

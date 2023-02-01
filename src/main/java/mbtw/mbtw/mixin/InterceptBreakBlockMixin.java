@@ -3,6 +3,7 @@ package mbtw.mbtw.mixin;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.BreakInterceptable;
 import mbtw.mbtw.block.InnerLogBlock;
+import mbtw.mbtw.state.property.MbtwProperties;
 import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -67,7 +68,7 @@ public abstract class InterceptBreakBlockMixin {
                 {
                     Block.replace(state, newState, world, pos, 2);
 
-                    if (!newState.get(BreakInterceptable.BROKEN)) {
+                    if (!newState.get(MbtwProperties.BROKEN)) {
                         handStack.postMine(this.world, newState, pos, this.player);
                         cir.setReturnValue(true);
                     }

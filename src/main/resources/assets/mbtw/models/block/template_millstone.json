@@ -1,0 +1,48 @@
+{   "parent": "block/block",
+  "textures": {
+    "particle": "block/stone"
+  },
+  "display": {
+    "fixed": {
+      "rotation": [ 0, 90, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.5, 0.5, 0.5 ]
+    }
+  },
+  "elements": [
+    {   "__comment": "Millstone base",
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 9, 16 ],
+      "faces": {
+        "down":  { "texture": "#bottom", "rotation": 0, "cullface": "down" },
+        "up":    { "texture": "#top", "rotation": 0 },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side", "rotation":  0 },
+        "east":  { "texture": "#side", "rotation": 0 }
+      }
+    },
+    {   "__comment": "Middle portion",
+      "from": [ 1, 9, 1 ],
+      "to": [ 15, 11, 15 ],
+      "faces": {
+        "north": { "texture": "#side" },
+        "south": {  "texture": "#side" },
+        "west":  { "texture": "#side", "rotation":  0 },
+        "east":  { "texture": "#side", "rotation": 0 }
+      }
+    },
+    {   "__comment": "Millstone top",
+      "from": [ 0, 11, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "up":    { "texture": "#top", "rotation": 0, "cullface": "up" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side", "rotation":  0 },
+        "east":  { "texture": "#side", "rotation": 0 },
+        "bottom": { "texture": "#top", "rotation": 0 }
+      }
+    }
+  ]
+}

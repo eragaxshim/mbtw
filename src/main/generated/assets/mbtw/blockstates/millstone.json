@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mbtw:block/millstone"
+      },
+      "when": {
+        "powered": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mbtw:block/millstone_on"
+      },
+      "when": {
+        "powered": "true"
+      }
+    }
+  ]
+}

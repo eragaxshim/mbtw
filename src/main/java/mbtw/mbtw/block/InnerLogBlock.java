@@ -1,5 +1,6 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
@@ -39,9 +40,10 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
 
     public InnerLogBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(PillarBlock.AXIS, Direction.Axis.Y).with(BREAK_LEVEL, 0).with(UP, true).with(DOWN, true));
+        setDefaultState(getStateManager().getDefaultState().with(MbtwProperties.BROKEN, false).with(PillarBlock.AXIS, Direction.Axis.Y).with(BREAK_LEVEL, 0).with(UP, true).with(DOWN, true));
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         int b = state.get(BREAK_LEVEL);
         boolean connected = state.get(UP) && state.get(DOWN);
@@ -96,7 +98,7 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         }
 
         if (handStack.getItem() instanceof AxeItem && (!(this instanceof InnerTrunkBlock) || ((AxeItem) handStack.getItem()).getMaterial().getMiningLevel() > 3)) {
-            return state.with(BreakInterceptable.BROKEN, true);
+            return state.with(MbtwProperties.BROKEN, true);
         }
 
         if (b == 5)
@@ -106,7 +108,7 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
 
         if (b+1 > 4)
         {
-            return state.with(BreakInterceptable.BROKEN, true);
+            return state.with(MbtwProperties.BROKEN, true);
         }
         else {
             Block.dropStacks(state, world, pos, world.getBlockEntity(pos), player, handStack);
@@ -147,7 +149,7 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(BreakInterceptable.BROKEN);
+        stateManager.add(MbtwProperties.BROKEN);
         stateManager.add(PillarBlock.AXIS);
         stateManager.add(BREAK_LEVEL);
         stateManager.add(UP);

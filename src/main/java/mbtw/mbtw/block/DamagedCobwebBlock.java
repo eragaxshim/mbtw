@@ -1,5 +1,6 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
@@ -19,7 +20,7 @@ public class DamagedCobwebBlock extends CobwebBlock implements BreakInterceptabl
 
     public DamagedCobwebBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(BREAK_LEVEL, 0));
+        setDefaultState(getStateManager().getDefaultState().with(MbtwProperties.BROKEN, false).with(BREAK_LEVEL, 0));
     }
 
     @Override
@@ -28,7 +29,7 @@ public class DamagedCobwebBlock extends CobwebBlock implements BreakInterceptabl
         int b = state.get(BREAK_LEVEL);
         if (b == 3 || handItem instanceof ShearsItem || handItem instanceof SwordItem || handItem instanceof AxeItem || (b == 0 && EnchantmentHelper.get(handStack).containsKey(Enchantments.SILK_TOUCH)))
         {
-            return state.with(BreakInterceptable.BROKEN, true);
+            return state.with(MbtwProperties.BROKEN, true);
         }
         else {
             return state.with(BREAK_LEVEL, b+1);
@@ -56,6 +57,6 @@ public class DamagedCobwebBlock extends CobwebBlock implements BreakInterceptabl
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(BREAK_LEVEL);
-        stateManager.add(BreakInterceptable.BROKEN);
+        stateManager.add(MbtwProperties.BROKEN);
     }
 }

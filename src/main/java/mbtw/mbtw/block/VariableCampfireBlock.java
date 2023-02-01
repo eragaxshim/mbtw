@@ -4,6 +4,7 @@ import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.CampfireBlockEntityMixinAccessor;
 import mbtw.mbtw.block.entity.CampfireBlockMixinAccessor;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
+import mbtw.mbtw.state.property.MbtwProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -48,8 +49,8 @@ import java.util.function.ToIntFunction;
 public class VariableCampfireBlock extends CampfireBlock implements Ignitable, IgnitionProvider {
     /* fire size 0 is used for the temporarily extinguished flame near end of lifetime
         and also for the special case when it was embers but fuel was added, which allows quicker ignition */
-    public static final IntProperty FIRE_SIZE = IntProperty.of("fire_size", 0, 4);
-    public static final BooleanProperty EMBERS = BooleanProperty.of("embers");
+    public static final IntProperty FIRE_SIZE = MbtwProperties.FIRE_SIZE;
+    public static final BooleanProperty EMBERS = MbtwProperties.EMBERS;
     private final int fireDamage;
 
     public VariableCampfireBlock(boolean emitsParticles, int fireDamage, Settings settings) {
@@ -166,7 +167,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
         return (blockState) -> {
             if (blockState.get(Properties.LIT))
             {
-                switch (blockState.get(VariableCampfireBlock.FIRE_SIZE)) {
+                switch (blockState.get(MbtwProperties.FIRE_SIZE)) {
                     case 1 -> {
                         return 4;
                     }

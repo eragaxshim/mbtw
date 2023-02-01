@@ -1,10 +1,7 @@
 package mbtw.mbtw;
 
 import mbtw.mbtw.block.*;
-import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
-import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
-import mbtw.mbtw.block.entity.FiniteTorchBlockEntity;
-import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
+import mbtw.mbtw.block.entity.*;
 import mbtw.mbtw.item.ChiselItem;
 import mbtw.mbtw.item.FiniteTorchItem;
 import mbtw.mbtw.item.FireStarterItem;
@@ -136,6 +133,10 @@ public class Mbtw implements ModInitializer {
 //        public String toString() {return "brick_smelting";}
 //    };
 	public static RecipeType<BrickOvenRecipe> BRICK_SMELTING;
+
+	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
+
+	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
 
 	public static ItemGroup MBTW_GROUP;
 
@@ -288,6 +289,10 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "brick_oven"), new BlockItem(BRICK_OVEN, new FabricItemSettings()));
 		BRICK_OVEN_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "brick_oven"), FabricBlockEntityTypeBuilder.create(BrickOvenBlockEntity::new, BRICK_OVEN).build(null));
+
+		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "millstone"), MILLSTONE);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "millstone"), new BlockItem(MILLSTONE, new FabricItemSettings()));
+		MILLSTONE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "millstone"), FabricBlockEntityTypeBuilder.create(MillstoneBlockEntity::new, MILLSTONE).build(null));
 
 		//BRICK_SMELTING = RecipeType.register("mbtw:brick_smelting");
 		//RecipeSerializer.register("mbtw:brick_smelting", BRICK_SMELTING_SERIALIZER);

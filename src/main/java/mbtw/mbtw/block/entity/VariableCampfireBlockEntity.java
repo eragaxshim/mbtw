@@ -2,6 +2,7 @@ package mbtw.mbtw.block.entity;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.VariableCampfireBlock;
+import mbtw.mbtw.state.property.MbtwProperties;
 import mbtw.mbtw.world.BlockSchedule;
 import mbtw.mbtw.world.ServerWorldMixinAccessor;
 import net.minecraft.block.BlockState;
@@ -65,7 +66,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
 
             if (campfire.burnTime == 0)
             {
-                world.setBlockState(pos, state.with(Properties.LIT, false).with(VariableCampfireBlock.EMBERS, true).with(VariableCampfireBlock.FIRE_SIZE, 1), 3);
+                world.setBlockState(pos, state.with(Properties.LIT, false).with(MbtwProperties.EMBERS, true).with(MbtwProperties.FIRE_SIZE, 1), 3);
                 campfire.burnableTime = 0;
                 campfire.tempWhileFueling = 0;
                 campfire.updateListeners();
@@ -83,7 +84,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
                 campfire.burnTime -= Math.min(Math.min(campfire.burnPower, Math.max((int)(0.05*campfire.burnTime), 200))*(isRaining ? 3 : 1), campfire.burnTime);
             }
         }
-        else if (world.getTime() % 20 == 0 && ((isEmbers = state.get(VariableCampfireBlock.EMBERS)) || state.get(VariableCampfireBlock.FIRE_SIZE) == 0))
+        else if (world.getTime() % 20 == 0 && ((isEmbers = state.get(MbtwProperties.EMBERS)) || state.get(MbtwProperties.FIRE_SIZE) == 0))
         {
             campfire.embersTime += 20*(isRaining ? 3 : 1);
 
@@ -101,7 +102,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
             else if (campfire.embersTime >= 800 && !isEmbers)
             {
                 campfire.burnableTime = 0;
-                world.setBlockState(pos, state.with(VariableCampfireBlock.EMBERS, true).with(VariableCampfireBlock.FIRE_SIZE, 1));
+                world.setBlockState(pos, state.with(MbtwProperties.EMBERS, true).with(MbtwProperties.FIRE_SIZE, 1));
                 campfire.updateListeners();
             }
             else {
@@ -115,7 +116,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
                         BlockState block = world.getBlockState(blockPos);
                         if (block.getBlock() instanceof VariableCampfireBlock)
                         {
-                            return block.get(Properties.LIT) && block.get(VariableCampfireBlock.FIRE_SIZE) > 1;
+                            return block.get(Properties.LIT) && block.get(MbtwProperties.FIRE_SIZE) > 1;
                         }
                         else return block.isOf(Blocks.FIRE);
                     })
@@ -159,7 +160,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
     private static void updateFireSize(World world, BlockPos pos, BlockState state,
                                        VariableCampfireBlockEntity campfire, boolean isRaining)
     {
-        int fireSize = state.get(VariableCampfireBlock.FIRE_SIZE);
+        int fireSize = state.get(MbtwProperties.FIRE_SIZE);
         int newFireSize = fireSize;
         int burnComparisonValue = campfire.burnTime + campfire.tempWhileFueling;
         if (burnComparisonValue < 750)
@@ -214,7 +215,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
             {
                 world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.3F, (float) (0.9 + 0.1 * world.getRandom().nextFloat()));
             }
-            world.setBlockState(pos, state.with(VariableCampfireBlock.FIRE_SIZE, newFireSize));
+            world.setBlockState(pos, state.with(MbtwProperties.FIRE_SIZE, newFireSize));
             campfire.updateListeners();
         }
         else {
@@ -228,7 +229,7 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
         for(int i = 0; i < itemsBeingCooked.size(); ++i) {
             ItemStack itemStack = itemsBeingCooked.get(i);
             if (!itemStack.isEmpty()) {
-                int fireSize = state.get(VariableCampfireBlock.FIRE_SIZE);
+                int fireSize = state.get(MbtwProperties.FIRE_SIZE);
                 campfireAccess.getCookingTimes()[i] += 1 - (fireSize == 1 ? world.getRandom().nextInt(1) : 0) + (fireSize == 4 ? 1 : 0);
 
                 if (campfireAccess.getFinishedItems()[i] && campfireAccess.getCookingTimes()[i] > 2 * campfireAccess.getCookingTotalTimes()[i])

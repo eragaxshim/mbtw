@@ -1,6 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.item.ChiselItem;
+import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -25,7 +26,7 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
 
     public StratifiedOreBlock(Settings settings, StratifiedStoneBlock sourceBlock, Item itemDrop) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false));
+        setDefaultState(getStateManager().getDefaultState().with(MbtwProperties.BROKEN, false));
         this.sourceBlock = sourceBlock;
         this.itemDrop = itemDrop;
         this.chunkDrop = null;
@@ -33,7 +34,7 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
     }
     public StratifiedOreBlock(Settings settings, StratifiedStoneBlock sourceBlock, Item chunkDrop, Item pileDrop) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false));
+        setDefaultState(getStateManager().getDefaultState().with(MbtwProperties.BROKEN, false));
         this.sourceBlock = sourceBlock;
         this.itemDrop = null;
         this.chunkDrop = chunkDrop;
@@ -65,7 +66,7 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
                 Map<Enchantment, Integer> ei = EnchantmentHelper.get(handStack);
                 if (ei.containsKey(Enchantments.SILK_TOUCH))
                 {
-                    return state.with(BROKEN, true);
+                    return state.with(MbtwProperties.BROKEN, true);
                 }
 
                 if (miningEffect >= 1)
@@ -90,6 +91,6 @@ public class StratifiedOreBlock extends Block implements BreakInterceptable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(BreakInterceptable.BROKEN);
+        stateManager.add(MbtwProperties.BROKEN);
     }
 }

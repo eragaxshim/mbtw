@@ -2,6 +2,7 @@ package mbtw.mbtw.block;
 
 import mbtw.mbtw.item.ChiselItem;
 import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
+import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +29,7 @@ public class TrunkBlock extends Block implements BreakInterceptable{
     public TrunkBlock(Settings settings, Block innerBlock) {
         super(settings);
         this.innerBlock = (InnerTrunkBlock) innerBlock;
-        setDefaultState(getStateManager().getDefaultState().with(BreakInterceptable.BROKEN, false).with(WORKBENCH, false));
+        setDefaultState(getStateManager().getDefaultState().with(MbtwProperties.BROKEN, false).with(WORKBENCH, false));
     }
 
     public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
@@ -37,7 +38,7 @@ public class TrunkBlock extends Block implements BreakInterceptable{
             return state.with(WORKBENCH, true);
         }
         else if (handStack.getItem() instanceof AxeItem && ((AxeItem) handStack.getItem()).getMaterial().getMiningLevel() > 3) {
-            return state.with(BreakInterceptable.BROKEN, true);
+            return state.with(MbtwProperties.BROKEN, true);
         }
 
         return innerBlock.getDefaultState().with(InnerTrunkBlock.BREAK_LEVEL, 1);
@@ -68,6 +69,6 @@ public class TrunkBlock extends Block implements BreakInterceptable{
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(WORKBENCH);
-        stateManager.add(BreakInterceptable.BROKEN);
+        stateManager.add(MbtwProperties.BROKEN);
     }
 }
