@@ -41,7 +41,7 @@
         "south": { "texture": "#side" },
         "west":  { "texture": "#side", "rotation":  0 },
         "east":  { "texture": "#side", "rotation": 0 },
-        "bottom": { "texture": "#top", "rotation": 0 }
+        "down": { "texture": "#top", "rotation": 0 }
       }
     }
   ]
