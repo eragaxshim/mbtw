@@ -73,11 +73,10 @@ public class MillstoneBlockEntity extends BlockEntity {
         }
         // Vector from source to sink
         Vec3i sourceToSink = sinkPos.subtract(millstone.sourcePos);
-        int out = source.getOutRotation(world, millstone.sourcePos, sinkState, sourceToSink);
-        // If we haven't saved the state, do so
-        if (millstone.sourceState == null) {
-            millstone.sourceState = world.getBlockState(millstone.sourcePos);
-        }
+        // TODO cache for changes?
+        millstone.sourceState = world.getBlockState(millstone.sourcePos);
+        int out = source.getOutRotation(world, millstone.sourcePos, millstone.sourceState, sourceToSink);
+
         if (out <= 0) {
             powerOff(world, sinkPos, sinkState);
             System.out.println("out Zero");

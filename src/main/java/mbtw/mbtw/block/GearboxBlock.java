@@ -11,6 +11,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class GearboxBlock extends Block implements MechanicalSource {
@@ -21,27 +23,8 @@ public class GearboxBlock extends Block implements MechanicalSource {
     }
 
     @Override
-    public int getOutRotation(World world, BlockPos pos, BlockState state, Vec3i sourceToSink) {
-        if (MechanicalVec.vecSameDirection(sourceToSink, OUT_DIRECTION)) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public static Optional<BlockPos> lookForSink(World world, BlockPos sourcePos, BlockState sourceState) {
-        System.out.println("looking!");
-        for (BlockPos iPos : BlockPos.iterate(sourcePos, sourcePos.offset(OUT_DIRECTION, 6))) {
-            BlockState iState = world.getBlockState(iPos);
-            System.out.println(iState);
-            if (!(iState.getBlock() instanceof MechanicalSink)) continue;
-            MechanicalSink sink = MbtwApi.SINK_API.find(world, iPos, iState, null, null);
-            if (sink == null) continue;
-            MechanicalVec rotationVector = new MechanicalVec(OUT_DIRECTION);
-            if (!sink.addSource(world, rotationVector, sourcePos, sourceState, iPos, iState)) continue;
-
-            return Optional.of(iPos);
-        }
-        return Optional.empty();
+    public List<MechanicalVec> getOutVecs(BlockPos sourcePos, BlockState sourceState) {
+        return List.of(new MechanicalVec(OUT_DIRECTION));
     }
 
     @Override

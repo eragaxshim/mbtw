@@ -11,6 +11,7 @@ import java.util.Set;
  * be nonzero and it must be a scalar multiple of a unit vector.
  */
 public class MechanicalVec {
+
     private final Direction direction;
     private final int magnitude;
 
@@ -56,6 +57,14 @@ public class MechanicalVec {
         return this.direction == direction;
     }
 
+    public boolean sameDirectionAsVec(MechanicalVec vec) {
+        return vec.sameDirection(this.direction);
+    }
+
+    public boolean sameDirectionAsVec(Vec3i vec) {
+        return vecSameDirection(vec, this.direction);
+    }
+
     public boolean oneOfDirections(Direction ... directions) {
         for (Direction direction : directions) {
             if (direction == this.direction) {
@@ -75,5 +84,13 @@ public class MechanicalVec {
         }
 
         return (new MechanicalVec(vec3i)).sameDirection(direction);
+    }
+
+    public int getMagnitude() {
+        return magnitude;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 }
