@@ -139,8 +139,8 @@ public class Mbtw implements ModInitializer {
 	public static final Block INFINITE_CRANK = new InfiniteCrankBlock(FabricBlockSettings.of(Material.WOOD));
 	public static BlockEntityType<InfiniteCrankBlockEntity> INFINITE_CRANK_ENTITY;
 
-	public static final Block AXLE = new AxleBlock(FabricBlockSettings.of(Material.WOOD));
-	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD));
+	public static final Block AXLE = new AxleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
+	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 
 	public static ItemGroup MBTW_GROUP;
 

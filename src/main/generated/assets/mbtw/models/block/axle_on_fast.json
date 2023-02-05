@@ -1,0 +1,7 @@
+{
+  "parent": "mbtw:block/template_axle",
+  "textures": {
+    "end": "mbtw:block/axle_end",
+    "side": "mbtw:block/axle_side_on_fast"
+  }
+}

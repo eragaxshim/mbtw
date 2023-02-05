@@ -12,5 +12,10 @@ public class MbtwProperties {
     public static final BooleanProperty BROKEN = BooleanProperty.of("broken");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
 
+    public static final BooleanProperty AXIS_DIRECTION = BooleanProperty.of("axis_direction");
+    public static final BooleanProperty BEARING_LOAD = BooleanProperty.of("bearing_load");
+    public static final IntProperty MECHANICAL_SOURCE = IntProperty.of("mechanical_source", 0, 4);
+    public static final IntProperty MECHANICAL_SINK = IntProperty.of("mechanical_sink", 0, 4);
+
     public static final EnumProperty<Direction> POWERED_UP_DOWN = EnumProperty.of("powered_face", Direction.class, Direction.UP, Direction.DOWN);
 }

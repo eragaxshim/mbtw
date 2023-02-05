@@ -19,7 +19,9 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ArrayUtils;
+
+import static mbtw.mbtw.block.ShapeHelper.createCuboidShapeFromArray;
+import static mbtw.mbtw.block.ShapeHelper.rotateCuboidCoords;
 
 public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
     protected static final VoxelShape SHAPE_B1;
@@ -84,15 +86,13 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
     public BlockState processBreakAttempt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack handStack)
     {
         int b = state.get(BREAK_LEVEL);
-
+        Direction.Axis axis = state.get(PillarBlock.AXIS);
         int d = state.get(PillarBlock.AXIS) == Direction.Axis.Z ? -1 : 1;
-        if (state.get(UP) && !world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), d)).isIn(BlockTags.LOGS))
-//                !BlockTags.LOGS.
-//                .contains())
+        if (state.get(UP) && !world.getBlockState(pos.offset(axis, d)).isIn(BlockTags.LOGS))
         {
             state = state.with(UP, false);
         }
-        if (state.get(DOWN) && world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -d)).isIn(BlockTags.LOGS))
+        if (state.get(DOWN) && !world.getBlockState(pos.offset(axis, -d)).isIn(BlockTags.LOGS))
         {
             state = state.with(DOWN, false);
         }
@@ -122,27 +122,22 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         Double[] coordsB3 = {3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D};
         Double[] coordsB4 = {4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D};
 
-        //TODO
         SHAPE_B1 = createCuboidShapeFromArray(coordsB1);
-        SHAPE_B1_X = createCuboidShapeFromArray(coordsB1);
-        SHAPE_B1_Z = createCuboidShapeFromArray(coordsB1);
-//        SHAPE_B1_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 0));
-//        SHAPE_B1_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 1));
+        SHAPE_B1_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 1));
+        SHAPE_B1_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB1, 2));
+
         SHAPE_B2 = createCuboidShapeFromArray(coordsB2);
-        SHAPE_B2_X = createCuboidShapeFromArray(coordsB2);
-        SHAPE_B2_Z = createCuboidShapeFromArray(coordsB2);
-//        SHAPE_B2_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 0));
-//        SHAPE_B2_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 1));
+        SHAPE_B2_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 1));
+        SHAPE_B2_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB2, 2));
+
         SHAPE_B3 = createCuboidShapeFromArray(coordsB3);
-        SHAPE_B3_X = createCuboidShapeFromArray(coordsB3);
-        SHAPE_B3_Z = createCuboidShapeFromArray(coordsB3);
-//        SHAPE_B3_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 0));
-//        SHAPE_B3_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 1));
+        SHAPE_B3_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 1));
+        SHAPE_B3_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB3, 2));
+
         SHAPE_B4 = createCuboidShapeFromArray(coordsB4);
-        SHAPE_B4_X = createCuboidShapeFromArray(coordsB4);
-        SHAPE_B4_Z = createCuboidShapeFromArray(coordsB4);
-//        SHAPE_B4_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 0));
-//        SHAPE_B4_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 1));
+        SHAPE_B4_X = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 1));
+        SHAPE_B4_Z = createCuboidShapeFromArray(rotateCuboidCoords(coordsB4, 2));
+
         UP = Properties.UP;
         DOWN = Properties.DOWN;
     }
@@ -156,32 +151,5 @@ public class InnerLogBlock extends PillarBlock implements BreakInterceptable {
         stateManager.add(DOWN);
     }
 
-    private static VoxelShape createCuboidShapeFromArray(Double[] coords)
-    {
-        return Block.createCuboidShape(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
-    }
 
-    private static Double[] rotateCuboidCoords(Double[] coords, int rotation)
-    {
-        Double[] newMinCoords = rotateCoordinate(coords[0], coords[1], coords[2], rotation);
-        Double[] newMaxCoords = rotateCoordinate(coords[3], coords[4], coords[5], rotation);
-
-        return ArrayUtils.addAll(newMinCoords, newMaxCoords);
-    }
-
-    private static Double[] rotateCoordinate(double x, double y, double z, int rotation)
-    {
-        // from Y to X
-        if (rotation == 0)
-        {
-            return new Double[] { y, 16.0D - x, z };
-        }
-        // from Y to Z
-        else if (rotation == 1) {
-            return new Double[] { x, 16.0D - z, y};
-        }
-        else {
-            return new Double[] { x, y, z };
-        }
-    }
 }

@@ -1,6 +1,7 @@
 package mbtw.mbtw.data.client;
 
 import mbtw.mbtw.Mbtw;
+import net.minecraft.block.Block;
 import net.minecraft.data.client.*;
 import net.minecraft.util.Identifier;
 
@@ -8,6 +9,7 @@ import java.util.*;
 
 public class MbtwModels {
     public static final Model TEMPLATE_MILLSTONE = MbtwModels.block("template_millstone", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
+    public static final Model TEMPLATE_AXLE = MbtwModels.block("template_axle", TextureKey.SIDE, TextureKey.END);
 
     private static Model block(String parent, TextureKey ... requiredTextureKeys) {
         return new Model(Optional.of(new Identifier(Mbtw.MOD_ID, "block/" + parent)), Optional.empty(), requiredTextureKeys);
@@ -29,5 +31,17 @@ public class MbtwModels {
         ((TextureMapMixinAccessor) newTextureMap).setInherited(newInherited);
         ((TextureMapMixinAccessor) newTextureMap).setEntries(newEntries);
         return newTextureMap;
+    }
+
+    public static TextureMap sideEnd(Block block) {
+        return new TextureMap().put(TextureKey.SIDE, TextureMap.getSubId(block, "_side")).put(TextureKey.END, TextureMap.getSubId(block, "_end"));
+    }
+
+    public static TextureMap sideEndOn(Block block) {
+        return new TextureMap().put(TextureKey.SIDE, TextureMap.getSubId(block, "_side_on")).put(TextureKey.END, TextureMap.getSubId(block, "_end"));
+    }
+
+    public static TextureMap sideEndOnFast(Block block) {
+        return new TextureMap().put(TextureKey.SIDE, TextureMap.getSubId(block, "_side_on_fast")).put(TextureKey.END, TextureMap.getSubId(block, "_end"));
     }
 }

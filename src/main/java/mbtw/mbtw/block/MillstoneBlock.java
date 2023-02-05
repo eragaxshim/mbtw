@@ -5,10 +5,7 @@ import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.state.property.MbtwProperties;
 import mbtw.mbtw.util.math.MechanicalVec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -17,12 +14,16 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,8 +35,14 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
     // Only makes sense if powered
     public static final EnumProperty<Direction> POWERED_UP_DOWN = MbtwProperties.POWERED_UP_DOWN;
     public static final BooleanProperty POWERED = MbtwProperties.POWERED;
+    public static final IntProperty MECHANICAL_SINK = MbtwProperties.MECHANICAL_SINK;
+    public static final int maxSink = 4;
 
     public static final Set<Direction> VALID_INPUT_FACES = new HashSet<>(Arrays.asList(Direction.UP, Direction.DOWN));
+    private static final VoxelShape base = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 9.0, 16.);
+    private static final VoxelShape middle = Block.createCuboidShape(1.0, 9.0, 1.0, 15.0, 11.0, 15.0);
+    private static final VoxelShape top = Block.createCuboidShape(0.0, 11.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape OUTLINE = VoxelShapes.union(base, middle, top);
 
     public MillstoneBlock(Settings settings) {
         super(settings);
@@ -80,5 +87,35 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
         } else {
             return false;
         }
+    }
+
+//    @Override
+//    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+//
+//        super.onStateReplaced(state, world, pos, newState, moved);
+//        if (world.isClient) {
+//            return;
+//        }
+//
+//        if (!state.isOf(newState.getBlock())) {
+//            for (Direction direction : VALID_INPUT_FACES) {
+//                world.updateNeighbor();
+//            }
+//        }
+//    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return OUTLINE;
+    }
+
+    @Override
+    public int getMaxSink() {
+        return maxSink;
+    }
+
+    @Override
+    public int getSink(BlockState state) {
+        return state.get(MECHANICAL_SINK);
     }
 }
