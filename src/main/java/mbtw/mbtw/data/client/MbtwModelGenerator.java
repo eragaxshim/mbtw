@@ -48,16 +48,19 @@ public class MbtwModelGenerator extends FabricModelProvider {
         TextureMap textureMapOnFast = MbtwModels.sideEndOnFast(Mbtw.AXLE);
         Identifier onFastIdentifier = MbtwModels.TEMPLATE_AXLE.upload(Mbtw.AXLE, "_on_fast", textureMapOnFast, blockStateModelGenerator.modelCollector);
 
-        BlockStateVariantMap blockStateVariantMap = BlockStateVariantMap.create(MbtwProperties.MECHANICAL_SOURCE, Properties.AXIS).register((source, axis) -> {
+        BlockStateVariantMap blockStateVariantMap = BlockStateVariantMap.create(MbtwProperties.MECHANICAL_SOURCE, Properties.AXIS, MbtwProperties.AXIS_DIRECTION).register((source, axis, axis_direction) -> {
                 switch (axis) {
                     case Y -> {
-                        return BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier));
+                        BlockStateVariant baseVariant = BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier));
+                        return axis_direction ? baseVariant : baseVariant.put(VariantSettings.X, VariantSettings.Rotation.R180);
                     }
                     case Z -> {
-                        return BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier)).put(VariantSettings.X, VariantSettings.Rotation.R90);
+                        BlockStateVariant baseVariant = BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier)).put(VariantSettings.X, VariantSettings.Rotation.R90);
+                        return axis_direction ? baseVariant : baseVariant.put(VariantSettings.Y, VariantSettings.Rotation.R180);
                     }
                     case X -> {
-                        return BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier)).put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90);
+                        BlockStateVariant baseVariant = BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier)).put(VariantSettings.X, VariantSettings.Rotation.R90);
+                        return axis_direction ? baseVariant.put(VariantSettings.Y, VariantSettings.Rotation.R90) : baseVariant.put(VariantSettings.Y, VariantSettings.Rotation.R270);
                     }
                 }
             throw new UnsupportedOperationException("Fix you generator!");

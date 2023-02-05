@@ -5,6 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -58,6 +61,11 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         return Direction.from(state.get(PillarBlock.AXIS), getAxisDirection(state));
     }
 
+    public static boolean inputOrOutput(BlockState state, Direction direction) {
+        Direction inputFace = getInputFace(state);
+        return inputFace == direction || inputFace.getOpposite() == direction;
+    }
+
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(PillarBlock.AXIS)) {
@@ -68,37 +76,66 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction inputFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        BlockState baseState = super.getPlacementState(ctx);
+        if (baseState == null) {
+            return null;
+        }
+        BlockPos pos = ctx.getBlockPos();
+        BlockState front = ctx.getWorld().getBlockState(pos.offset(baseState.get(PillarBlock.AXIS), 1));
+        BlockState back = ctx.getWorld().getBlockState(pos.offset(baseState.get(PillarBlock.AXIS), -1));
+
+
+        return baseState;
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction incomingFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 //        if (!world.isClient()) {
 //            return state;
 //        }
 
         System.out.println("updated axle");
-        if (neighborState.getBlock() instanceof MechanicalSink sink && inputFace == getInputFace(state).getOpposite()) {
+        if (neighborState.getBlock() instanceof MechanicalSink sink && sink.isSinkAtFace(neighborState, incomingFace.getOpposite())
+                && inputOrOutput(state, incomingFace)) {
             System.out.println("update from sink");
             int sinkSink = sink.getSink(neighborState);
             int selfSink = state.get(MECHANICAL_SINK);
 
+            BlockState newState = state;
+            // If sink zero and this sink nonzero, switch direction
+            // Since in this case there cannot be a source
+            if (getInputFace(state).getOpposite() != incomingFace && sinkSink > 0) {
+                newState = switchInputOutput(newState);
+            }
+
             // If sink request is not equal, change our sink request
             if (sinkSink != selfSink) {
                 boolean selfBearing = state.get(BEARING_LOAD);
-                BlockState newState = state;
+
                 // If requesting more, temporarily it must set bearing load to false and then wait for it to be
                 // re-activated
                 if (sinkSink > selfSink && selfBearing) {
                     newState = newState.with(BEARING_LOAD, false);
                 }
-                return newState.with(MECHANICAL_SINK, sinkSink);
+                newState = newState.with(MECHANICAL_SINK, sinkSink);
             }
-            
-        } else if (neighborState.getBlock() instanceof MechanicalSource source && inputFace == getInputFace(state)) {
+            return newState;
+        } else if (neighborState.getBlock() instanceof MechanicalSource source && source.isSourceAtFace(neighborState, incomingFace.getOpposite())
+                && inputOrOutput(state, incomingFace)) {
             System.out.println("update from source");
-            int sourceSource = source.getSourceAtFace(neighborState, inputFace.getOpposite());
+            int sourceSource = source.getSourceAtFace(neighborState, incomingFace.getOpposite());
             int selfSource = state.get(MECHANICAL_SOURCE);
-            boolean sourceBearing = source.getBearingAtFace(neighborState, inputFace.getOpposite());
+            boolean sourceBearing = source.getBearingAtFace(neighborState, incomingFace.getOpposite());
             boolean selfBearing = state.get(BEARING_LOAD);
 
             BlockState newState = state;
+            // If this source nonzero, switch direction
+            // If this then later hits a source, source will cause breakage
+            if (getInputFace(state) != incomingFace && sourceSource > 0) {
+                newState = switchInputOutput(newState);
+            }
+
             if (sourceSource == selfSource && sourceBearing == selfBearing) {
                 return state;
             }
@@ -110,8 +147,13 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
                 newState = newState.with(BEARING_LOAD, sourceBearing);
             }
             return newState;
-        } else if (neighborState.getBlock() instanceof MechanicalConnector && inputFace == getInputFace(state)) {
+        } else if (neighborState.getBlock() instanceof MechanicalConnector connector && connector.isOutputAtFace(neighborState, incomingFace.getOpposite())
+                && inputOrOutput(state, incomingFace)) {
+
+
             return neighborState;
+        } else if (getInputFace(state) == incomingFace && (state.get(MECHANICAL_SOURCE) > 0 || state.get(BEARING_LOAD))) {
+            return state.with(MECHANICAL_SOURCE, 0).with(BEARING_LOAD, false);
         }
 
         return state;
@@ -138,6 +180,11 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     @Override
     public int getSink(BlockState connectorState) {
         return connectorState.get(MECHANICAL_SINK);
+    }
+
+    @Override
+    public boolean isOutputAtFace(BlockState connectorState, Direction outputFace) {
+        return getInputFace(connectorState).getOpposite() == outputFace;
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

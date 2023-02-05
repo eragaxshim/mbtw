@@ -23,6 +23,8 @@ public interface MechanicalSource {
         return 0;
     }
 
+    boolean isSourceAtFace(BlockState state, Direction face);
+
     int getSourceAtFace(BlockState state, Direction face);
 
     boolean getBearingAtFace(BlockState state, Direction face);

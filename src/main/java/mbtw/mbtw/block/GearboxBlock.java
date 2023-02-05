@@ -13,6 +13,7 @@ import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +53,14 @@ public class GearboxBlock extends Block implements MechanicalSource {
     }
 
     @Override
+    public boolean isSourceAtFace(BlockState state, Direction face) {
+        Direction facing = state.get(FACING);
+        Direction up = DirectionHelper.relativeTo(facing, DirectionHelper.Relative.UP);
+
+        return face == up || face == up.getOpposite();
+    }
+
+    @Override
     public int getSourceAtFace(BlockState state, Direction face) {
         Direction facing = state.get(FACING);
         Direction up = DirectionHelper.relativeTo(facing, DirectionHelper.Relative.UP);
@@ -68,6 +77,29 @@ public class GearboxBlock extends Block implements MechanicalSource {
     @Override
     public List<MechanicalVec> getOutVecs(BlockPos sourcePos, BlockState sourceState) {
         return List.of(new MechanicalVec(OUT_DIRECTION));
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean notify) {
+        if (world.isClient) {
+            return;
+        }
+
+        if (neighborBlock instanceof MechanicalConnector connector) {
+            Vec3i outVec = neighborPos.subtract(pos);
+            if (MechanicalVec.notUniDirectional(neighborPos.subtract(pos))) {
+                return;
+            }
+            Direction incomingFace = (new MechanicalVec(outVec)).getDirection();
+            BlockState neighborState = world.getBlockState(neighborPos);
+            if (!isSourceAtFace(state, incomingFace) || !connector.isOutputAtFace(neighborState, incomingFace.getOpposite())) {
+                return;
+            }
+            if (connector.getSource(neighborState) > 0) {
+                // This means connector is inputting into source, which is not allowed
+                world.breakBlock(neighborPos, false);
+            }
+        }
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

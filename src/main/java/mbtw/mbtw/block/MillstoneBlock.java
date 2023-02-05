@@ -118,4 +118,9 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
     public int getSink(BlockState state) {
         return state.get(MECHANICAL_SINK);
     }
+
+    @Override
+    public boolean isSinkAtFace(BlockState state, Direction sinkFace) {
+        return sinkFace == Direction.UP || sinkFace == Direction.DOWN;
+    }
 }
