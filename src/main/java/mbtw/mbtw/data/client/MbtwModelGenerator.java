@@ -77,6 +77,6 @@ public class MbtwModelGenerator extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-
+        itemModelGenerator.register(Mbtw.FLOUR, Models.GENERATED);
     }
 }

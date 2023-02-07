@@ -8,7 +8,9 @@ import mbtw.mbtw.item.FireStarterItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
+import mbtw.mbtw.recipe.MillstoneRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
+import mbtw.mbtw.screen.MillstoneScreenHandler;
 import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
 import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.fabricmc.api.ModInitializer;
@@ -94,6 +96,8 @@ public class Mbtw implements ModInitializer {
 	public static final Item BOW_DRILL = new FireStarterItem(new FabricItemSettings(), 900, ItemStack.EMPTY, 150);
 	public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings(), 700, ItemStack.EMPTY, 600);
 
+	public static final Item FLOUR = new Item(new FabricItemSettings());
+
 	public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
 	public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
 	public static final Block BIRCH_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -128,11 +132,8 @@ public class Mbtw implements ModInitializer {
 
 	public static final Block BRICK_OVEN = new BrickOvenBlock(FabricBlockSettings.of(Material.STONE, MapColor.RED).requiresTool().strength(2.0F, 6.0F).luminance((LitStateInvoker.invokeCreateLightLevelFromBlockState(13))));
 	public static BlockEntityType<BrickOvenBlockEntity> BRICK_OVEN_ENTITY;
-	//    public static final RecipeType<BrickOvenRecipe> BRICK_SMELTING = new RecipeType<BrickOvenRecipe>() {
-//        @Override
-//        public String toString() {return "brick_smelting";}
-//    };
 	public static RecipeType<BrickOvenRecipe> BRICK_SMELTING;
+	public static RecipeType<MillstoneRecipe> MILLING;
 
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
 	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
@@ -144,10 +145,12 @@ public class Mbtw implements ModInitializer {
 
 	public static ItemGroup MBTW_GROUP;
 
-	//public static final RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER = new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100);
 	public static RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER;
+	public static RecipeSerializer<MillstoneRecipe> MILLING_SERIALIZER;
 	//public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "brick_oven"), BrickOvenScreenHandler::new);
+
 	public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new);
+	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new);
 
 	public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = new ScreenHandlerType<>(TrunkWorkbenchScreenHandler::new);
 
@@ -161,27 +164,24 @@ public class Mbtw implements ModInitializer {
 //    public static final ConfiguredFeature<?, ?> ORE_IRON_DEEP = Feature.ORE.configure(new OreFeatureConfig(RULE_DEEP_STONE, DEEP_IRON_ORE.getDefaultState(), 9)).rangeOf(DEEP_STONE_MAX).spreadHorizontally().repeat(5);
 
 	static {
-		Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "brick_smelting"), new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100));
+		BRICK_SMELTING_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "brick_smelting"), new CookingRecipeSerializer<>(BrickOvenRecipe::new, 100));
 		BRICK_SMELTING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "brick_smelting"), new RecipeType<BrickOvenRecipe>() {
 			@Override
 			public String toString() {
 				return "brick_smelting";
 			}
 		});
+		MILLING_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "milling"), new CookingRecipeSerializer<>(MillstoneRecipe::new, 50));
+		MILLING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "milling"), new RecipeType<MillstoneRecipe>() {
+			@Override
+			public String toString() {
+				return "milling";
+			}
+		});
 	}
 
 	@Override
 	public void onInitialize() {
-
-		MBTW_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "mbtw_group"))
-				.displayName(Text.literal("MBTW"))
-				.icon(() -> new ItemStack(LOOSE_STONE))
-				.entries((enabledFeatures, entries, operatorEnabled) -> {
-					entries.add(LOOSE_STONE);
-					entries.add(IRON_ORE_PILE);
-				})
-				.build();
-
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "empty"), MBTW_EMPTY);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "loose_stone"), LOOSE_STONE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "iron_ore_pile"), IRON_ORE_PILE);
@@ -189,6 +189,7 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "coal_dust_pile"), COAL_DUST_PILE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "saw_dust"), SAW_DUST);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "fungal_dust"), FUNGAL_DUST);
+
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "oak_bark"), OAK_BARK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "spruce_bark"), SPRUCE_BARK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "birch_bark"), BIRCH_BARK);
@@ -197,6 +198,7 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "dark_oak_bark"), DARK_OAK_BARK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "crimson_bark"), CRIMSON_BARK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "warped_bark"), WARPED_BARK);
+
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "gravel_pile"), GRAVEL_PILE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "ash_pile"), ASH_PILE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "creeper_oyster"), CREEPER_OYSTER);
@@ -214,6 +216,7 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "crimson_stem_inner"), CRIMSON_STEM_INNER);
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "warped_stem_inner"), WARPED_STEM_INNER);
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "dark_oak_log_inner"), DARK_OAK_LOG_INNER);
+
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "oak_trunk"), OAK_TRUNK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "oak_trunk"), new BlockItem(OAK_TRUNK, new FabricItemSettings()));
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "spruce_trunk"), SPRUCE_TRUNK);
@@ -275,6 +278,8 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "bow_drill"), BOW_DRILL);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "fire_plough"), FIRE_PLOUGH);
 
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "flour"), FLOUR);
+
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "finite_torch"), FINITE_TORCH);
@@ -311,9 +316,8 @@ public class Mbtw implements ModInitializer {
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
 
-		//BRICK_SMELTING = RecipeType.register("mbtw:brick_smelting");
-		//RecipeSerializer.register("mbtw:brick_smelting", BRICK_SMELTING_SERIALIZER);
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN_SCREEN_HANDLER);
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "millstone"), MILLSTONE_SCREEN_HANDLER);
 
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal"), ORE_COAL);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_hard"), ORE_COAL_HARD);
@@ -321,6 +325,38 @@ public class Mbtw implements ModInitializer {
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron"), ORE_IRON);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_hard"), ORE_IRON_HARD);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_iron_deep"), ORE_IRON_DEEP);
+
+		MBTW_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "mbtw_group"))
+				.displayName(Text.literal("MBTW"))
+				.icon(() -> new ItemStack(LOOSE_STONE))
+				.entries((enabledFeatures, entries, operatorEnabled) -> {
+					entries.add(LOOSE_STONE);
+					entries.add(IRON_ORE_PILE);
+					entries.add(IRON_ORE_CHUNK);
+					entries.add(COAL_DUST_PILE);
+					entries.add(SAW_DUST);
+					entries.add(FUNGAL_DUST);
+					entries.add(GRAVEL_PILE);
+					entries.add(ASH_PILE);
+					entries.add(LOOSE_COBBLESTONE);
+					entries.add(GRAVEL_SLAB);
+					entries.add(LOOSE_COBBLESTONE_SLAB);
+					entries.add(POINTY_STICK);
+					entries.add(SHARP_STONE);
+					entries.add(IRON_CHISEL);
+					entries.add(FIRE_STRIKER);
+					entries.add(BOW_DRILL);
+					entries.add(FIRE_PLOUGH);
+					entries.add(FINITE_TORCH);
+					entries.add(CLAY_BRICK);
+					entries.add(VARIABLE_CAMPFIRE);
+					entries.add(BRICK_OVEN);
+					entries.add(MILLSTONE);
+					entries.add(AXLE);
+					entries.add(GEARBOX);
+				})
+				.build();
+
 
 		FuelRegistry.INSTANCE.add(SAW_DUST, 100);
 		FuelRegistry.INSTANCE.add(POINTY_STICK, 100);

@@ -8,8 +8,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public interface MechanicalSink {
-    boolean addSource(World world, MechanicalVec rotVec, BlockPos sourcePos, BlockState sourceState, BlockPos pos, BlockState state);
-
     int getMaxSink();
 
     int getSink(BlockState state);

@@ -1,0 +1,10 @@
+{
+  "type": "mbtw:milling",
+  "category": "misc",
+  "cookingtime": 10,
+  "experience": 0.0,
+  "ingredient": {
+    "item": "minecraft:wheat"
+  },
+  "result": "mbtw:flour"
+}

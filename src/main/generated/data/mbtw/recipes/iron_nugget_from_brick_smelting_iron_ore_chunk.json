@@ -1,0 +1,10 @@
+{
+  "type": "mbtw:milling",
+  "category": "misc",
+  "cookingtime": 2000,
+  "experience": 0.0,
+  "ingredient": {
+    "item": "mbtw:iron_ore_chunk"
+  },
+  "result": "minecraft:iron_nugget"
+}

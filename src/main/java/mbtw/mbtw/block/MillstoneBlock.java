@@ -9,7 +9,10 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -31,11 +34,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MillstoneBlock extends Block implements BlockEntityProvider, MechanicalSink {
+public class MillstoneBlock extends AbstractMechanicalBlock {
     // Only makes sense if powered
     public static final EnumProperty<Direction> POWERED_UP_DOWN = MbtwProperties.POWERED_UP_DOWN;
-    public static final BooleanProperty POWERED = MbtwProperties.POWERED;
-    public static final IntProperty MECHANICAL_SINK = MbtwProperties.MECHANICAL_SINK;
     public static final int maxSink = 4;
 
     public static final Set<Direction> VALID_INPUT_FACES = new HashSet<>(Arrays.asList(Direction.UP, Direction.DOWN));
@@ -46,7 +47,7 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
 
     public MillstoneBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getDefaultState().with(POWERED, false).with(POWERED_UP_DOWN, Direction.UP));
+        setDefaultState(this.getDefaultState().with(POWERED_UP_DOWN, Direction.UP));
     }
 
     @Override
@@ -55,18 +56,26 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
-        } else {
-            world.setBlockState(pos, state.with(POWERED, !state.get(POWERED)), Block.NOTIFY_ALL);
-            return ActionResult.CONSUME;
+    protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof MillstoneBlockEntity) {
+            player.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
+            //player.incrementStat(Stats.INTERACT_WITH_FURNACE);
         }
     }
 
+//    @Override
+//    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+//        if (world.isClient) {
+//            return ActionResult.SUCCESS;
+//        } else {
+//            world.setBlockState(pos, state.with(POWERED, !state.get(POWERED)), Block.NOTIFY_ALL);
+//            return ActionResult.CONSUME;
+//        }
+//    }
+
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         super.appendProperties(stateManager);
-        stateManager.add(POWERED);
         stateManager.add(POWERED_UP_DOWN);
     }
 
@@ -77,16 +86,6 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
         }
 
         return (world1, pos, state1, millstone) -> MillstoneBlockEntity.serverTick(world1, pos, state1, (MillstoneBlockEntity) millstone);
-    }
-
-    @Override
-    public boolean addSource(World world, MechanicalVec rotVec, BlockPos sourcePos, BlockState sourceState, BlockPos pos, BlockState state) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof MillstoneBlockEntity) {
-            return ((MillstoneBlockEntity) blockEntity).addSource(rotVec, sourcePos, sourceState, pos, state);
-        } else {
-            return false;
-        }
     }
 
 //    @Override
@@ -112,11 +111,6 @@ public class MillstoneBlock extends Block implements BlockEntityProvider, Mechan
     @Override
     public int getMaxSink() {
         return maxSink;
-    }
-
-    @Override
-    public int getSink(BlockState state) {
-        return state.get(MECHANICAL_SINK);
     }
 
     @Override

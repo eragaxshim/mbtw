@@ -1,6 +1,7 @@
 package mbtw.mbtw;
 
 import mbtw.mbtw.gui.screen.ingame.BrickOvenScreen;
+import mbtw.mbtw.gui.screen.ingame.MillstoneScreen;
 import mbtw.mbtw.render.block.entity.VariableCampfireBlockEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -15,6 +16,7 @@ public class MbtwClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		HandledScreens.register(Mbtw.BRICK_OVEN_SCREEN_HANDLER, BrickOvenScreen::new);
+		HandledScreens.register(Mbtw.MILLSTONE_SCREEN_HANDLER, MillstoneScreen::new);
 		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.DAMAGED_COBWEB);
 		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.VARIABLE_CAMPFIRE);
 		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), Mbtw.FINITE_TORCH);

@@ -10,17 +10,17 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.util.Identifier;
 
-public class BrickOvenRecipe extends AbstractCookingRecipe {
-    public BrickOvenRecipe(Identifier id, String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
+public class MillstoneRecipe extends AbstractCookingRecipe {
+    public MillstoneRecipe(Identifier id, String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
         super(Mbtw.MILLING, id, group, category, input, output, experience, cookTime);
     }
 
     @Environment(EnvType.CLIENT)
     public ItemStack createIcon() {
-        return new ItemStack(Mbtw.BRICK_OVEN);
+        return new ItemStack(Mbtw.MILLSTONE);
     }
 
     public RecipeSerializer<?> getSerializer() {
-        return Mbtw.BRICK_SMELTING_SERIALIZER;
+        return Mbtw.MILLING_SERIALIZER;
     }
 }
