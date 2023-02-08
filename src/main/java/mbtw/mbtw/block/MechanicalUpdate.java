@@ -13,8 +13,33 @@ public class MechanicalUpdate {
 
     public MechanicalUpdate(BlockState oldState) {
         this.oldState = oldState;
-        this.newState = null;
+        this.newState = oldState;
         this.requiredProperties = new HashSet<>();
+    }
+
+    /**
+     * Updates property newState with value from otherState and adds property to requiredProperties
+     * @param property
+     * @param otherState
+     * @param onlyIfDifferent Only updates if the new value is different
+     */
+    public void updateState(Property<?> property, BlockState otherState, boolean onlyIfDifferent) {
+        this.newState = mergeProperty(newState, otherState, property, property.getType(), true, onlyIfDifferent);
+    }
+
+    public void updateState(Property<?> property, BlockState otherState) {
+        updateState(property, otherState, false);
+    }
+
+    public <T extends Comparable<T>> void updateState(Property<T> property, T value) {
+        updateState(property, value, false);
+    }
+
+    public <T extends Comparable<T>> void updateState(Property<T> property, T value, boolean onlyIfDifferent) {
+        if (!onlyIfDifferent || newState.get(property) != value) {
+            newState = newState.with(property, value);
+            addProperty(property);
+        }
     }
 
     public MechanicalUpdate withState(BlockState newState) {
@@ -45,15 +70,25 @@ public class MechanicalUpdate {
     public BlockState mergeState(MechanicalUpdate otherUpdate) {
         BlockState mergedState = otherUpdate.newState;
         for (Property<?> property : requiredProperties) {
-            mergedState = mergeProperty(mergedState, this.newState, property, property.getType());
+            mergedState = mergeProperty(mergedState, this.newState, property, property.getType(), false, false);
         }
         return mergedState;
     }
 
-    public static <T extends Comparable<T>> BlockState mergeProperty(BlockState firstState, BlockState otherState, Property<?> property, Class<T> expectedType) {
+    public <T extends Comparable<T>> BlockState mergeProperty(BlockState firstState, BlockState otherState, Property<?> property, Class<T> expectedType, boolean addRequired, boolean onlyIfDifferent) {
         if (property.getType() == expectedType) {
             Property<T> propertyT = (Property<T>) property;
-            return firstState.with(propertyT, otherState.get(propertyT));
+            T otherValue = otherState.get(propertyT);
+            boolean merge = !onlyIfDifferent || firstState.get(propertyT) != otherValue;
+            if (merge && addRequired) {
+                addProperty(propertyT);
+            }
+
+            if (merge) {
+                return firstState.with(propertyT, otherValue);
+            } else {
+                return firstState;
+            }
         } else {
             return null;
         }

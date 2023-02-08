@@ -1,5 +1,7 @@
-// 1.19.3	2023-02-07T23:16:18.0019674	mbtw/Recipes
+// 1.19.3	2023-02-08T10:07:09.9231966	mbtw/Recipes
+7bcc581ea1e376e6b4f5a9badb253e8e77c61efc data\mbtw\recipes\brick_from_brick_smelting_clay_brick.json
+41a0b386663cd5e8ec7657631ddc78c8b0ac53fe data\mbtw\advancements\recipes\misc\brick_from_brick_smelting_clay_brick.json
 f9b1769119dd4b13272924cb478f69c9ea77e9f9 data\mbtw\advancements\recipes\misc\flour_from_milling_wheat.json
-4a05c1aa832b01cbd97ee4a88bea6dfc834814b6 data\mbtw\recipes\iron_nugget_from_brick_smelting_iron_ore_chunk.json
-094a9e52476b2e56d564664b99785f96535a9b36 data\mbtw\recipes\flour_from_milling_wheat.json
+32328517b1ba74d6222c5bc21c3c2c7757f9c0fd data\mbtw\recipes\iron_nugget_from_brick_smelting_iron_ore_chunk.json
+bf5c0c78e30855c3bbfcec643083ac2de470febd data\mbtw\recipes\flour_from_milling_wheat.json
 69556fec335855a554af923035c42d7999d7e5e9 data\mbtw\advancements\recipes\misc\iron_nugget_from_brick_smelting_iron_ore_chunk.json

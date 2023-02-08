@@ -1,45 +1,33 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.entity.MillstoneBlockEntity;
-import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
+import mbtw.mbtw.block.entity.MillstoneBlockBlockEntity;
 import mbtw.mbtw.state.property.MbtwProperties;
-import mbtw.mbtw.util.math.MechanicalVec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class MillstoneBlock extends AbstractMechanicalBlock {
     // Only makes sense if powered
     public static final EnumProperty<Direction> POWERED_UP_DOWN = MbtwProperties.POWERED_UP_DOWN;
     public static final int maxSink = 4;
 
-    public static final Set<Direction> VALID_INPUT_FACES = new HashSet<>(Arrays.asList(Direction.UP, Direction.DOWN));
+
     private static final VoxelShape base = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 9.0, 16.);
     private static final VoxelShape middle = Block.createCuboidShape(1.0, 9.0, 1.0, 15.0, 11.0, 15.0);
     private static final VoxelShape top = Block.createCuboidShape(0.0, 11.0, 0.0, 16.0, 16.0, 16.0);
@@ -52,13 +40,13 @@ public class MillstoneBlock extends AbstractMechanicalBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MillstoneBlockEntity(pos, state);
+        return new MillstoneBlockBlockEntity(pos, state);
     }
 
     @Override
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof MillstoneBlockEntity) {
+        if (blockEntity instanceof MillstoneBlockBlockEntity) {
             player.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
             //player.incrementStat(Stats.INTERACT_WITH_FURNACE);
         }
@@ -85,7 +73,7 @@ public class MillstoneBlock extends AbstractMechanicalBlock {
             return null;
         }
 
-        return (world1, pos, state1, millstone) -> MillstoneBlockEntity.serverTick(world1, pos, state1, (MillstoneBlockEntity) millstone);
+        return (world1, pos, state1, millstone) -> MillstoneBlockBlockEntity.serverTick(world1, pos, state1, (MillstoneBlockBlockEntity) millstone);
     }
 
 //    @Override
@@ -109,12 +97,22 @@ public class MillstoneBlock extends AbstractMechanicalBlock {
     }
 
     @Override
-    public int getMaxSink() {
+    public int getMaxSink(BlockState state) {
         return maxSink;
     }
 
     @Override
     public boolean isSinkAtFace(BlockState state, Direction sinkFace) {
         return sinkFace == Direction.UP || sinkFace == Direction.DOWN;
+    }
+
+    @Override
+    public List<Direction> getInputFaces(BlockState state) {
+        return List.of(Direction.UP, Direction.DOWN);
+    }
+
+    @Override
+    public boolean incongruentInputAllowed(BlockState state) {
+        return false;
     }
 }

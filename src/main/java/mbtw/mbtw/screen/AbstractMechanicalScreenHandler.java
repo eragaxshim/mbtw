@@ -1,5 +1,6 @@
 package mbtw.mbtw.screen;
 
+import mbtw.mbtw.recipe.AbstractMechanicalRecipe;
 import mbtw.mbtw.screen.slot.MechanicalOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,13 +24,13 @@ public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
     protected final World world;
-    private final RecipeType<? extends AbstractCookingRecipe> recipeType;
+    private final RecipeType<? extends AbstractMechanicalRecipe> recipeType;
 
-    protected AbstractMechanicalScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends  AbstractCookingRecipe> recipeType, int syncId, PlayerInventory playerInventory) {
+    protected AbstractMechanicalScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends AbstractMechanicalRecipe> recipeType, int syncId, PlayerInventory playerInventory) {
         this(type, recipeType, syncId, playerInventory, new SimpleInventory(2), new ArrayPropertyDelegate(2));
     }
 
-    protected AbstractMechanicalScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends  AbstractCookingRecipe> recipeType, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    protected AbstractMechanicalScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends  AbstractMechanicalRecipe> recipeType, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(type, syncId);
         this.recipeType = recipeType;
         AbstractMechanicalScreenHandler.checkSize(inventory, 2);
@@ -58,11 +59,6 @@ public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler
     public void addSlots(Inventory inventory, PlayerInventory playerInventory) {
         this.addSlot(new Slot(inventory, 0, 56, 17));
         this.addSlot(new MechanicalOutputSlot(playerInventory.player, inventory, 1, 116, 35));
-    }
-
-    public boolean isProcessing() {
-        //TODO change
-        return true;
     }
 
     public int getCookProgress() {

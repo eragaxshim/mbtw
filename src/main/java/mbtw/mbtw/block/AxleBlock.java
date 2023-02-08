@@ -130,12 +130,18 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
             return stateFromSink(state, neighborState, sink, toNeighbor);
         } else if (neighborState.getBlock() instanceof MechanicalSource source && source.isSourceAtFace(neighborState, toNeighbor.getOpposite())) {
             return stateFromSource(state, neighborState, source, toNeighbor);
-        } else if (neighborState.getBlock() instanceof MechanicalConnector connector && connector.isOutputAtFace(neighborState, toNeighbor.getOpposite())) {
+        } else if (neighborState.getBlock() instanceof MechanicalConnector connector && (connector.isOutputAtFace(neighborState, toNeighbor.getOpposite()) || connector.isOutputAtFace(neighborState, toNeighbor))) {
             return stateFromConnector(state, neighborState, connector, toNeighbor);
         } else if (getInputFace(state) == toNeighbor && (state.get(MECHANICAL_SOURCE) > 0 || state.get(BEARING_LOAD))) {
             BlockState returnState = state.with(MECHANICAL_SOURCE, 0).with(BEARING_LOAD, false);
             MechanicalUpdate update = new MechanicalUpdate(state);
             update.addProperty(MECHANICAL_SOURCE);
+            update.addProperty(BEARING_LOAD);
+            return update.withState(returnState);
+        } else if (getInputFace(state).getOpposite() == toNeighbor && state.get(MECHANICAL_SINK) > 0) {
+            BlockState returnState = state.with(MECHANICAL_SINK, 0).with(BEARING_LOAD, false);
+            MechanicalUpdate update = new MechanicalUpdate(state);
+            update.addProperty(MECHANICAL_SINK);
             update.addProperty(BEARING_LOAD);
             return update.withState(returnState);
         } else {
@@ -146,7 +152,8 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction incomingFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (inputOrOutput(state, incomingFace)) {
-            return getMechanicalUpdate(state, neighborState, incomingFace).getNewState();
+            MechanicalUpdate update = getMechanicalUpdate(state, neighborState, incomingFace);
+            return update.getNewState();
         }
 
         return state;
@@ -194,17 +201,28 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     }
 
     // This assumes the connector outputs into axle
-    public static MechanicalUpdate stateFromConnector(BlockState state, BlockState connectorState, MechanicalConnector connector, Direction toConnector) {
+    public static MechanicalUpdate stateFromConnector(BlockState state, BlockState cState, MechanicalConnector connector, Direction toConnector) {
         MechanicalUpdate update = new MechanicalUpdate(state);
-        if (state.get(MECHANICAL_SOURCE) == 0 || toConnector == getInputFace(state)) {
-            update.addProperty(INPUT_FACE);
-            update.addProperty(BEARING_LOAD);
-            update.addProperty(MECHANICAL_SINK);
-            update.addProperty(MECHANICAL_SOURCE);
-            return update.withState(connectorState);
-        } else {
-            return update.withState(state);
+        Direction inputFace = getInputFace(state);
+        int cSource = connector.getSource(cState);
+        // We only switch direction for an active source, not for sink
+        // If there is a sink it should only be nonzero if there is a nonzero source
+        if (state.get(MECHANICAL_SOURCE) == 0 && cSource > 0) {
+            if (toConnector != getInputFace(state)) {
+                inputFace = inputFace.getOpposite();
+                update.updateState(INPUT_FACE, !state.get(INPUT_FACE));
+            } else {
+                update.addProperty(INPUT_FACE);
+            }
         }
+
+        if (toConnector == inputFace) {
+            update.updateState(BEARING_LOAD, connector.getBearing(cState), true);
+            update.updateState(MECHANICAL_SOURCE, cSource, true);
+        } else if (toConnector == inputFace.getOpposite()) {
+            update.updateState(MECHANICAL_SINK, connector.getSink(cState), true);
+        }
+        return update;
     }
 
     // This assumes the source sinks in axis of axle
@@ -243,6 +261,11 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         BlockState back = world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -1));
 
 
+    }
+
+    @Override
+    public BlockState withSink(BlockState connectorState, int newSink) {
+        return connectorState.with(MECHANICAL_SINK, newSink);
     }
 
     @Override

@@ -41,7 +41,6 @@
     "item.SwordItemMixin",
     "loot.ExplosionDecayMixin",
     "loot.SurvivesExplosionMixin",
-    "recipe.RecipeCopyMixin",
     "recipe.SerializerMixin",
     "recipe.ShapelessRecipeMixin",
     "screen.CraftingContextAccessor",

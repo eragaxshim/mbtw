@@ -7,6 +7,8 @@ import net.minecraft.util.math.Direction;
  * Mechanical Power is a simple system.
  */
 public interface MechanicalConnector {
+    BlockState withSink(BlockState connectorState, int newSink);
+
     int getSource(BlockState connectorState);
 
     boolean getBearing(BlockState connectorState);

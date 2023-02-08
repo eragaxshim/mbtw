@@ -24,27 +24,32 @@ public class MbtwRecipeGenerator extends FabricRecipeProvider {
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
         offerBrickSmelting(exporter, Mbtw.IRON_ORE_CHUNK, Items.IRON_NUGGET, 0,2000);
-        offerMilling(exporter, Items.WHEAT, Mbtw.FLOUR, 0, 10);
+        offerBrickSmelting(exporter, Mbtw.CLAY_BRICK, Items.BRICK, 0,1000);
+        offerMilling(exporter, Items.WHEAT, 1, Mbtw.FLOUR, 2, 10, 1);
     }
 
     public static void offerBrickSmelting(Consumer<RecipeJsonProvider> exporter, ItemConvertible input, ItemConvertible output, float experience, int cookingTime) {
-        criterionOffer(input, RecipeProvider.hasItem(input), output, "_from_brick_smelting", createBrickSmeltingMisc(Ingredient.ofItems(input), output, experience, cookingTime), exporter);
+        criterionOfferCooking(input, RecipeProvider.hasItem(input), output, "_from_brick_smelting", createBrickSmeltingMisc(Ingredient.ofItems(input), output, experience, cookingTime), exporter);
     }
 
-    public static void offerMilling(Consumer<RecipeJsonProvider> exporter, ItemConvertible input, ItemConvertible output, float experience, int cookingTime) {
-        criterionOffer(input, RecipeProvider.hasItem(input), output, "_from_milling", createMillingMisc(Ingredient.ofItems(input), output, experience, cookingTime), exporter);
+    public static void offerMilling(Consumer<RecipeJsonProvider> exporter, ItemConvertible input, int inputCount, ItemConvertible output, int outputCount, int processingTime, int requiredPower) {
+        criterionOfferMechanical(input, RecipeProvider.hasItem(input), output, "_from_milling", createMillingMisc(Ingredient.ofItems(input), inputCount, output, outputCount, processingTime, requiredPower), exporter);
     }
 
-    public static void criterionOffer(ItemConvertible input, String criterionName, ItemConvertible output, String method, CookingRecipeJsonBuilder builder, Consumer<RecipeJsonProvider> exporter) {
+    public static void criterionOfferCooking(ItemConvertible input, String criterionName, ItemConvertible output, String method, CookingRecipeJsonBuilder builder, Consumer<RecipeJsonProvider> exporter) {
+        builder.criterion(criterionName, VanillaRecipeProvider.conditionsFromItem(input)).offerTo(exporter, RecipeProvider.getItemPath(output) + method + "_" + RecipeProvider.getItemPath(input));
+    }
+
+    public static void criterionOfferMechanical(ItemConvertible input, String criterionName, ItemConvertible output, String method, MechanicalRecipeJsonBuilder builder, Consumer<RecipeJsonProvider> exporter) {
         builder.criterion(criterionName, VanillaRecipeProvider.conditionsFromItem(input)).offerTo(exporter, RecipeProvider.getItemPath(output) + method + "_" + RecipeProvider.getItemPath(input));
     }
 
     public static CookingRecipeJsonBuilder createBrickSmeltingMisc(Ingredient input, ItemConvertible output, float experience, int cookingTime) {
-        return new CookingRecipeJsonBuilder(RecipeCategory.MISC, CookingRecipeCategory.MISC, output, input, experience, cookingTime, Mbtw.MILLING_SERIALIZER);
+        return new CookingRecipeJsonBuilder(RecipeCategory.MISC, CookingRecipeCategory.MISC, output, input, experience, cookingTime, Mbtw.BRICK_SMELTING_SERIALIZER);
     }
 
-    public static CookingRecipeJsonBuilder createMillingMisc(Ingredient input, ItemConvertible output, float experience, int cookingTime) {
-        return new CookingRecipeJsonBuilder(RecipeCategory.MISC, CookingRecipeCategory.MISC, output, input, experience, cookingTime, Mbtw.MILLING_SERIALIZER);
+    public static MechanicalRecipeJsonBuilder createMillingMisc(Ingredient input, int inputCount, ItemConvertible output, int outputCount, int processingTime, int requiredPower) {
+        return new MechanicalRecipeJsonBuilder(RecipeCategory.MISC, input, inputCount, output, outputCount, processingTime, requiredPower, Mbtw.MILLING_SERIALIZER);
     }
 
 }

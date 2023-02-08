@@ -8,6 +8,7 @@ import mbtw.mbtw.item.FireStarterItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
+import mbtw.mbtw.recipe.MechanicalRecipeSerializer;
 import mbtw.mbtw.recipe.MillstoneRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import mbtw.mbtw.screen.MillstoneScreenHandler;
@@ -136,7 +137,7 @@ public class Mbtw implements ModInitializer {
 	public static RecipeType<MillstoneRecipe> MILLING;
 
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
-	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
+	public static BlockEntityType<MillstoneBlockBlockEntity> MILLSTONE_ENTITY;
 	public static final Block INFINITE_CRANK = new InfiniteCrankBlock(FabricBlockSettings.of(Material.WOOD));
 	public static BlockEntityType<InfiniteCrankBlockEntity> INFINITE_CRANK_ENTITY;
 
@@ -171,7 +172,7 @@ public class Mbtw implements ModInitializer {
 				return "brick_smelting";
 			}
 		});
-		MILLING_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "milling"), new CookingRecipeSerializer<>(MillstoneRecipe::new, 50));
+		MILLING_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "milling"), new MechanicalRecipeSerializer<>(MillstoneRecipe::new, 50, 1));
 		MILLING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "milling"), new RecipeType<MillstoneRecipe>() {
 			@Override
 			public String toString() {
@@ -301,7 +302,7 @@ public class Mbtw implements ModInitializer {
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "millstone"), MILLSTONE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "millstone"), new BlockItem(MILLSTONE, new FabricItemSettings()));
-		MILLSTONE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "millstone"), FabricBlockEntityTypeBuilder.create(MillstoneBlockEntity::new, MILLSTONE).build(null));
+		MILLSTONE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "millstone"), FabricBlockEntityTypeBuilder.create(MillstoneBlockBlockEntity::new, MILLSTONE).build(null));
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "infinite_crank"), INFINITE_CRANK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "infinite_crank"), new BlockItem(INFINITE_CRANK, new FabricItemSettings()));

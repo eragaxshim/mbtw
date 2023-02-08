@@ -1,10 +1,10 @@
 {
   "type": "mbtw:brick_smelting",
   "category": "misc",
-  "cookingtime": 2000,
+  "cookingtime": 1000,
   "experience": 0.0,
   "ingredient": {
-    "item": "mbtw:iron_ore_chunk"
+    "item": "mbtw:clay_brick"
   },
-  "result": "minecraft:iron_nugget"
+  "result": "minecraft:brick"
 }

@@ -1,7 +1,7 @@
 package mbtw.mbtw.block.entity;
 
-import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.MechanicalSink;
+import mbtw.mbtw.recipe.AbstractMechanicalRecipe;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,7 +12,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.PropertyDelegate;
@@ -20,28 +19,26 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class AbstractMechanicalProcessor extends LockableContainerBlockEntity {
+public abstract class AbstractBlockMechanicalProcessor extends LockableContainerBlockEntity implements MechanicalSinkBlockEntity {
     private boolean processing;
     private int availablePower;
 
     private BlockState connectorState;
     private BlockPos connectorPos;
 
-    private static final MechanicalSink SINK = (MechanicalSink) Mbtw.MILLSTONE;
-
     protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
     int cookTime;
     int cookTimeTotal;
 
-    private final RecipeManager.MatchGetter<Inventory, ? extends AbstractCookingRecipe> matchGetter;
+    private final RecipeManager.MatchGetter<Inventory, ? extends AbstractMechanicalRecipe> matchGetter;
 
     protected final PropertyDelegate propertyDelegate = new PropertyDelegate(){
 
         @Override
         public int get(int index) {
             return switch (index) {
-                case 0 -> AbstractMechanicalProcessor.this.cookTime;
-                case 1 -> AbstractMechanicalProcessor.this.cookTimeTotal;
+                case 0 -> AbstractBlockMechanicalProcessor.this.cookTime;
+                case 1 -> AbstractBlockMechanicalProcessor.this.cookTimeTotal;
                 default -> 0;
             };
         }
@@ -49,8 +46,8 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         @Override
         public void set(int index, int value) {
             switch (index) {
-                case 0 -> AbstractMechanicalProcessor.this.cookTime = value;
-                case 1 -> AbstractMechanicalProcessor.this.cookTimeTotal = value;
+                case 0 -> AbstractBlockMechanicalProcessor.this.cookTime = value;
+                case 1 -> AbstractBlockMechanicalProcessor.this.cookTimeTotal = value;
             }
         }
 
@@ -60,7 +57,7 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         }
     };
 
-    public AbstractMechanicalProcessor(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, RecipeType<? extends AbstractCookingRecipe> recipeType) {
+    public AbstractBlockMechanicalProcessor(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, MechanicalSink sink, RecipeType<? extends AbstractMechanicalRecipe> recipeType) {
         super(blockEntityType, pos, state);
         this.processing = true;
         this.matchGetter = RecipeManager.createCachedMatchGetter(recipeType);
@@ -80,7 +77,7 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         }
     }
 
-    public static void updatePowered(World world, BlockPos sinkPos, BlockState sinkState, AbstractMechanicalProcessor processor, boolean updatedState) {
+    public static void updatePowered(World world, BlockPos sinkPos, BlockState sinkState, AbstractBlockMechanicalProcessor processor, boolean updatedState) {
         if (processor.availablePower <= 0 || !processor.processing) {
             powerOff(world, sinkPos, sinkState, updatedState);
         } else {
@@ -88,24 +85,24 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         }
     }
 
-    public static void recipeTick(World world, BlockPos pos, BlockState state, AbstractMechanicalProcessor processor) {
+    public static void recipeTick(World world, BlockPos pos, BlockState state, AbstractBlockMechanicalProcessor processor) {
         ItemStack inputStack = processor.inventory.get(0);
         boolean doMarkDirty = false;
         int cookTime = processor.cookTime;
         int cookTimeTotal = processor.cookTimeTotal;
 
         if (!inputStack.isEmpty()) {
-            AbstractCookingRecipe recipe = processor.matchGetter.getFirstMatch(processor, world).orElse(null);
+            AbstractMechanicalRecipe recipe = processor.matchGetter.getFirstMatch(processor, world).orElse(null);
             if (recipe != null) {
                 int maxOutPutSlotCount = Math.min(processor.getMaxCountOfSlot(1), processor.getMaxCountPerStack());
-                boolean canAcceptRecipe = AbstractMechanicalProcessor.canAcceptRecipeOutput(recipe, processor.inventory, maxOutPutSlotCount);
-                if (canAcceptRecipe) {
+                boolean canAcceptRecipe = AbstractBlockMechanicalProcessor.canAcceptRecipeOutput(recipe, processor.inventory, maxOutPutSlotCount);
+                if (canAcceptRecipe && processor.availablePower >= recipe.getRequiredPower()) {
                     processor.cookTime++;
-                    processor.cookTimeTotal = recipe.getCookTime();
+                    processor.cookTimeTotal = recipe.getProcessingTime();
                     if (processor.cookTime > 0 && processor.cookTime == processor.cookTimeTotal) {
                         processor.cookTime = 0;
                         // Adds new item, decrements previous item
-                        AbstractMechanicalProcessor.craftRecipe(recipe, processor.inventory);
+                        AbstractBlockMechanicalProcessor.craftRecipe(recipe, processor.inventory);
                     }
                     doMarkDirty = true;
                 } else {
@@ -116,13 +113,13 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
             }
         }
         if (doMarkDirty || processor.cookTime != cookTime || processor.cookTimeTotal != cookTimeTotal) {
-            AbstractMechanicalProcessor.markDirty(world, pos, state);
+            AbstractBlockMechanicalProcessor.markDirty(world, pos, state);
         }
     }
 
     public abstract int getMaxCountOfSlot(int slotIndex);
 
-    private static boolean canAcceptRecipeOutput(AbstractCookingRecipe recipe, DefaultedList<ItemStack> slots, int maxSlotCount) {
+    private static boolean canAcceptRecipeOutput(AbstractMechanicalRecipe recipe, DefaultedList<ItemStack> slots, int maxSlotCount) {
         // if nothing in input, no
         if (slots.get(0).isEmpty()) {
             return false;
@@ -157,7 +154,7 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         slots.set(1, stack);
     }
 
-    public static void craftRecipe(AbstractCookingRecipe recipe, DefaultedList<ItemStack> slots) {
+    public static void craftRecipe(AbstractMechanicalRecipe recipe, DefaultedList<ItemStack> slots) {
         ItemStack inputStack = getInputSlot(slots);
         ItemStack recipeOutput = recipe.getOutput();
         ItemStack outputSlotStack = getOutputSlot(slots);
@@ -169,11 +166,11 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         inputStack.decrement(1);
     }
 
-    public boolean isProcessing() {
-        return this.propertyDelegate.get(0) > 0;
-    }
 
-    public static void serverTick(World world, BlockPos sinkPos, BlockState sinkState, AbstractMechanicalProcessor processor) {
+
+    public static void serverTick(World world, BlockPos sinkPos, BlockState sinkState, AbstractBlockMechanicalProcessor processor) {
+        MechanicalSinkBlockEntity.mechanicalTick(world, sinkPos, sinkState, processor);
+        processor.availablePower = processor.sink().getAvailablePower(sinkState);
         recipeTick(world, sinkPos, sinkState, processor);
 //        BlockState cState = processor.connectorState;
 //        BlockPos cPos = processor.connectorPos;
@@ -257,12 +254,12 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
         // inputting nonempty, putting it in same stack with also same nbt
         boolean alreadyThere = !stack.isEmpty() && stack.isItemEqual(itemStack) && ItemStack.areNbtEqual(stack, itemStack);
         this.inventory.set(slot, stack);
-        if (stack.getCount() > this.getMaxCountPerStack()) {
-            stack.setCount(this.getMaxCountPerStack());
+        int maxOutPutSlotCount = Math.min(this.getMaxCountOfSlot(slot), this.getMaxCountPerStack());
+        if (stack.getCount() > maxOutPutSlotCount) {
+            stack.setCount(maxOutPutSlotCount);
         }
-        // !bl means
         if (slot == 0 && !alreadyThere) {
-            this.cookTimeTotal = AbstractMechanicalProcessor.getCookTime(this.world, this);
+            this.cookTimeTotal = AbstractBlockMechanicalProcessor.getProcessingTime(this.world, this);
             this.cookTime = 0;
             this.markDirty();
         }
@@ -281,10 +278,10 @@ public abstract class AbstractMechanicalProcessor extends LockableContainerBlock
 
     @Override
     public void clear() {
-
+        this.inventory.clear();
     }
 
-    private static int getCookTime(World world, AbstractMechanicalProcessor processor) {
-        return processor.matchGetter.getFirstMatch(processor, world).map(AbstractCookingRecipe::getCookTime).orElse(200);
+    private static int getProcessingTime(World world, AbstractBlockMechanicalProcessor processor) {
+        return processor.matchGetter.getFirstMatch(processor, world).map(AbstractMechanicalRecipe::getProcessingTime).orElse(200);
     }
 }

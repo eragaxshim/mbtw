@@ -1,5 +1,6 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -20,7 +21,7 @@ public abstract class AbstractMechanicalBlock extends Block implements BlockEnti
 
     public AbstractMechanicalBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getDefaultState().with(POWERED, false));
+        setDefaultState(this.getDefaultState().with(POWERED, false).with(MECHANICAL_SINK, 0));
     }
 
     @Override
@@ -37,10 +38,26 @@ public abstract class AbstractMechanicalBlock extends Block implements BlockEnti
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         super.appendProperties(stateManager);
         stateManager.add(POWERED);
+        stateManager.add(MECHANICAL_SINK);
     }
 
     @Override
     public int getSink(BlockState state) {
         return state.get(MECHANICAL_SINK);
+    }
+
+    @Override
+    public boolean isPowered(BlockState state) {
+        return state.get(POWERED);
+    }
+
+    @Override
+    public BlockState setAvailablePower(BlockState state, int availablePower) {
+        return state.with(POWERED, availablePower > 0).with(MECHANICAL_SINK, availablePower);
+    }
+
+    @Override
+    public BlockState setSink(BlockState state, int sink) {
+        return state.with(MECHANICAL_SINK, sink);
     }
 }
