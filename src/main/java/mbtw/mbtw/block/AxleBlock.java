@@ -80,10 +80,13 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         Direction.Axis axis = state.get(PillarBlock.AXIS);
         Direction toPosNeighbor = Direction.from(axis, Direction.AxisDirection.POSITIVE);
 
-        BlockState front = world.getBlockState(pos.offset(toPosNeighbor));
-        BlockState back = world.getBlockState(pos.offset(toPosNeighbor.getOpposite()));
-        MechanicalUpdate frontUpdate = getMechanicalUpdate(state, front, toPosNeighbor);
-        MechanicalUpdate backUpdate = getMechanicalUpdate(state, back, toPosNeighbor.getOpposite());
+        BlockPos frontPos = pos.offset(toPosNeighbor);
+        BlockState front = world.getBlockState(frontPos);
+        BlockPos backPos = pos.offset(toPosNeighbor.getOpposite());
+        BlockState back = world.getBlockState(backPos);
+
+        MechanicalUpdate frontUpdate = getMechanicalUpdate(world, state, front, frontPos, toPosNeighbor);
+        MechanicalUpdate backUpdate = getMechanicalUpdate(world, state, back, backPos, toPosNeighbor.getOpposite());
 
         if ((frontUpdate.getNewState() == state && backUpdate.getNewState() == state)) {
             return state;
@@ -130,10 +133,10 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
 //    }
 
     // This assumes the neighbor is in the axis of the axle
-    public static MechanicalUpdate getMechanicalUpdate(BlockState state, BlockState neighborState, Direction toNeighbor) {
+    public static MechanicalUpdate getMechanicalUpdate(World world, BlockState state, BlockState neighborState, BlockPos neighborPos, Direction toNeighbor) {
         Block neighbor = neighborState.getBlock();
         if (neighbor instanceof MechanicalSink sink && sink.isSinkAtFace(neighborState, toNeighbor.getOpposite())) {
-            return stateFromSink(state, neighborState, sink, toNeighbor);
+            return stateFromSink(world, state, neighborState, neighborPos, sink, toNeighbor);
         } else if (neighborState.getBlock() instanceof MechanicalSource source && source.isSourceAtFace(neighborState, toNeighbor.getOpposite())) {
             return stateFromSource(state, neighborState, source, toNeighbor);
         } else if (neighborState.getBlock() instanceof MechanicalConnector connector && (connector.isOutputAtFace(neighborState, toNeighbor.getOpposite()) || connector.isOutputAtFace(neighborState, toNeighbor))) {
@@ -237,9 +240,9 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     }
 
     // This assumes the source sinks in axis of axle
-    public static MechanicalUpdate stateFromSink(BlockState state, BlockState sinkState, MechanicalSink sink, Direction toSink) {
+    public static MechanicalUpdate stateFromSink(World world, BlockState state, BlockState sinkState, BlockPos sinkPos, MechanicalSink sink, Direction toSink) {
         MechanicalUpdate update = new MechanicalUpdate(state);
-        int sinkSink = sink.getSink(sinkState);
+        int sinkSink = sink.getSink(world, sinkState, sinkPos, null);
         int selfSink = state.get(MECHANICAL_SINK);
 
         BlockState newState = state;

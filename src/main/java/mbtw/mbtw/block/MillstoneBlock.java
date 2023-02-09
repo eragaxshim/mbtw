@@ -1,8 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
-import mbtw.mbtw.block.entity.MillstoneBlockBlockEntity;
+import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -40,13 +39,13 @@ public class MillstoneBlock extends AbstractMechanicalBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MillstoneBlockBlockEntity(pos, state);
+        return new MillstoneBlockEntity(pos, state);
     }
 
     @Override
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof MillstoneBlockBlockEntity) {
+        if (blockEntity instanceof MillstoneBlockEntity) {
             player.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
             //player.incrementStat(Stats.INTERACT_WITH_FURNACE);
         }
@@ -73,7 +72,7 @@ public class MillstoneBlock extends AbstractMechanicalBlock {
             return null;
         }
 
-        return (world1, pos, state1, millstone) -> MillstoneBlockBlockEntity.serverTick(world1, pos, state1, (MillstoneBlockBlockEntity) millstone);
+        return (world1, pos, state1, millstone) -> MillstoneBlockEntity.serverTick(world1, pos, state1, (MillstoneBlockEntity) millstone);
     }
 
 //    @Override

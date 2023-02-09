@@ -1,10 +1,18 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.DynamicMechanicalSource;
+import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.block.entity.GearboxBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
+import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import mbtw.mbtw.util.SourceUpdate;
 import mbtw.mbtw.util.math.DirectionHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -19,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GearboxBlock extends Block implements DynamicMechanicalSource {
+public class GearboxBlock extends Block implements DynamicMechanicalSource, MechanicalSink, BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
     // bitwise flag
     public static final IntProperty BEARING = IntProperty.of("bearing", 0, 31);
@@ -98,8 +106,8 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource {
     }
 
     @Override
-    public int getAvailableDelivery(BlockState state) {
-        return 4;
+    public int getAvailableDelivery(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        return getAvailablePower(world, state, pos, blockEntity);
     }
 
     @Override
@@ -150,17 +158,6 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource {
         return update.updateBearing(newState);
     }
 
-    //    @Override
-//    public BlockState getStateForNeighborUpdate(BlockState state, Direction incomingFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-//        if (isSourceAtFace(state, incomingFace) && state.getBlock() instanceof MechanicalSource source) {
-//            SourceUpdate update = new SourceUpdate((World) world, pos, state, source);
-//            BlockState newState = update.updateSourceBase();
-//            return update.updateBearing(newState);
-//        }
-//
-//        return state;
-//    }
-
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         super.appendProperties(stateManager);
         stateManager.add(FACING);
@@ -174,5 +171,78 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource {
         if (!world.isClient) {
             //Optional<BlockPos> possibleSink = lookForSink(world, pos, state);
         }
+    }
+
+    @Override
+    public int getMaxSink(BlockState state) {
+        return 16;
+    }
+
+    @Override
+    public int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        if (blockEntity != null) {
+            return blockEntity.getSink(world, state, pos, blockEntity);
+        }
+        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
+            return mechanicalSinkBlockEntity.getSink(world, state, pos, mechanicalSinkBlockEntity);
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        if (blockEntity != null) {
+            return blockEntity.getAvailablePower(world, state, pos, blockEntity) > 0;
+        }
+        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
+            return mechanicalSinkBlockEntity.getAvailablePower(world, state, pos, mechanicalSinkBlockEntity) > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        if (blockEntity != null) {
+            return blockEntity.getAvailablePower(world, state, pos, blockEntity);
+        }
+        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
+            return mechanicalSinkBlockEntity.getAvailablePower(world, state, pos, mechanicalSinkBlockEntity);
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean isSinkAtFace(BlockState state, Direction sinkFace) {
+        Direction facing = state.get(FACING);
+        Direction inputFace = DirectionHelper.relativeTo(facing, DirectionHelper.Relative.IDENTITY);
+        return sinkFace == inputFace;
+    }
+
+    @Override
+    public List<Direction> getInputFaces(BlockState state) {
+        Direction facing = state.get(FACING);
+        Direction inputFace = DirectionHelper.relativeTo(facing, DirectionHelper.Relative.IDENTITY);
+        return List.of(inputFace);
+    }
+
+    @Override
+    public boolean incongruentInputAllowed(BlockState state) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new GearboxBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (type != Mbtw.GEARBOX_ENTITY || world.isClient) {
+            return null;
+        }
+
+        return (world1, pos, tickerState, gearbox) -> GearboxBlockEntity.serverTick(world1, pos, tickerState, (GearboxBlockEntity) gearbox);
     }
 }

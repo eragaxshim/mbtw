@@ -7,12 +7,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SourceUpdate {
-    private final WorldAccess world;
+    private final World world;
     private final DynamicMechanicalSource source;
     private final BlockPos sourcePos;
     private final BlockState sourceState;
@@ -60,7 +61,7 @@ public class SourceUpdate {
     // This uses saved sourceState, so always call this first
     public BlockState updateSourceBase() {
         int costPerBase = Math.max(source.costPerBase(sourceState, sinkingFaces), maxConnectedRatio);
-        int newBase = source.getAvailableDelivery(sourceState) / costPerBase;
+        int newBase = source.getAvailableDelivery(world, sourceState, sourcePos, null) / costPerBase;
         return source.setSourceBase(sourceState, newBase);
     }
 

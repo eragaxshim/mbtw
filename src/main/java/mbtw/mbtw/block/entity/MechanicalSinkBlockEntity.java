@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public interface MechanicalSinkBlockEntity {
     MechanicalSink sink();
@@ -24,4 +25,12 @@ public interface MechanicalSinkBlockEntity {
 
 
     }
+
+    int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity);
+
+    int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity);
+
+    void worldSetAvailablePower(World world, BlockPos sinkPos, BlockState sinkState, int availablePower);
+
+    void worldSetSink(World world, BlockPos sinkPos, BlockState sinkState, int sink);
 }

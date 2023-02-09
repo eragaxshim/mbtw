@@ -14,6 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractMechanicalBlock extends Block implements BlockEntityProvider, MechanicalSink {
     public static final BooleanProperty POWERED = MbtwProperties.POWERED;
@@ -42,26 +43,12 @@ public abstract class AbstractMechanicalBlock extends Block implements BlockEnti
     }
 
     @Override
-    public int getSink(BlockState state) {
+    public int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
         return state.get(MECHANICAL_SINK);
     }
 
     @Override
-    public boolean isPowered(BlockState state) {
+    public boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
         return state.get(POWERED);
-    }
-
-    @Override
-    public BlockState setAvailablePower(BlockState state, int availablePower) {
-        if (availablePower > 0) {
-            return state.with(POWERED, true).with(MECHANICAL_SINK, availablePower);
-        } else {
-            return state.with(POWERED, false);
-        }
-    }
-
-    @Override
-    public BlockState setSink(BlockState state, int sink) {
-        return state.with(MECHANICAL_SINK, sink);
     }
 }

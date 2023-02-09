@@ -9,8 +9,8 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-public class MillstoneBlockBlockEntity extends AbstractBlockMechanicalProcessor {
-    public MillstoneBlockBlockEntity(BlockPos pos, BlockState state) {
+public class MillstoneBlockEntity extends AbstractBlockMechanicalProcessor {
+    public MillstoneBlockEntity(BlockPos pos, BlockState state) {
         super(Mbtw.MILLSTONE_ENTITY, pos, state, (MechanicalSink) Mbtw.MILLSTONE, Mbtw.MILLING);
     }
 

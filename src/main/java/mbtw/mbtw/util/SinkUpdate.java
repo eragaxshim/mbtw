@@ -15,6 +15,7 @@ import java.util.List;
 public class SinkUpdate {
     private final World world;
     private final MechanicalSink sink;
+    private final MechanicalSinkBlockEntity sinkEntity;
     private final BlockPos sinkPos;
     private final BlockState sinkState;
     private final List<ConnectorState> connectors = new ArrayList<>();
@@ -25,6 +26,7 @@ public class SinkUpdate {
     public SinkUpdate(World world, BlockPos sinkPos, BlockState sinkState, MechanicalSinkBlockEntity sinkEntity) {
         this.world = world;
         this.sink = sinkEntity.sink();
+        this.sinkEntity = sinkEntity;
         this.sinkPos = sinkPos;
         this.sinkState = sinkState;
 
@@ -66,33 +68,20 @@ public class SinkUpdate {
     }
 
     public boolean updateSinkPower() {
-        if (availablePower() != sink.getAvailablePower(sinkState)) {
-            world.setBlockState(sinkPos, sink.setAvailablePower(sinkState, availablePower()));
+        if (availablePower() != sink.getAvailablePower(world, sinkState, sinkPos, sinkEntity)) {
+            sinkEntity.worldSetAvailablePower(world, sinkPos, sinkState, availablePower());
             return true;
         }
         return false;
     }
 
     public boolean updateSink() {
-        if (sink.getSink(sinkState) != maxSource()) {
-            world.setBlockState(sinkPos, sink.setSink(sinkState, maxSource()));
+        if (sink.getSink(world, sinkState, sinkPos, sinkEntity) != maxSource()) {
+            sinkEntity.worldSetSink(world, sinkPos, sinkState, maxSource());
             return true;
         }
         return false;
     }
-
-//    public void updateConnectors() {
-//        int maxSink = sink.getMaxSink(sinkState);
-//        if (maxSink <= maxSource()) {
-//            return;
-//        }
-//
-//        connectors.stream().filter(connectorState -> !connectorState.atMaxSink).forEach(connectorState -> {
-//            world.setBlockState(connectorState.pos, connectorState.connector.withSink(connectorState.blockState, Math.min(maxSink, connectorState.source)));
-//        });
-//    }
-
-
 }
 
 

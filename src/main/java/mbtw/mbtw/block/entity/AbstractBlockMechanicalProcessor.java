@@ -1,5 +1,6 @@
 package mbtw.mbtw.block.entity;
 
+import mbtw.mbtw.block.AbstractMechanicalBlock;
 import mbtw.mbtw.block.MechanicalSink;
 import mbtw.mbtw.recipe.AbstractMechanicalRecipe;
 import mbtw.mbtw.state.property.MbtwProperties;
@@ -18,6 +19,7 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractBlockMechanicalProcessor extends LockableContainerBlockEntity implements MechanicalSinkBlockEntity {
     private boolean processing;
@@ -74,14 +76,6 @@ public abstract class AbstractBlockMechanicalProcessor extends LockableContainer
     public static void powerOn(World world, BlockPos pos, BlockState state, boolean updatedState) {
         if (!state.get(MbtwProperties.POWERED) || updatedState) {
             world.setBlockState(pos, state.with(MbtwProperties.POWERED, true), Block.NOTIFY_ALL);
-        }
-    }
-
-    public static void updatePowered(World world, BlockPos sinkPos, BlockState sinkState, AbstractBlockMechanicalProcessor processor, boolean updatedState) {
-        if (processor.availablePower <= 0 || !processor.processing) {
-            powerOff(world, sinkPos, sinkState, updatedState);
-        } else {
-            powerOn(world, sinkPos, sinkState, updatedState);
         }
     }
 
@@ -170,36 +164,8 @@ public abstract class AbstractBlockMechanicalProcessor extends LockableContainer
 
     public static void serverTick(World world, BlockPos sinkPos, BlockState sinkState, AbstractBlockMechanicalProcessor processor) {
         MechanicalSinkBlockEntity.mechanicalTick(world, sinkPos, sinkState, processor);
-        processor.availablePower = processor.sink().getAvailablePower(sinkState);
+        processor.availablePower = processor.sink().getAvailablePower(world, sinkState, sinkPos, processor);
         recipeTick(world, sinkPos, sinkState, processor);
-//        BlockState cState = processor.connectorState;
-//        BlockPos cPos = processor.connectorPos;
-//        // connectorPos and connectorState are set by block updates
-//        if (cPos != null && cState != null && cState.getBlock() instanceof MechanicalConnector connector) {
-//            int connectorSource = connector.getSource(cState);
-//            int connectorSink = connector.getSink(cState);
-//            if (connector.getBearing(cState)) {
-//                processor.availablePower = connectorSink;
-//            } else {
-//                processor.availablePower = 0;
-//            }
-//
-//            int sink = SINK.getSink(sinkState);
-//            // If not sinking equal to source (and not already at max sink), set it to appropriate value
-//            if (sink != connectorSource && sink < SINK.getMaxSink()) {
-//                BlockState newState = sinkState.with(MillstoneBlock.MECHANICAL_SINK, Math.min(SINK.getMaxSink(), connectorSource));
-//                updatePowered(world, sinkPos, newState, processor, true);
-//                return;
-//            }
-//        } else {
-//            processor.availablePower = 0;
-//        }
-//
-//        updatePowered(world, sinkPos, sinkState, processor, false);
-//
-//        if (world.getTime() % 43 == 0) {
-//            System.out.println("null millstone");
-//        }
     }
 
     @Override
@@ -283,5 +249,33 @@ public abstract class AbstractBlockMechanicalProcessor extends LockableContainer
 
     private static int getProcessingTime(World world, AbstractBlockMechanicalProcessor processor) {
         return processor.matchGetter.getFirstMatch(processor, world).map(AbstractMechanicalRecipe::getProcessingTime).orElse(200);
+    }
+
+    @Override
+    public void worldSetAvailablePower(World world, BlockPos sinkPos, BlockState sinkState, int availablePower) {
+        this.availablePower = availablePower;
+        BlockState newState;
+        if (availablePower > 0) {
+            newState = sinkState.with(AbstractMechanicalBlock.POWERED, true).with(AbstractMechanicalBlock.MECHANICAL_SINK, availablePower);
+        } else {
+            newState = sinkState.with(AbstractMechanicalBlock.POWERED, false);
+        }
+
+        world.setBlockState(sinkPos, newState);
+    }
+
+    @Override
+    public void worldSetSink(World world, BlockPos sinkPos, BlockState sinkState, int sink) {
+        world.setBlockState(sinkPos, sinkState.with(AbstractMechanicalBlock.MECHANICAL_SINK, sink));
+    }
+
+    @Override
+    public int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        return sink().getAvailablePower(world, state, pos, blockEntity);
+    }
+
+    @Override
+    public int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        return sink().getSink(world, state, pos, blockEntity);
     }
 }

@@ -137,11 +137,12 @@ public class Mbtw implements ModInitializer {
 	public static RecipeType<MillstoneRecipe> MILLING;
 
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
-	public static BlockEntityType<MillstoneBlockBlockEntity> MILLSTONE_ENTITY;
+	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
 	public static final Block INFINITE_CRANK = new InfiniteCrankBlock(FabricBlockSettings.of(Material.WOOD));
 
 	public static final Block AXLE = new AxleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
+	public static BlockEntityType<GearboxBlockEntity> GEARBOX_ENTITY;
 
 	public static ItemGroup MBTW_GROUP;
 
@@ -301,7 +302,7 @@ public class Mbtw implements ModInitializer {
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "millstone"), MILLSTONE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "millstone"), new BlockItem(MILLSTONE, new FabricItemSettings()));
-		MILLSTONE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "millstone"), FabricBlockEntityTypeBuilder.create(MillstoneBlockBlockEntity::new, MILLSTONE).build(null));
+		MILLSTONE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "millstone"), FabricBlockEntityTypeBuilder.create(MillstoneBlockEntity::new, MILLSTONE).build(null));
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "infinite_crank"), INFINITE_CRANK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "infinite_crank"), new BlockItem(INFINITE_CRANK, new FabricItemSettings()));
@@ -311,6 +312,7 @@ public class Mbtw implements ModInitializer {
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "gearbox"), GEARBOX);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "gearbox"), new BlockItem(GEARBOX, new FabricItemSettings()));
+		GEARBOX_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "gearbox"), FabricBlockEntityTypeBuilder.create(GearboxBlockEntity::new, GEARBOX).build(null));
 
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
