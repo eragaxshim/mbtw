@@ -1,33 +1,35 @@
 package mbtw.mbtw.block;
 
-import mbtw.mbtw.block.entity.InfiniteCrankBlockEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-public class InfiniteCrankBlock extends Block implements BlockEntityProvider {
+import java.util.List;
+
+public class InfiniteCrankBlock extends Block implements MechanicalSource {
+
     public InfiniteCrankBlock(Settings settings) {
         super(settings);
+        setDefaultState(this.getDefaultState());
     }
 
-
-
-    @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new InfiniteCrankBlockEntity(pos, state);
+    public boolean isSourceAtFace(BlockState state, Direction face) {
+        return face == Direction.DOWN;
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return BlockEntityProvider.super.getTicker(world, state, type);
+    public int getSourceAtFace(BlockState state, Direction face) {
+        return face == Direction.DOWN ? 2 : 0;
+    }
+
+    @Override
+    public boolean getBearingAtFace(BlockState state, Direction face) {
+        return face == Direction.DOWN;
+    }
+
+    @Override
+    public List<Direction> getOutputFaces(BlockState sourceState) {
+        return List.of(Direction.DOWN);
     }
 }

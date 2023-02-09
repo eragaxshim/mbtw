@@ -4,7 +4,6 @@ import mbtw.mbtw.block.MechanicalConnector;
 import mbtw.mbtw.block.MechanicalSink;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -43,9 +42,10 @@ public class SinkUpdate {
             return availablePower;
         }
         if (sink.incongruentInputAllowed(sinkState)) {
-            availablePower = connectors.stream().max(Comparator.comparing(sinkState -> sinkState.bearing ? sinkState.source : 0)).orElse(EMPTY).source;
+            availablePower = connectors.stream().max(Comparator.comparing(sinkState -> sinkState.bearing() ? sinkState.source() : 0)).orElse(EMPTY).source();
         } else {
-            availablePower = connectors.stream().filter(sinkState -> sinkState.bearing && sinkState.source > 0).min(Comparator.comparing(sinkState -> sinkState.source)).orElse(EMPTY).source;
+            // Source of the connector with bearing load, positive source with the least source
+            availablePower = connectors.stream().filter(sinkState -> sinkState.bearing() && sinkState.source() > 0).min(Comparator.comparing(ConnectorState::source)).orElse(EMPTY).source();
         }
 
         return availablePower;
@@ -56,9 +56,10 @@ public class SinkUpdate {
             return maxSource;
         }
         if (sink.incongruentInputAllowed(sinkState)) {
-            maxSource = connectors.stream().max(Comparator.comparing(sinkState -> sinkState.source)).orElse(EMPTY).source;
+            maxSource = connectors.stream().max(Comparator.comparing(ConnectorState::source)).orElse(EMPTY).source();
         } else {
-            maxSource = connectors.stream().filter(sinkState -> sinkState.source > 0).min(Comparator.comparing(sinkState -> sinkState.source)).orElse(EMPTY).source;
+            // Source of the connector with positive source with the least source
+            maxSource = connectors.stream().filter(sinkState -> sinkState.source() > 0).min(Comparator.comparing(ConnectorState::source)).orElse(EMPTY).source();
         }
 
         return maxSource;
@@ -91,27 +92,7 @@ public class SinkUpdate {
 //        });
 //    }
 
-    public static class ConnectorState {
-        private final MechanicalConnector connector;
-        private final BlockPos pos;
-        private final BlockState blockState;
-        private final Direction direction;
-        private final int source;
-        private final int sink;
-        private final boolean bearing;
-        private final boolean atMaxSink;
 
-        public ConnectorState(MechanicalConnector connector, BlockPos pos, BlockState blockState, Direction direction, int source, int sink, boolean bearing) {
-            this.connector = connector;
-            this.pos = pos;
-            this.blockState = blockState;
-            this.direction = direction;
-            this.source = source;
-            this.sink = sink;
-            this.bearing = bearing;
-            this.atMaxSink = sink == source;
-        }
-    }
 }
 
 

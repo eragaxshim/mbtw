@@ -53,7 +53,11 @@ public abstract class AbstractMechanicalBlock extends Block implements BlockEnti
 
     @Override
     public BlockState setAvailablePower(BlockState state, int availablePower) {
-        return state.with(POWERED, availablePower > 0).with(MECHANICAL_SINK, availablePower);
+        if (availablePower > 0) {
+            return state.with(POWERED, true).with(MECHANICAL_SINK, availablePower);
+        } else {
+            return state.with(POWERED, false);
+        }
     }
 
     @Override

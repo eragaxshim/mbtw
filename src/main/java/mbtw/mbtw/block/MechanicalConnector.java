@@ -15,6 +15,7 @@ public interface MechanicalConnector {
 
     int getSink(BlockState connectorState);
 
+    // If it is output at face, it is input at opposite face
     boolean isOutputAtFace(BlockState connectorState, Direction outputFace);
 
 }

@@ -76,8 +76,7 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         };
     }
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public @Nullable BlockState update(World world, BlockPos pos, BlockState state) {
         Direction.Axis axis = state.get(PillarBlock.AXIS);
         Direction toPosNeighbor = Direction.from(axis, Direction.AxisDirection.POSITIVE);
 
@@ -87,39 +86,46 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         MechanicalUpdate backUpdate = getMechanicalUpdate(state, back, toPosNeighbor.getOpposite());
 
         if ((frontUpdate.getNewState() == state && backUpdate.getNewState() == state)) {
-            return;
+            return state;
         }
 
         if (frontUpdate.isCompatibleWith(backUpdate)) {
-            world.setBlockState(pos, frontUpdate.mergeState(backUpdate), Block.NOTIFY_LISTENERS) ;
+            return frontUpdate.mergeState(backUpdate);
         } else {
-            world.breakBlock(pos, true);
+            return null;
+        }
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        Block block = state.getBlock();
+        if (!oldState.isOf(state.getBlock()) && !world.isClient && block instanceof MechanicalConnector) {
+            BlockState updatedState = this.update(world, pos, state);
+            if (updatedState == null) {
+                world.breakBlock(pos, false);
+            } else if (updatedState != state && world.getBlockState(pos) == state) {
+                world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
+            }
+
+            Direction.Axis axis = state.get(PillarBlock.AXIS);
+            Direction toPosNeighbor = Direction.from(axis, Direction.AxisDirection.POSITIVE);
+
+            world.updateNeighborsAlways(pos.offset(toPosNeighbor), this);
+            world.updateNeighborsAlways(pos.offset(toPosNeighbor.getOpposite()), this);
+        }
+    }
+
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        if (!world.isClient && state.getBlock() instanceof MechanicalConnector) {
+            BlockState updatedState = this.update(world, pos, state);
+            if (updatedState != state && world.getBlockState(pos) == state) {
+                world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
+            }
         }
     }
 
 //    @Override
-//    public BlockState getPlacementState(ItemPlacementContext ctx) {
-//        BlockState baseState = super.getPlacementState(ctx);
-//        if (baseState == null) {
-//            return null;
-//        }
-//        BlockPos pos = ctx.getBlockPos();
-//        Direction.Axis axis = baseState.get(PillarBlock.AXIS);
-//        Direction toPosNeighbor = Direction.from(axis, Direction.AxisDirection.POSITIVE);
-//
-//        BlockState front = ctx.getWorld().getBlockState(pos.offset(toPosNeighbor));
-//        BlockState back = ctx.getWorld().getBlockState(pos.offset(toPosNeighbor.getOpposite()));
-//        MechanicalUpdate frontUpdate = getMechanicalUpdate(baseState, front, toPosNeighbor);
-//        MechanicalUpdate backUpdate = getMechanicalUpdate(baseState, back, toPosNeighbor.getOpposite());
-//
-//        if (frontUpdate.isCompatibleWith(backUpdate)) {
-//            return frontUpdate.mergeState(backUpdate);
-//        } else {
-//            return Blocks.AIR.getDefaultState();
-//        }
-//    }
-
-//    public static boolean isIncompatibleUpdate(BlockState oldState, BlockState state1, BlockState state2) {
+//    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
 //
 //    }
 
@@ -149,15 +155,20 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         }
     }
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction incomingFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (inputOrOutput(state, incomingFace)) {
-            MechanicalUpdate update = getMechanicalUpdate(state, neighborState, incomingFace);
-            return update.getNewState();
-        }
-
-        return state;
-    }
+//    @Override
+//    public BlockState getStateForNeighborUpdate(BlockState state, Direction incomingFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+//        if (inputOrOutput(state, incomingFace)) {
+//            MechanicalUpdate update = getMechanicalUpdate(state, neighborState, incomingFace);
+//            if (!world.isClient()) {
+//                System.out.println("");
+//            }
+//
+//
+//            return update.getNewState();
+//        }
+//
+//        return state;
+//    }
 
     static {
         Double[] coordsB1 = {6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D};
@@ -254,13 +265,6 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
             update.addProperty(MECHANICAL_SINK);
         }
         return update.withState(newState);
-    }
-
-    public void update(World world, BlockPos pos, BlockState state) {
-        BlockState front = world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), 1));
-        BlockState back = world.getBlockState(pos.offset(state.get(PillarBlock.AXIS), -1));
-
-
     }
 
     @Override

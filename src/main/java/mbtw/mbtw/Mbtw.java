@@ -139,7 +139,6 @@ public class Mbtw implements ModInitializer {
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
 	public static BlockEntityType<MillstoneBlockBlockEntity> MILLSTONE_ENTITY;
 	public static final Block INFINITE_CRANK = new InfiniteCrankBlock(FabricBlockSettings.of(Material.WOOD));
-	public static BlockEntityType<InfiniteCrankBlockEntity> INFINITE_CRANK_ENTITY;
 
 	public static final Block AXLE = new AxleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
@@ -306,7 +305,6 @@ public class Mbtw implements ModInitializer {
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "infinite_crank"), INFINITE_CRANK);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "infinite_crank"), new BlockItem(INFINITE_CRANK, new FabricItemSettings()));
-		INFINITE_CRANK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "infinite_crank"), FabricBlockEntityTypeBuilder.create(InfiniteCrankBlockEntity::new, INFINITE_CRANK).build(null));
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "axle"), AXLE);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "axle"), new BlockItem(AXLE, new FabricItemSettings()));
