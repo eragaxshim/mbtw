@@ -1,25 +1,100 @@
 {
   "variants": {
-    "facing=down": {
+    "facing=down,up_relative=east": {
+      "model": "mbtw:block/gearbox",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,up_relative=north": {
       "model": "mbtw:block/gearbox",
       "x": 90
     },
-    "facing=east": {
+    "facing=down,up_relative=south": {
+      "model": "mbtw:block/gearbox",
+      "x": 90,
+      "y": 180
+    },
+    "facing=down,up_relative=west": {
+      "model": "mbtw:block/gearbox",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,up_relative=east": {
       "model": "mbtw:block/gearbox",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,up_relative=north": {
+      "model": "mbtw:block/gearbox",
+      "y": 90
+    },
+    "facing=east,up_relative=south": {
+      "model": "mbtw:block/gearbox",
+      "y": 90
+    },
+    "facing=east,up_relative=west": {
+      "model": "mbtw:block/gearbox",
+      "y": 90
+    },
+    "facing=north,up_relative=east": {
       "model": "mbtw:block/gearbox"
     },
-    "facing=south": {
+    "facing=north,up_relative=north": {
+      "model": "mbtw:block/gearbox"
+    },
+    "facing=north,up_relative=south": {
+      "model": "mbtw:block/gearbox"
+    },
+    "facing=north,up_relative=west": {
+      "model": "mbtw:block/gearbox"
+    },
+    "facing=south,up_relative=east": {
       "model": "mbtw:block/gearbox",
       "y": 180
     },
-    "facing=up": {
+    "facing=south,up_relative=north": {
+      "model": "mbtw:block/gearbox",
+      "y": 180
+    },
+    "facing=south,up_relative=south": {
+      "model": "mbtw:block/gearbox",
+      "y": 180
+    },
+    "facing=south,up_relative=west": {
+      "model": "mbtw:block/gearbox",
+      "y": 180
+    },
+    "facing=up,up_relative=east": {
+      "model": "mbtw:block/gearbox",
+      "x": 270,
+      "y": 270
+    },
+    "facing=up,up_relative=north": {
+      "model": "mbtw:block/gearbox",
+      "x": 270,
+      "y": 180
+    },
+    "facing=up,up_relative=south": {
       "model": "mbtw:block/gearbox",
       "x": 270
     },
-    "facing=west": {
+    "facing=up,up_relative=west": {
+      "model": "mbtw:block/gearbox",
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,up_relative=east": {
+      "model": "mbtw:block/gearbox",
+      "y": 270
+    },
+    "facing=west,up_relative=north": {
+      "model": "mbtw:block/gearbox",
+      "y": 270
+    },
+    "facing=west,up_relative=south": {
+      "model": "mbtw:block/gearbox",
+      "y": 270
+    },
+    "facing=west,up_relative=west": {
       "model": "mbtw:block/gearbox",
       "y": 270
     }

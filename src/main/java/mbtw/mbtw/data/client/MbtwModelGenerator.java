@@ -7,14 +7,11 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.*;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -72,11 +69,51 @@ public class MbtwModelGenerator extends FabricModelProvider {
         blockStateModelGenerator.blockStateCollector.accept(axisRotations(variants, conditions, true));
     }
 
+    public static BlockStateVariantMap createSouthDefaultRelativeUpRotations() {
+        return BlockStateVariantMap.create(Properties.FACING, MbtwProperties.UP_DIRECTION).register((facing, upDirection) -> {
+            switch (facing) {
+                case DOWN -> {
+                    BlockStateVariant xVariant = BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90);
+                    return switch (upDirection) {
+                        case NORTH -> xVariant;
+                        case EAST -> xVariant.put(VariantSettings.Y, VariantSettings.Rotation.R90);
+                        case SOUTH -> xVariant.put(VariantSettings.Y, VariantSettings.Rotation.R180);
+                        case WEST -> xVariant.put(VariantSettings.Y, VariantSettings.Rotation.R270);
+                        default -> throw new UnsupportedOperationException("Fix you generator!");
+                    };
+                }
+                case UP -> {
+                    BlockStateVariant xVariant = BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270);
+                    return switch (upDirection) {
+                        case NORTH -> xVariant.put(VariantSettings.Y, VariantSettings.Rotation.R180);
+                        case EAST -> xVariant.put(VariantSettings.Y, VariantSettings.Rotation.R270);
+                        case SOUTH -> xVariant;
+                        case WEST -> xVariant.put(VariantSettings.Y, VariantSettings.Rotation.R90);
+                        default -> throw new UnsupportedOperationException("Fix you generator!");
+                    };
+                }
+                case NORTH -> {
+                    return BlockStateVariant.create();
+                }
+                case SOUTH -> {
+                    return BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R180);
+                }
+                case WEST -> {
+                    return BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R270);
+                }
+                case EAST -> {
+                    return BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90);
+                }
+            }
+            throw new UnsupportedOperationException("Fix you generator!");
+        });
+    }
+
     public void registerGearbox(BlockStateModelGenerator blockStateModelGenerator) {
         TextureMap textureMap = MbtwModels.sideInputOutput(Mbtw.GEARBOX);
         Identifier identifier = MbtwModels.TEMPLATE_GEARBOX.upload(Mbtw.GEARBOX, textureMap, blockStateModelGenerator.modelCollector);
 
-        BlockStateVariantMap rotations =  BlockStateModelGenerator.createNorthDefaultRotationStates();
+        BlockStateVariantMap rotations = createSouthDefaultRelativeUpRotations();
         VariantsBlockStateSupplier supplier = VariantsBlockStateSupplier.create(Mbtw.GEARBOX, BlockStateVariant.create().put(VariantSettings.MODEL, identifier));
         blockStateModelGenerator.blockStateCollector.accept(supplier.coordinate(rotations));
     }

@@ -1,7 +1,7 @@
 package mbtw.mbtw.state.property;
 
+import mbtw.mbtw.util.math.Relative;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.Direction;
@@ -20,4 +20,5 @@ public class MbtwProperties {
     public static final IntProperty MECHANICAL_SINK = IntProperty.of("mechanical_sink", 0, MAX_MECHANICAL_POWER);
 
     public static final EnumProperty<Direction> POWERED_UP_DOWN = EnumProperty.of("powered_face", Direction.class, Direction.UP, Direction.DOWN);
+    public static final EnumProperty<Direction> UP_DIRECTION = EnumProperty.of("up_relative", Direction.class, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 }

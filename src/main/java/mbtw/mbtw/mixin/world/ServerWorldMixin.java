@@ -8,8 +8,10 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.PersistentStateManager;
@@ -20,12 +22,14 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.spawner.Spawner;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
@@ -40,6 +44,7 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
 
     @Shadow public abstract PersistentStateManager getPersistentStateManager();
 
+    @Shadow @Final private List<ServerPlayerEntity> players;
     private BlockScheduleManager blockScheduleManager;
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getWorldBorder()Lnet/minecraft/world/border/WorldBorder;"))
@@ -50,7 +55,8 @@ public abstract class ServerWorldMixin extends World implements ServerWorldMixin
 
     @Inject(method = "tick", at = @At("HEAD"))
     protected void testTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci)
-    {}
+    {
+    }
 
     @Inject(method = "tickChunk", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=tickBlocks"))
     protected void tickBlockScheduler2(WorldChunk chunk, int randomTickSpeed, CallbackInfo ci)

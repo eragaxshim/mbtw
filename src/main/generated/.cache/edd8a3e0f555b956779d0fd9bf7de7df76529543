@@ -1,4 +1,4 @@
-// 1.19.3	2023-02-10T13:22:59.3408993	mbtw/Model Definitions
+// 1.19.3	2023-02-10T15:44:05.9499369	mbtw/Model Definitions
 c2ffcecfabe3c238f683ee7f1f4e31ac9d1fa67b assets\mbtw\models\block\millstone_on.json
 df22b9a4e3076728cbdadb1e0720f90fc6ae6002 assets\mbtw\models\item\infinite_crank.json
 f5d55dd4304705d34cc786b81c60b91aebc00de9 assets\mbtw\blockstates\axle.json
@@ -13,5 +13,5 @@ e097ca400778010fa0db3c92a947feb9688e0f36 assets\mbtw\models\item\flour.json
 8318f6d29690db46e26e604ecca1cb9d4950450c assets\mbtw\models\block\axle_on.json
 cabfe878bbcfbadde0fd28dc07344557897e824d assets\mbtw\blockstates\infinite_crank.json
 8dcfc55b7b60ad66a63c49ec1fed9a31450129f4 assets\mbtw\models\block\infinite_crank.json
-79a2203e0374ecc7b6fa2b6c4b71a76f8989f768 assets\mbtw\blockstates\gearbox.json
+7844e44260fd84c395dbad3756c2b61945153aa9 assets\mbtw\blockstates\gearbox.json
 901d53250a43dcceebb23182fb0e53b93f6595ac assets\mbtw\models\block\axle.json

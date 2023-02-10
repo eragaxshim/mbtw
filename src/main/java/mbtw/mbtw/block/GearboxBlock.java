@@ -4,9 +4,10 @@ import mbtw.mbtw.DynamicMechanicalSource;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.GearboxBlockEntity;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
-import mbtw.mbtw.block.entity.MillstoneBlockEntity;
+import mbtw.mbtw.state.property.MbtwProperties;
 import mbtw.mbtw.util.SourceUpdate;
 import mbtw.mbtw.util.math.DirectionHelper;
+import mbtw.mbtw.util.math.Relative;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -30,36 +32,44 @@ import java.util.List;
 
 public class GearboxBlock extends Block implements DynamicMechanicalSource, MechanicalSink, BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
+    public static final EnumProperty<Direction> UP_DIRECTION = MbtwProperties.UP_DIRECTION;
     // bitwise flag
     public static final IntProperty BEARING = IntProperty.of("bearing", 0, 31);
-    public static final IntProperty SOURCE_BASE = IntProperty.of("source_base", 0, 8);
+    public static final IntProperty SOURCE_BASE = IntProperty.of("source_base", 0, 4);
     // correspond to order of DirectionHelper.Relative
-    // max ratio * available power cannot be more than max allowed mechanical power
+    // max ratio * max power / min ratio cannot be more than max allowed mechanical power
     public static final int[] SOURCE_RATIOS = {0, 1, 2, 0, 0, 0};
 
     public GearboxBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getDefaultState()
-                .with(FACING, Direction.NORTH)
+                .with(FACING, Direction.SOUTH)
+                .with(UP_DIRECTION, Direction.EAST)
                 .with(BEARING, 0)
                 .with(SOURCE_BASE, 1));
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
+        Direction up_relative = Direction.NORTH;
+        if (ctx.getPlayer() != null) {
+            Direction horizontalFacing = ctx.getPlayer().getHorizontalFacing();
+            if (horizontalFacing != Direction.UP && horizontalFacing != Direction.DOWN) {
+                up_relative = horizontalFacing;
+            }
+        }
+
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite()).with(UP_DIRECTION, up_relative);
     }
 
     @Override
     public boolean getBearingAtFace(BlockState state, Direction face) {
-        Direction facing = state.get(FACING);
-        DirectionHelper.Relative relative = DirectionHelper.getRelative(facing, face);
+        Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
         return (state.get(BEARING) & relative.getBitField()) != 0;
     }
 
     @Override
     public BlockState setBearingAtFace(BlockState state, Direction face, boolean bearing) {
-        Direction facing = state.get(FACING);
-        DirectionHelper.Relative relative = DirectionHelper.getRelative(facing, face);
+        Relative relative =  DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
 
         int newValue;
         if (bearing) {
@@ -74,11 +84,10 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
 
     @Override
     public List<Direction> getOutputFaces(BlockState state) {
-        Direction facing = state.get(FACING);
         List<Direction> list = new ArrayList<>();
         for (int i = 0; i < SOURCE_RATIOS.length; i++) {
             if (SOURCE_RATIOS[i] > 0) {
-                list.add(DirectionHelper.relativeTo(facing, DirectionHelper.Relative.byIndex(i)));
+                list.add(DirectionHelper.relativeToCheckY(state.get(FACING), state.get(UP_DIRECTION), Relative.byIndex(i)));
             }
         }
         return list;
@@ -86,17 +95,15 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
 
     @Override
     public int costPerBase(BlockState state, List<Direction> includedFaces) {
-        Direction facing = state.get(FACING);
         return includedFaces.stream().reduce(0, (t, direction) -> {
-            DirectionHelper.Relative relative = DirectionHelper.getRelative(facing, direction);
+            Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), direction);
             return t+SOURCE_RATIOS[relative.getIndex()];
         }, Integer::sum);
     }
 
     @Override
     public int getRatioAtFace(BlockState state, Direction face) {
-        Direction facing = state.get(FACING);
-        DirectionHelper.Relative relative = DirectionHelper.getRelative(facing, face);
+        Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
         return SOURCE_RATIOS[relative.getIndex()];
     }
 
@@ -117,8 +124,7 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
 
     @Override
     public boolean isSourceAtFace(BlockState state, Direction face) {
-        Direction facing = state.get(FACING);
-        DirectionHelper.Relative relative = DirectionHelper.getRelative(facing, face);
+        Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
         return SOURCE_RATIOS[relative.getIndex()] > 0;
     }
 
@@ -126,8 +132,7 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
     public int getSourceAtFace(BlockState state, Direction face) {
         int sourceBase = state.get(SOURCE_BASE);
         if (sourceBase > 0) {
-            Direction facing = state.get(FACING);
-            DirectionHelper.Relative relative = DirectionHelper.getRelative(facing, face);
+            Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
             return SOURCE_RATIOS[relative.getIndex()] * sourceBase;
         }
         return 0;
@@ -168,6 +173,7 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
         stateManager.add(FACING);
         stateManager.add(BEARING);
         stateManager.add(SOURCE_BASE);
+        stateManager.add(UP_DIRECTION);
     }
 
     @Override
@@ -218,16 +224,12 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
 
     @Override
     public boolean isSinkAtFace(BlockState state, Direction sinkFace) {
-        Direction facing = state.get(FACING);
-        Direction inputFace = DirectionHelper.relativeTo(facing, DirectionHelper.Relative.IDENTITY);
-        return sinkFace == inputFace;
+        return sinkFace == state.get(FACING);
     }
 
     @Override
     public List<Direction> getInputFaces(BlockState state) {
-        Direction facing = state.get(FACING);
-        Direction inputFace = DirectionHelper.relativeTo(facing, DirectionHelper.Relative.IDENTITY);
-        return List.of(inputFace);
+        return List.of(state.get(FACING));
     }
 
     @Override
