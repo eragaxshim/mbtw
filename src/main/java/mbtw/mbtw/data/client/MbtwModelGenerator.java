@@ -5,9 +5,18 @@ import mbtw.mbtw.state.property.MbtwProperties;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.*;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 
 public class MbtwModelGenerator extends FabricModelProvider {
     public MbtwModelGenerator(FabricDataOutput generator) {
@@ -48,35 +57,117 @@ public class MbtwModelGenerator extends FabricModelProvider {
         TextureMap textureMapOnFast = MbtwModels.sideEndOnFast(Mbtw.AXLE);
         Identifier onFastIdentifier = MbtwModels.TEMPLATE_AXLE.upload(Mbtw.AXLE, "_on_fast", textureMapOnFast, blockStateModelGenerator.modelCollector);
 
-        BlockStateVariantMap blockStateVariantMap = BlockStateVariantMap.create(MbtwProperties.MECHANICAL_SOURCE, Properties.AXIS, MbtwProperties.AXIS_DIRECTION).register((source, axis, axis_direction) -> {
-                switch (axis) {
-                    case Y -> {
-                        BlockStateVariant baseVariant = BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier));
-                        return axis_direction ? baseVariant : baseVariant.put(VariantSettings.X, VariantSettings.Rotation.R180);
-                    }
-                    case Z -> {
-                        BlockStateVariant baseVariant = BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier)).put(VariantSettings.X, VariantSettings.Rotation.R90);
-                        return axis_direction ? baseVariant : baseVariant.put(VariantSettings.Y, VariantSettings.Rotation.R180);
-                    }
-                    case X -> {
-                        BlockStateVariant baseVariant = BlockStateVariant.create().put(VariantSettings.MODEL, sourceToModel(source, offIdentifier, onIdentifier, onFastIdentifier)).put(VariantSettings.X, VariantSettings.Rotation.R90);
-                        return axis_direction ? baseVariant.put(VariantSettings.Y, VariantSettings.Rotation.R90) : baseVariant.put(VariantSettings.Y, VariantSettings.Rotation.R270);
-                    }
-                }
-            throw new UnsupportedOperationException("Fix you generator!");
-        });
+        // Note that when you put anything into these variants you also change the original variant
+        // Use BlockStateVariant.union() instead if you want to create variants of the variants
+        BlockStateVariant baseVariantOff = BlockStateVariant.create().put(VariantSettings.MODEL, offIdentifier);
+        BlockStateVariant baseVariantOn = BlockStateVariant.create().put(VariantSettings.MODEL, onIdentifier);
+        BlockStateVariant baseVariantFast = BlockStateVariant.create().put(VariantSettings.MODEL, onFastIdentifier);
 
-        blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(Mbtw.AXLE).coordinate(blockStateVariantMap));
+        When offCondition = When.create().set(MbtwProperties.MECHANICAL_SOURCE, 0);
+        When onCondition = intClosedOr(MbtwProperties.MECHANICAL_SOURCE, 1, 2);
+        When onFastCondition = intClosedOr(MbtwProperties.MECHANICAL_SOURCE, 3, MbtwProperties.MAX_MECHANICAL_POWER);
+
+        List<BlockStateVariant> variants = List.of(baseVariantOff, baseVariantOn, baseVariantFast);
+        List<When> conditions = List.of(offCondition, onCondition, onFastCondition);
+        blockStateModelGenerator.blockStateCollector.accept(axisRotations(variants, conditions, true));
+    }
+
+    public void registerGearbox(BlockStateModelGenerator blockStateModelGenerator) {
+        TextureMap textureMap = MbtwModels.sideInputOutput(Mbtw.GEARBOX);
+        Identifier identifier = MbtwModels.TEMPLATE_GEARBOX.upload(Mbtw.GEARBOX, textureMap, blockStateModelGenerator.modelCollector);
+
+        BlockStateVariantMap rotations =  BlockStateModelGenerator.createNorthDefaultRotationStates();
+        VariantsBlockStateSupplier supplier = VariantsBlockStateSupplier.create(Mbtw.GEARBOX, BlockStateVariant.create().put(VariantSettings.MODEL, identifier));
+        blockStateModelGenerator.blockStateCollector.accept(supplier.coordinate(rotations));
     }
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         registerMillstone(blockStateModelGenerator);
         registerAxle(blockStateModelGenerator);
+        registerGearbox(blockStateModelGenerator);
+        blockStateModelGenerator.registerSimpleCubeAll(Mbtw.INFINITE_CRANK);
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(Mbtw.FLOUR, Models.GENERATED);
+    }
+
+    // Ensure variants and conditions are of same length
+    // This assumes the original model is oriented in the y-axis
+    public static MultipartBlockStateSupplier axisRotations(List<BlockStateVariant> variants, List<When> conditions, boolean hasAxisDirection) {
+        MultipartBlockStateSupplier supplier = MultipartBlockStateSupplier.create(Mbtw.AXLE);
+
+        When yAxis = When.create().set(Properties.AXIS, Direction.Axis.Y);
+        When zAxis = When.create().set(Properties.AXIS, Direction.Axis.Z);
+        When xAxis = When.create().set(Properties.AXIS, Direction.Axis.X);
+
+        Iterator<BlockStateVariant> variantIterator = variants.iterator();
+        Iterator<When> conditionIterator = conditions.iterator();
+
+        BlockStateVariant x90 = BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90);
+
+        while (variantIterator.hasNext() && conditionIterator.hasNext()) {
+            BlockStateVariant variant = variantIterator.next();
+            When condition = conditionIterator.next();
+            BlockStateVariant xVariant = BlockStateVariant.union(variant, x90);
+            if (hasAxisDirection) {
+                BlockStateVariant x180 = BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R180);
+                BlockStateVariant y180 = BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R180);
+                BlockStateVariant y90 = BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90);
+
+                When axisPos = When.create().set(MbtwProperties.AXIS_DIRECTION, true);
+                When axisNeg = When.create().set(MbtwProperties.AXIS_DIRECTION, false);
+                BlockStateVariant y270 = BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90);
+                supplier = supplier
+                        .with(
+                                When.allOf(condition, yAxis, axisPos),
+                                variant
+                        )
+                        .with(
+                                When.allOf(condition, yAxis, axisNeg),
+                                BlockStateVariant.union(variant, x180)
+                        )
+                        .with(
+                                When.allOf(condition, xAxis, axisPos),
+                                BlockStateVariant.union(xVariant, y90)
+                        )
+                        .with(
+                                When.allOf(condition, xAxis, axisNeg),
+                                BlockStateVariant.union(xVariant, y270)
+                        )
+                        .with(
+                                When.allOf(condition, zAxis, axisPos),
+                                xVariant
+                        )
+                        .with(
+                                When.allOf(condition, zAxis, axisNeg),
+                                BlockStateVariant.union(xVariant, y180)
+                        );
+            } else {
+                supplier = supplier
+                        .with(
+                                When.allOf(condition, yAxis),
+                                variant
+                        )
+                        .with(
+                                When.allOf(condition, zAxis),
+                                xVariant
+                        )
+                        .with(
+                                When.allOf(condition, xAxis),
+                                xVariant
+                        );
+            }
+        }
+        return supplier;
+    }
+
+    public static When intClosedOr(IntProperty property, int minValue, int maxValue) {
+        // We need Integer[] instead of int[] because otherwise it cannot be passed as varargs
+        Integer[] integerArgs = IntStream.rangeClosed(minValue+1, maxValue).boxed().toArray(Integer[]::new);
+
+        return When.create().set(property, minValue, integerArgs);
     }
 }

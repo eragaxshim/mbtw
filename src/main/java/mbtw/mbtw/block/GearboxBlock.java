@@ -14,6 +14,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -34,14 +35,18 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
     public static final IntProperty SOURCE_BASE = IntProperty.of("source_base", 0, 8);
     // correspond to order of DirectionHelper.Relative
     // max ratio * available power cannot be more than max allowed mechanical power
-    public static final int[] SOURCE_RATIOS = {0, 0, 0, 1, 2, 0};
+    public static final int[] SOURCE_RATIOS = {0, 1, 2, 0, 0, 0};
 
     public GearboxBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getDefaultState()
-                .with(FACING, Direction.SOUTH)
+                .with(FACING, Direction.NORTH)
                 .with(BEARING, 0)
                 .with(SOURCE_BASE, 1));
+    }
+
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Override

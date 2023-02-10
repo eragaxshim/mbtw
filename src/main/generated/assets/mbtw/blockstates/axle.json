@@ -1,134 +1,352 @@
 {
-  "variants": {
-    "axis=x,axis_direction=false,mechanical_source=0": {
-      "model": "mbtw:block/axle",
-      "x": 90,
-      "y": 270
+  "multipart": [
+    {
+      "apply": {
+        "model": "mbtw:block/axle"
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "0"
+          },
+          {
+            "axis": "y"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=false,mechanical_source=1": {
-      "model": "mbtw:block/axle_on",
-      "x": 90,
-      "y": 270
+    {
+      "apply": {
+        "model": "mbtw:block/axle",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "0"
+          },
+          {
+            "axis": "y"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=false,mechanical_source=2": {
-      "model": "mbtw:block/axle_on",
-      "x": 90,
-      "y": 270
+    {
+      "apply": {
+        "model": "mbtw:block/axle",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "0"
+          },
+          {
+            "axis": "x"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=false,mechanical_source=3": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90,
-      "y": 270
+    {
+      "apply": {
+        "model": "mbtw:block/axle",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "0"
+          },
+          {
+            "axis": "x"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=false,mechanical_source=4": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90,
-      "y": 270
+    {
+      "apply": {
+        "model": "mbtw:block/axle",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "0"
+          },
+          {
+            "axis": "z"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=true,mechanical_source=0": {
-      "model": "mbtw:block/axle",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "mbtw:block/axle",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "0"
+          },
+          {
+            "axis": "z"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=true,mechanical_source=1": {
-      "model": "mbtw:block/axle_on",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on"
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "1|2"
+          },
+          {
+            "axis": "y"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=true,mechanical_source=2": {
-      "model": "mbtw:block/axle_on",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "1|2"
+          },
+          {
+            "axis": "y"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=true,mechanical_source=3": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "1|2"
+          },
+          {
+            "axis": "x"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=x,axis_direction=true,mechanical_source=4": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "1|2"
+          },
+          {
+            "axis": "x"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=false,mechanical_source=0": {
-      "model": "mbtw:block/axle",
-      "x": 180
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "1|2"
+          },
+          {
+            "axis": "z"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=false,mechanical_source=1": {
-      "model": "mbtw:block/axle_on",
-      "x": 180
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "1|2"
+          },
+          {
+            "axis": "z"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=false,mechanical_source=2": {
-      "model": "mbtw:block/axle_on",
-      "x": 180
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on_fast"
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "3|4|5|6|7|8"
+          },
+          {
+            "axis": "y"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=false,mechanical_source=3": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 180
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on_fast",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "3|4|5|6|7|8"
+          },
+          {
+            "axis": "y"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=false,mechanical_source=4": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 180
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on_fast",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "3|4|5|6|7|8"
+          },
+          {
+            "axis": "x"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=true,mechanical_source=0": {
-      "model": "mbtw:block/axle"
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on_fast",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "3|4|5|6|7|8"
+          },
+          {
+            "axis": "x"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=true,mechanical_source=1": {
-      "model": "mbtw:block/axle_on"
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on_fast",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "3|4|5|6|7|8"
+          },
+          {
+            "axis": "z"
+          },
+          {
+            "axis_direction": "true"
+          }
+        ]
+      }
     },
-    "axis=y,axis_direction=true,mechanical_source=2": {
-      "model": "mbtw:block/axle_on"
-    },
-    "axis=y,axis_direction=true,mechanical_source=3": {
-      "model": "mbtw:block/axle_on_fast"
-    },
-    "axis=y,axis_direction=true,mechanical_source=4": {
-      "model": "mbtw:block/axle_on_fast"
-    },
-    "axis=z,axis_direction=false,mechanical_source=0": {
-      "model": "mbtw:block/axle",
-      "x": 90,
-      "y": 180
-    },
-    "axis=z,axis_direction=false,mechanical_source=1": {
-      "model": "mbtw:block/axle_on",
-      "x": 90,
-      "y": 180
-    },
-    "axis=z,axis_direction=false,mechanical_source=2": {
-      "model": "mbtw:block/axle_on",
-      "x": 90,
-      "y": 180
-    },
-    "axis=z,axis_direction=false,mechanical_source=3": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90,
-      "y": 180
-    },
-    "axis=z,axis_direction=false,mechanical_source=4": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90,
-      "y": 180
-    },
-    "axis=z,axis_direction=true,mechanical_source=0": {
-      "model": "mbtw:block/axle",
-      "x": 90
-    },
-    "axis=z,axis_direction=true,mechanical_source=1": {
-      "model": "mbtw:block/axle_on",
-      "x": 90
-    },
-    "axis=z,axis_direction=true,mechanical_source=2": {
-      "model": "mbtw:block/axle_on",
-      "x": 90
-    },
-    "axis=z,axis_direction=true,mechanical_source=3": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90
-    },
-    "axis=z,axis_direction=true,mechanical_source=4": {
-      "model": "mbtw:block/axle_on_fast",
-      "x": 90
+    {
+      "apply": {
+        "model": "mbtw:block/axle_on_fast",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "mechanical_source": "3|4|5|6|7|8"
+          },
+          {
+            "axis": "z"
+          },
+          {
+            "axis_direction": "false"
+          }
+        ]
+      }
     }
-  }
+  ]
 }

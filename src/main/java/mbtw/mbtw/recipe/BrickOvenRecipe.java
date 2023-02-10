@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class BrickOvenRecipe extends AbstractCookingRecipe {
     public BrickOvenRecipe(Identifier id, String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
-        super(Mbtw.MILLING, id, group, category, input, output, experience, cookTime);
+        super(Mbtw.BRICK_SMELTING, id, group, category, input, output, experience, cookTime);
     }
 
     @Environment(EnvType.CLIENT)

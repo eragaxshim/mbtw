@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "mbtw:block/gearbox",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "mbtw:block/gearbox",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mbtw:block/gearbox"
+    },
+    "facing=south": {
+      "model": "mbtw:block/gearbox",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "mbtw:block/gearbox",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "mbtw:block/gearbox",
+      "y": 270
+    }
+  }
+}

@@ -4,3 +4,4 @@ accessible class net/minecraft/recipe/CookingRecipeSerializer$RecipeFactory
 accessible class net/minecraft/world/chunk/WorldChunk$DirectBlockEntityTickInvoker
 accessible class net/minecraft/world/chunk/WorldChunk$WrappedBlockEntityTickInvoker
 accessible method net/minecraft/data/server/recipe/CookingRecipeJsonBuilder <init> (Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/recipe/book/CookingRecipeCategory;Lnet/minecraft/item/ItemConvertible;Lnet/minecraft/recipe/Ingredient;FILnet/minecraft/recipe/RecipeSerializer;)V
+# accessible method net/minecraft/data/client/When$LogicalCondition <init> (Lnet/minecraft/data/client/When$LogicalOperator;Ljava/util/List;)V
