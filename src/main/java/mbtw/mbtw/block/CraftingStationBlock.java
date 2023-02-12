@@ -33,7 +33,7 @@ public class CraftingStationBlock extends CraftingTableBlock {
             return ActionResult.SUCCESS;
         } else {
             player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
-            player.incrementStat(Stats.INTERACT_WITH_SMITHING_TABLE);
+            player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
             return ActionResult.CONSUME;
         }
     }

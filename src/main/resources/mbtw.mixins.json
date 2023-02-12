@@ -44,6 +44,7 @@
     "recipe.SerializerMixin",
     "recipe.ShapelessRecipeMixin",
     "screen.CraftingContextAccessor",
+    "screen.CraftingScreenHandlerAccessor",
     "screen.CraftingScreenMixin",
     "screen.ScreenHandlerMixin",
     "screen.ScreenHandlerTickItemMixin",

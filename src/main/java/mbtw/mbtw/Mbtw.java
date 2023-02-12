@@ -8,6 +8,7 @@ import mbtw.mbtw.item.FireStarterItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
+import mbtw.mbtw.recipe.CountIngredient;
 import mbtw.mbtw.recipe.MechanicalRecipeSerializer;
 import mbtw.mbtw.recipe.MillstoneRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
@@ -20,7 +21,9 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.impl.recipe.ingredient.builtin.AllIngredient;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.*;
@@ -145,7 +148,7 @@ public class Mbtw implements ModInitializer {
 	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static BlockEntityType<GearboxBlockEntity> GEARBOX_ENTITY;
 
-	public static final Block CRAFTING_STATION = new CraftingStationBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sounds(BlockSoundGroup.WOOD));
+	public static final Block CRAFTING_STATION = new CraftingStationBlock(FabricBlockSettings.of(Material.REPAIR_STATION).strength(2.5F).requiresTool().sounds(BlockSoundGroup.ANVIL));
 
 	public static ItemGroup MBTW_GROUP;
 
@@ -328,6 +331,8 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "millstone"), MILLSTONE_SCREEN_HANDLER);
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "trunk_workbench"), TRUNK_WORKBENCH_SCREEN_HANDLER);
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "crafting_station"), CRAFTING_STATION_SCREEN_HANDLER);
+
+		CustomIngredientSerializer.register(CountIngredient.SERIALIZER);
 
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal"), ORE_COAL);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_hard"), ORE_COAL_HARD);

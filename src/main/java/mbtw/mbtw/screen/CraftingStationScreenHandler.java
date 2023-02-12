@@ -1,5 +1,7 @@
 package mbtw.mbtw.screen;
 
+import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.mixin.screen.CraftingScreenHandlerAccessor;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,7 +17,7 @@ public class CraftingStationScreenHandler extends CraftingScreenHandler {
         super(syncId, playerInventory, context);
     }
 
-//    public boolean canUse(PlayerEntity player) {
-//        return canUse(this.context, player, Blocks.CRAFTING_TABLE);
-//    }
+    public boolean canUse(PlayerEntity player) {
+        return canUse(((CraftingScreenHandlerAccessor)this).getContext(), player, Mbtw.CRAFTING_STATION);
+    }
 }

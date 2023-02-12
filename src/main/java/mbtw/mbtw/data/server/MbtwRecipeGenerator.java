@@ -3,16 +3,18 @@ package mbtw.mbtw.data.server;
 import mbtw.mbtw.Mbtw;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.CookingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.VanillaRecipeProvider;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.tag.ItemTags;
 
 import java.util.function.Consumer;
 
@@ -23,6 +25,8 @@ public class MbtwRecipeGenerator extends FabricRecipeProvider {
 
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
+        ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, Mbtw.CRAFTING_STATION).input('#', ItemTags.PLANKS).input('@', Items.IRON_INGOT).pattern("@@@").pattern("#@#").pattern("@@@").criterion("has_iron_ingot", conditionsFromItem(Items.IRON_INGOT)).offerTo(exporter);
+
         offerBrickSmelting(exporter, Mbtw.IRON_ORE_CHUNK, Items.IRON_NUGGET, 0,2000);
         offerBrickSmelting(exporter, Mbtw.CLAY_BRICK, Items.BRICK, 0,1000);
         offerMilling(exporter, Items.WHEAT, 1, Mbtw.FLOUR, 2, 10, 1);
