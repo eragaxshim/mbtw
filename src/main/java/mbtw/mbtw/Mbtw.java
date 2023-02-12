@@ -11,6 +11,7 @@ import mbtw.mbtw.recipe.BrickOvenRecipe;
 import mbtw.mbtw.recipe.MechanicalRecipeSerializer;
 import mbtw.mbtw.recipe.MillstoneRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
+import mbtw.mbtw.screen.CraftingStationScreenHandler;
 import mbtw.mbtw.screen.MillstoneScreenHandler;
 import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
 import mbtw.mbtw.tag.MbtwTagsMaps;
@@ -144,6 +145,8 @@ public class Mbtw implements ModInitializer {
 	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static BlockEntityType<GearboxBlockEntity> GEARBOX_ENTITY;
 
+	public static final Block CRAFTING_STATION = new CraftingStationBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sounds(BlockSoundGroup.WOOD));
+
 	public static ItemGroup MBTW_GROUP;
 
 	public static RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER;
@@ -154,6 +157,7 @@ public class Mbtw implements ModInitializer {
 	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new);
 
 	public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = new ScreenHandlerType<>(TrunkWorkbenchScreenHandler::new);
+	public static final ScreenHandlerType<CraftingScreenHandler> CRAFTING_STATION_SCREEN_HANDLER = new ScreenHandlerType<>(CraftingStationScreenHandler::new);
 
 	//    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
 //    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
@@ -314,11 +318,16 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "gearbox"), new BlockItem(GEARBOX, new FabricItemSettings()));
 		GEARBOX_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "gearbox"), FabricBlockEntityTypeBuilder.create(GearboxBlockEntity::new, GEARBOX).build(null));
 
+		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "crafting_station"), CRAFTING_STATION);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "crafting_station"), new BlockItem(CRAFTING_STATION, new FabricItemSettings()));
+
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
 
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN_SCREEN_HANDLER);
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "millstone"), MILLSTONE_SCREEN_HANDLER);
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "trunk_workbench"), TRUNK_WORKBENCH_SCREEN_HANDLER);
+		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "crafting_station"), CRAFTING_STATION_SCREEN_HANDLER);
 
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal"), ORE_COAL);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "ore_coal_hard"), ORE_COAL_HARD);

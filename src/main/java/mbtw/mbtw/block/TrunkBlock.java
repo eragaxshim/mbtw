@@ -61,9 +61,7 @@ public class TrunkBlock extends Block implements BreakInterceptable{
     }
 
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> {
-            return new TrunkWorkbenchScreenHandler(i, playerInventory, ScreenHandlerContext.create(world, pos));
-        }, TITLE);
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new TrunkWorkbenchScreenHandler(i, playerInventory, ScreenHandlerContext.create(world, pos)), TITLE);
     }
 
     @Override
