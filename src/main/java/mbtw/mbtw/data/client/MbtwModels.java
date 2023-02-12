@@ -14,6 +14,7 @@ public class MbtwModels {
     public static final Model TEMPLATE_MILLSTONE = MbtwModels.block("template_millstone", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
     public static final Model TEMPLATE_AXLE = MbtwModels.block("template_axle", TextureKey.SIDE, TextureKey.END);
     public static final Model TEMPLATE_GEARBOX = MbtwModels.block("template_gearbox", TextureKey.SIDE, INPUT, OUTPUT);
+    public static final Model TEMPLATE_GEARBOX_OTHER = MbtwModels.block("template_gearbox_other", TextureKey.SIDE, INPUT, OUTPUT);
 
     private static Model block(String parent, TextureKey ... requiredTextureKeys) {
         return new Model(Optional.of(new Identifier(Mbtw.MOD_ID, "block/" + parent)), Optional.empty(), requiredTextureKeys);

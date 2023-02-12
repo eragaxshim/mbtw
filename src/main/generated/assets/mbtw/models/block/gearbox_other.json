@@ -1,0 +1,8 @@
+{
+  "parent": "mbtw:block/template_gearbox_other",
+  "textures": {
+    "input": "mbtw:block/gearbox_input",
+    "output": "mbtw:block/gearbox_output",
+    "side": "mbtw:block/gearbox_side"
+  }
+}

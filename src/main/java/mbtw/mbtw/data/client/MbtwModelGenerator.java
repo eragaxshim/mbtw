@@ -1,6 +1,7 @@
 package mbtw.mbtw.data.client;
 
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.block.GearboxBlock;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -34,16 +35,6 @@ public class MbtwModelGenerator extends FabricModelProvider {
                 .with(When.create().set(MbtwProperties.POWERED, true),
                         BlockStateVariant.create().put(VariantSettings.MODEL, onIdentifier))
         );
-    }
-
-    private static Identifier sourceToModel(int source, Identifier offIdentifier, Identifier onIdentifier, Identifier onFastIdentifier) {
-        if (source == 0) {
-            return offIdentifier;
-        } else if (source < 3) {
-            return onIdentifier;
-        } else {
-            return onFastIdentifier;
-        }
     }
 
     public void registerAxle(BlockStateModelGenerator blockStateModelGenerator) {
@@ -112,9 +103,10 @@ public class MbtwModelGenerator extends FabricModelProvider {
     public void registerGearbox(BlockStateModelGenerator blockStateModelGenerator) {
         TextureMap textureMap = MbtwModels.sideInputOutput(Mbtw.GEARBOX);
         Identifier identifier = MbtwModels.TEMPLATE_GEARBOX.upload(Mbtw.GEARBOX, textureMap, blockStateModelGenerator.modelCollector);
+        Identifier identifierOther = MbtwModels.TEMPLATE_GEARBOX_OTHER.upload(Mbtw.GEARBOX, "_other", textureMap, blockStateModelGenerator.modelCollector);
 
         BlockStateVariantMap rotations = createSouthDefaultRelativeUpRotations();
-        VariantsBlockStateSupplier supplier = VariantsBlockStateSupplier.create(Mbtw.GEARBOX, BlockStateVariant.create().put(VariantSettings.MODEL, identifier));
+        VariantsBlockStateSupplier supplier = VariantsBlockStateSupplier.create(Mbtw.GEARBOX).coordinate(BlockStateModelGenerator.createBooleanModelMap(GearboxBlock.MODE, identifierOther, identifier));
         blockStateModelGenerator.blockStateCollector.accept(supplier.coordinate(rotations));
     }
 

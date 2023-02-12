@@ -4,6 +4,7 @@ import mbtw.mbtw.DynamicMechanicalSource;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.GearboxBlockEntity;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalSourceBlockEntity;
 import mbtw.mbtw.state.property.MbtwProperties;
 import mbtw.mbtw.util.SourceUpdate;
 import mbtw.mbtw.util.math.DirectionHelper;
@@ -15,13 +16,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -33,20 +35,20 @@ import java.util.List;
 public class GearboxBlock extends Block implements DynamicMechanicalSource, MechanicalSink, BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
     public static final EnumProperty<Direction> UP_DIRECTION = MbtwProperties.UP_DIRECTION;
-    // bitwise flag
-    public static final IntProperty BEARING = IntProperty.of("bearing", 0, 31);
     public static final IntProperty SOURCE_BASE = IntProperty.of("source_base", 0, 4);
+    public static final BooleanProperty MODE = BooleanProperty.of("gearbox_mode");
     // correspond to order of DirectionHelper.Relative
     // max ratio * max power / min ratio cannot be more than max allowed mechanical power
     public static final int[] SOURCE_RATIOS = {0, 1, 2, 0, 0, 0};
+    public static final int[] SOURCE_RATIOS_OTHER = {0, 0, 0, 1, 2, 0};
 
     public GearboxBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getDefaultState()
                 .with(FACING, Direction.SOUTH)
                 .with(UP_DIRECTION, Direction.EAST)
-                .with(BEARING, 0)
-                .with(SOURCE_BASE, 1));
+                .with(SOURCE_BASE, 0)
+                .with(MODE, false));
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -62,31 +64,30 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
     }
 
     @Override
-    public boolean getBearingAtFace(BlockState state, Direction face) {
-        Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
-        return (state.get(BEARING) & relative.getBitField()) != 0;
+    public boolean getBearingAtFace(World world, BlockState state, BlockPos pos, @Nullable MechanicalSourceBlockEntity blockEntity, Direction face) {
+        if (blockEntity != null) {
+            return blockEntity.getBearingAtFace(state, face);
+        }
+        if (world.getBlockEntity(pos) instanceof MechanicalSourceBlockEntity mechanicalSourceBlockEntity) {
+            return mechanicalSourceBlockEntity.getBearingAtFace(state, face);
+        } else {
+            return false;
+        }
     }
 
-    @Override
-    public BlockState setBearingAtFace(BlockState state, Direction face, boolean bearing) {
-        Relative relative =  DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
-
-        int newValue;
-        if (bearing) {
-            // bitwise or, will always add the specific bit
-            newValue = state.get(BEARING) | relative.getBitField();
+    public int[] getSourceRatios(BlockState state) {
+        if (!state.get(MODE)) {
+            return SOURCE_RATIOS;
         } else {
-            // bitwise and of state and field to switch ensures we only subtract if it is set
-            newValue = state.get(BEARING) - (state.get(BEARING) & relative.getBitField());
+            return SOURCE_RATIOS_OTHER;
         }
-        return state.with(BEARING, newValue);
     }
 
     @Override
     public List<Direction> getOutputFaces(BlockState state) {
         List<Direction> list = new ArrayList<>();
-        for (int i = 0; i < SOURCE_RATIOS.length; i++) {
-            if (SOURCE_RATIOS[i] > 0) {
+        for (int i = 0; i < getSourceRatios(state).length; i++) {
+            if (getSourceRatios(state)[i] > 0) {
                 list.add(DirectionHelper.relativeToCheckY(state.get(FACING), state.get(UP_DIRECTION), Relative.byIndex(i)));
             }
         }
@@ -97,90 +98,81 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
     public int costPerBase(BlockState state, List<Direction> includedFaces) {
         return includedFaces.stream().reduce(0, (t, direction) -> {
             Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), direction);
-            return t+SOURCE_RATIOS[relative.getIndex()];
+            return t+getSourceRatios(state)[relative.getIndex()];
         }, Integer::sum);
     }
 
     @Override
     public int getRatioAtFace(BlockState state, Direction face) {
         Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
-        return SOURCE_RATIOS[relative.getIndex()];
+        return getSourceRatios(state)[relative.getIndex()];
     }
 
     @Override
-    public BlockState setSourceBase(BlockState state, int sourceBase) {
-        return state.with(SOURCE_BASE, sourceBase);
-    }
-
-    @Override
-    public int getSourceBase(BlockState state) {
-        return state.get(SOURCE_BASE);
-    }
-
-    @Override
-    public int getAvailableDelivery(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
-        return getAvailablePower(world, state, pos, blockEntity);
+    public int getAvailableDelivery(World world, BlockState state, BlockPos pos, @Nullable MechanicalSourceBlockEntity blockEntity) {
+        if (blockEntity instanceof GearboxBlockEntity gearboxEntity) {
+            return getAvailablePower(world, state, pos, gearboxEntity);
+        } else {
+            return getAvailablePower(world, state, pos, null);
+        }
     }
 
     @Override
     public boolean isSourceAtFace(BlockState state, Direction face) {
         Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
-        return SOURCE_RATIOS[relative.getIndex()] > 0;
+        return getSourceRatios(state)[relative.getIndex()] > 0;
     }
 
     @Override
     public int getSourceAtFace(BlockState state, Direction face) {
         int sourceBase = state.get(SOURCE_BASE);
+        return computeSourceAtFace(state, face, sourceBase);
+    }
+
+    public int computeSourceAtFace(BlockState state, Direction face, int sourceBase) {
         if (sourceBase > 0) {
             Relative relative = DirectionHelper.getRelativeCheckY(state.get(FACING), state.get(UP_DIRECTION), face);
-            return SOURCE_RATIOS[relative.getIndex()] * sourceBase;
+            return getSourceRatios(state)[relative.getIndex()] * sourceBase;
         }
         return 0;
     }
 
-    @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        Block block = state.getBlock();
-        if (!oldState.isOf(state.getBlock()) && !world.isClient && block instanceof DynamicMechanicalSource source) {
-            BlockState updatedState = this.update(world, pos, state, source);
-            if (updatedState != state && world.getBlockState(pos) == state) {
-                world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
-            }
+//    @Override
+//    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+//        Block block = state.getBlock();
+//        if (!oldState.isOf(state.getBlock()) && !world.isClient && block instanceof DynamicMechanicalSource source) {
+//            BlockState updatedState = this.update(world, pos, state, source);
+//            if (updatedState != state && world.getBlockState(pos) == state) {
+//                world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
+//            }
+//
+//            for (Direction direction : source.getOutputFaces(state)) {
+//                world.updateNeighborsAlways(pos.offset(direction), this);
+//            }
+//        }
+//    }
 
-            for (Direction direction : source.getOutputFaces(state)) {
-                world.updateNeighborsAlways(pos.offset(direction), this);
-            }
-        }
-    }
-
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient && state.getBlock() instanceof DynamicMechanicalSource source) {
-            BlockState updatedState = this.update(world, pos, state, source);
-            if (updatedState != state && world.getBlockState(pos) == state) {
-                world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
-            }
-        }
-    }
-
-    public BlockState update(World world, BlockPos pos, BlockState state, DynamicMechanicalSource source) {
-        SourceUpdate update = new SourceUpdate(world, pos, state, source);
-        BlockState newState = update.updateSourceBase();
-        return update.updateBearing(newState);
-    }
+//    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+//        if (!world.isClient && state.getBlock() instanceof DynamicMechanicalSource source) {
+//
+//        }
+//    }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         super.appendProperties(stateManager);
         stateManager.add(FACING);
-        stateManager.add(BEARING);
         stateManager.add(SOURCE_BASE);
         stateManager.add(UP_DIRECTION);
+        stateManager.add(MODE);
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        System.out.println("Placed!");
-        if (!world.isClient) {
-            //Optional<BlockPos> possibleSink = lookForSink(world, pos, state);
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        } else {
+            world.setBlockState(pos, state.with(MODE, !state.get(MODE)), Block.NOTIFY_ALL);
+            return ActionResult.CONSUME;
         }
     }
 

@@ -121,7 +121,9 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (!world.isClient && state.getBlock() instanceof MechanicalConnector) {
             BlockState updatedState = this.update(world, pos, state);
-            if (updatedState != state && world.getBlockState(pos) == state) {
+            if (updatedState == null) {
+                world.breakBlock(pos, false);
+            } else if (updatedState != state && world.getBlockState(pos) == state) {
                 world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
             }
         }
@@ -138,7 +140,7 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         if (neighbor instanceof MechanicalSink sink && sink.isSinkAtFace(neighborState, toNeighbor.getOpposite())) {
             return stateFromSink(world, state, neighborState, neighborPos, sink, toNeighbor);
         } else if (neighborState.getBlock() instanceof MechanicalSource source && source.isSourceAtFace(neighborState, toNeighbor.getOpposite())) {
-            return stateFromSource(state, neighborState, source, toNeighbor);
+            return stateFromSource(world, state, neighborState, neighborPos, source, toNeighbor);
         } else if (neighborState.getBlock() instanceof MechanicalConnector connector && (connector.isOutputAtFace(neighborState, toNeighbor.getOpposite()) || connector.isOutputAtFace(neighborState, toNeighbor))) {
             return stateFromConnector(state, neighborState, connector, toNeighbor);
         } else if (getInputFace(state) == toNeighbor && (state.get(MECHANICAL_SOURCE) > 0 || state.get(BEARING_LOAD))) {
@@ -182,26 +184,31 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
     }
 
     // This assumes the source outputs in axis of axle
-    public static MechanicalUpdate stateFromSource(BlockState state, BlockState sourceState, MechanicalSource source, Direction toSource) {
+    public static MechanicalUpdate stateFromSource(World world, BlockState state, BlockState sourceState, BlockPos sourcePos, MechanicalSource source, Direction toSource) {
         MechanicalUpdate update = new MechanicalUpdate(state);
         int sourceSource = source.getSourceAtFace(sourceState, toSource.getOpposite());
         int selfSource = state.get(MECHANICAL_SOURCE);
-        boolean sourceBearing = source.getBearingAtFace(sourceState, toSource.getOpposite());
+        boolean sourceBearing = source.getBearingAtFace(world, sourceState, sourcePos, null, toSource.getOpposite());
         boolean selfBearing = state.get(BEARING_LOAD);
 
         BlockState newState = state;
-        // If this source nonzero, switch direction
-        // If this then later hits a source, source will cause breakage
-        if (getInputFace(state) != toSource && sourceSource > 0) {
-            newState = switchInputOutput(newState);
-            update.addProperty(INPUT_FACE);
+        // We always want a source to make it change direction
+        update.addProperty(INPUT_FACE);
+        if (sourceSource > 0) {
+            if (getInputFace(state) != toSource) {
+                newState = switchInputOutput(newState);
+            }
         }
 
         if (sourceSource == selfSource && sourceBearing == selfBearing) {
             return update.withState(newState);
         }
+        // In this case there is a change
         // Only valid with this input face
-        update.addProperty(INPUT_FACE);
+        // Ensure input face also is correct
+        if (getInputFace(newState) != toSource) {
+            newState = switchInputOutput(newState);
+        }
 
         if (sourceSource != selfSource) {
             newState = newState.with(MECHANICAL_SOURCE, sourceSource);
