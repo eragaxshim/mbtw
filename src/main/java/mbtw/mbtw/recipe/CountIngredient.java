@@ -62,6 +62,10 @@ public class CountIngredient implements CustomIngredient {
         return SERIALIZER;
     }
 
+    public int getCount() {
+        return count;
+    }
+
     private static class Serializer implements CustomIngredientSerializer<CountIngredient> {
         private final Identifier id = new Identifier(Mbtw.MOD_ID, "count");
 

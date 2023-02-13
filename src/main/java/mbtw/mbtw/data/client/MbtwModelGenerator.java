@@ -121,6 +121,9 @@ public class MbtwModelGenerator extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(Mbtw.FLOUR, Models.GENERATED);
+        itemModelGenerator.register(Mbtw.SOUL_FLUX, Models.GENERATED);
+        itemModelGenerator.register(Mbtw.SOUL_URN, Models.GENERATED);
+        itemModelGenerator.register(Mbtw.SOULFORGED_GOLD, Models.GENERATED);
     }
 
     // Ensure variants and conditions are of same length

@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public abstract class AbstractMechanicalRecipe implements Recipe<Inventory> {
+public abstract class AbstractMechanicalRecipe implements PoweredRecipe {
     protected final RecipeType<?> type;
     protected final Identifier id;
     protected final String group;
@@ -32,7 +32,7 @@ public abstract class AbstractMechanicalRecipe implements Recipe<Inventory> {
 
     @Override
     public boolean matches(Inventory inventory, World world) {
-        ItemStack stack = inventory.getStack(0);
+        ItemStack stack = inventory.getStack(1);
         return this.input.test(stack) && stack.getCount() >= this.inputCount;
     }
 
@@ -79,5 +79,9 @@ public abstract class AbstractMechanicalRecipe implements Recipe<Inventory> {
     @Override
     public RecipeType<?> getType() {
         return this.type;
+    }
+
+    public void decrementInput(DefaultedList<ItemStack> inputStacks) {
+        inputStacks.get(0).decrement(inputCount);
     }
 }

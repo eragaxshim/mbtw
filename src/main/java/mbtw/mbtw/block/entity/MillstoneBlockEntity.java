@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class MillstoneBlockEntity extends AbstractBlockMechanicalProcessor {
     public MillstoneBlockEntity(BlockPos pos, BlockState state) {
-        super(Mbtw.MILLSTONE_ENTITY, pos, state, (MechanicalSink) Mbtw.MILLSTONE, Mbtw.MILLING);
+        super(Mbtw.MILLSTONE_ENTITY, pos, state, Mbtw.MILLING);
     }
 
     @Override

@@ -1,7 +1,32 @@
 package mbtw.mbtw;
 
-import mbtw.mbtw.block.*;
-import mbtw.mbtw.block.entity.*;
+import mbtw.mbtw.block.AshBlock;
+import mbtw.mbtw.block.AxleBlock;
+import mbtw.mbtw.block.BrickOvenBlock;
+import mbtw.mbtw.block.ClayBrickBlock;
+import mbtw.mbtw.block.CraftingStationBlock;
+import mbtw.mbtw.block.CrucibleBlock;
+import mbtw.mbtw.block.DamagedCobwebBlock;
+import mbtw.mbtw.block.FallingSlabBlock;
+import mbtw.mbtw.block.FiniteTorchBlock;
+import mbtw.mbtw.block.FiniteWallTorchBlock;
+import mbtw.mbtw.block.GearboxBlock;
+import mbtw.mbtw.block.InfiniteCrankBlock;
+import mbtw.mbtw.block.InnerLogBlock;
+import mbtw.mbtw.block.InnerTrunkBlock;
+import mbtw.mbtw.block.MbtwApi;
+import mbtw.mbtw.block.MillstoneBlock;
+import mbtw.mbtw.block.StratifiedOreBlock;
+import mbtw.mbtw.block.StratifiedStoneBlock;
+import mbtw.mbtw.block.TrunkBlock;
+import mbtw.mbtw.block.VariableCampfireBlock;
+import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
+import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
+import mbtw.mbtw.block.entity.CrucibleBlockEntity;
+import mbtw.mbtw.block.entity.FiniteTorchBlockEntity;
+import mbtw.mbtw.block.entity.GearboxBlockEntity;
+import mbtw.mbtw.block.entity.MillstoneBlockEntity;
+import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
 import mbtw.mbtw.item.FiniteTorchItem;
 import mbtw.mbtw.item.FireStarterItem;
@@ -9,10 +34,12 @@ import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
 import mbtw.mbtw.recipe.CountIngredient;
+import mbtw.mbtw.recipe.CrucibleRecipe;
 import mbtw.mbtw.recipe.MechanicalRecipeSerializer;
 import mbtw.mbtw.recipe.MillstoneRecipe;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import mbtw.mbtw.screen.CraftingStationScreenHandler;
+import mbtw.mbtw.screen.CrucibleScreenHandler;
 import mbtw.mbtw.screen.MillstoneScreenHandler;
 import mbtw.mbtw.screen.TrunkWorkbenchScreenHandler;
 import mbtw.mbtw.tag.MbtwTagsMaps;
@@ -23,10 +50,19 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.fabric.impl.recipe.ingredient.builtin.AllIngredient;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FallingBlock;
+import net.minecraft.block.MapColor;
+import net.minecraft.block.Material;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CookingRecipeSerializer;
 import net.minecraft.recipe.RecipeSerializer;
@@ -102,6 +138,9 @@ public class Mbtw implements ModInitializer {
 	public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings(), 700, ItemStack.EMPTY, 600);
 
 	public static final Item FLOUR = new Item(new FabricItemSettings());
+	public static final Item SOUL_URN = new Item(new FabricItemSettings());
+	public static final Item SOUL_FLUX = new Item(new FabricItemSettings());
+	public static final Item SOULFORGED_GOLD = new Item(new FabricItemSettings());
 
 	public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
 	public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -139,6 +178,7 @@ public class Mbtw implements ModInitializer {
 	public static BlockEntityType<BrickOvenBlockEntity> BRICK_OVEN_ENTITY;
 	public static RecipeType<BrickOvenRecipe> BRICK_SMELTING;
 	public static RecipeType<MillstoneRecipe> MILLING;
+	public static RecipeType<CrucibleRecipe> CRUCIBLE_SMELTING;
 
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
 	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
@@ -150,14 +190,18 @@ public class Mbtw implements ModInitializer {
 
 	public static final Block CRAFTING_STATION = new CraftingStationBlock(FabricBlockSettings.of(Material.REPAIR_STATION).strength(2.5F).requiresTool().sounds(BlockSoundGroup.ANVIL));
 
+	public static final Block CRUCIBLE = new CrucibleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
+	public static BlockEntityType<CrucibleBlockEntity> CRUCIBLE_ENTITY;
+
 	public static ItemGroup MBTW_GROUP;
 
 	public static RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER;
 	public static RecipeSerializer<MillstoneRecipe> MILLING_SERIALIZER;
-	//public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "brick_oven"), BrickOvenScreenHandler::new);
+	public static RecipeSerializer<CrucibleRecipe> CRUCIBLE_SERIALIZER;
 
 	public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new);
 	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new);
+	public static final ScreenHandlerType<CrucibleScreenHandler> CRUCIBLE_SCREEN_HANDLER = new ScreenHandlerType<>(CrucibleScreenHandler::new);
 
 	public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = new ScreenHandlerType<>(TrunkWorkbenchScreenHandler::new);
 	public static final ScreenHandlerType<CraftingScreenHandler> CRAFTING_STATION_SCREEN_HANDLER = new ScreenHandlerType<>(CraftingStationScreenHandler::new);
@@ -184,6 +228,13 @@ public class Mbtw implements ModInitializer {
 			@Override
 			public String toString() {
 				return "milling";
+			}
+		});
+		CRUCIBLE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "crucible_smelting"), new CrucibleRecipe.Serializer());
+		CRUCIBLE_SMELTING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "crucible_smelting"), new RecipeType<CrucibleRecipe>() {
+			@Override
+			public String toString() {
+				return "crucible_smelting";
 			}
 		});
 	}
@@ -287,6 +338,9 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "fire_plough"), FIRE_PLOUGH);
 
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "flour"), FLOUR);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "soul_urn"), SOUL_URN);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "soul_flux"), SOUL_FLUX);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "soulforged_gold"), SOULFORGED_GOLD);
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "damaged_cobweb"), DAMAGED_COBWEB);
 
@@ -323,6 +377,10 @@ public class Mbtw implements ModInitializer {
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "crafting_station"), CRAFTING_STATION);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "crafting_station"), new BlockItem(CRAFTING_STATION, new FabricItemSettings()));
+
+		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "crucible"), CRUCIBLE);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "crucible"), new BlockItem(CRUCIBLE, new FabricItemSettings()));
+		CRUCIBLE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "crucible"), FabricBlockEntityTypeBuilder.create(CrucibleBlockEntity::new, CRUCIBLE).build(null));
 
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
@@ -369,6 +427,10 @@ public class Mbtw implements ModInitializer {
 					entries.add(MILLSTONE);
 					entries.add(AXLE);
 					entries.add(GEARBOX);
+					entries.add(FLOUR);
+					entries.add(SOUL_FLUX);
+					entries.add(SOUL_URN);
+					entries.add(SOULFORGED_GOLD);
 				})
 				.build();
 

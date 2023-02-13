@@ -1,0 +1,17 @@
+{
+  "type": "mbtw:crucible_smelting",
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "mbtw:soul_flux"
+    },
+    {
+      "item": "mbtw:soul_urn"
+    }
+  ],
+  "result": {
+    "item": "mbtw:soulforged_gold"
+  }
+}

@@ -1,13 +1,13 @@
 package mbtw.mbtw.screen;
 
 import mbtw.mbtw.recipe.AbstractMechanicalRecipe;
+import mbtw.mbtw.recipe.PoweredRecipe;
 import mbtw.mbtw.screen.slot.MechanicalOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.recipe.RecipeType;
@@ -16,25 +16,26 @@ import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
-public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
+public class AbstractProcessorScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
     protected final World world;
-    private final RecipeType<? extends AbstractMechanicalRecipe> recipeType;
+    private final RecipeType<? extends PoweredRecipe> recipeType;
+    private final int inventorySize;
 
-    protected AbstractMechanicalScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends AbstractMechanicalRecipe> recipeType, int syncId, PlayerInventory playerInventory) {
-        this(type, recipeType, syncId, playerInventory, new SimpleInventory(2), new ArrayPropertyDelegate(2));
+    protected AbstractProcessorScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends PoweredRecipe> recipeType, int syncId, int inventorySize, PlayerInventory playerInventory) {
+        this(type, recipeType, syncId, inventorySize, playerInventory, new SimpleInventory(inventorySize), new ArrayPropertyDelegate(3));
     }
 
-    protected AbstractMechanicalScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends  AbstractMechanicalRecipe> recipeType, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    protected AbstractProcessorScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends PoweredRecipe> recipeType, int syncId, int inventorySize, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(type, syncId);
+        this.inventorySize = inventorySize;
         this.recipeType = recipeType;
-        AbstractMechanicalScreenHandler.checkSize(inventory, 2);
-        AbstractMechanicalScreenHandler.checkDataCount(propertyDelegate, 2);
+        AbstractProcessorScreenHandler.checkSize(inventory, inventorySize);
+        AbstractProcessorScreenHandler.checkDataCount(propertyDelegate, 2);
         this.inventory = inventory;
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;
@@ -57,8 +58,22 @@ public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler
     }
 
     public void addSlots(Inventory inventory, PlayerInventory playerInventory) {
-        this.addSlot(new Slot(inventory, 0, 56, 17));
-        this.addSlot(new MechanicalOutputSlot(playerInventory.player, inventory, 1, 116, 35));
+        this.addSlot(new MechanicalOutputSlot(playerInventory.player, inventory, 0, 116, 35));
+        if (inventory.size() > 2) {
+            for(int i = 0; i < 3; ++i) {
+                for(int j = 0; j < 3; ++j) {
+                    if (j + i * 3 < inventory.size()-1) {
+                        this.addSlot(new Slot(inventory, 1 + j + i * 3, 30 + j * 18, 17 + i * 18));
+                    }
+                }
+            }
+        } else {
+            this.addSlot(new Slot(inventory, 1, 56, 17));
+        }
+    }
+
+    public boolean isPowered() {
+        return this.propertyDelegate.get(2) > 0;
     }
 
     public int getCookProgress() {
@@ -87,8 +102,7 @@ public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler
 
     @Override
     public void clearCraftingSlots() {
-        this.getSlot(0).setStack(ItemStack.EMPTY);
-        this.getSlot(1).setStack(ItemStack.EMPTY);
+        this.inventory.clear();
     }
 
     @Override
@@ -98,22 +112,22 @@ public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler
 
     @Override
     public int getCraftingResultSlotIndex() {
-        return 1;
+        return 0;
     }
 
     @Override
     public int getCraftingWidth() {
-        return 1;
+        return inventorySize > 2 ? 3 : 1;
     }
 
     @Override
     public int getCraftingHeight() {
-        return 1;
+        return inventorySize > 2 ? 3 : 1;
     }
 
     @Override
     public int getCraftingSlotCount() {
-        return 2;
+        return inventorySize;
     }
 
     @Override
@@ -123,6 +137,6 @@ public class AbstractMechanicalScreenHandler extends AbstractRecipeScreenHandler
 
     @Override
     public boolean canInsertIntoSlot(int index) {
-        return index != 1;
+        return index != 0;
     }
 }
