@@ -15,6 +15,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,5 +109,20 @@ public class FiniteTorchItem extends VerticallyAttachableBlockItem implements Ti
         {
             this.onFinalProgress(stack, world, pos, stackTag.getBoolean("DecreaseProgressTick"), stackTag.getInt("MaxProgress"));
         }
+    }
+
+    @Override
+    public boolean isItemBarVisible(ItemStack stack) {
+        return TickProgressable.isItemBarVisible(stack);
+    }
+
+    @Override
+    public int getItemBarStep(ItemStack stack) {
+        return TickProgressable.getItemBarStep(stack);
+    }
+
+    @Override
+    public int getItemBarColor(ItemStack stack) {
+        return TickProgressable.getItemBarColor(stack);
     }
 }

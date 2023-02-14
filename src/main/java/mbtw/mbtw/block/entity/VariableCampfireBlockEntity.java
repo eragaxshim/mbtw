@@ -13,6 +13,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -240,7 +241,8 @@ public class VariableCampfireBlockEntity extends CampfireBlockEntity {
                 }
                 else if (!campfireAccess.getFinishedItems()[i] && campfireAccess.getCookingTimes()[i] >= campfireAccess.getCookingTotalTimes()[i]) {
                     Inventory inventory = new SimpleInventory(itemStack);
-                    ItemStack craftedStack = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map((campfireCookingRecipe) -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
+                    DynamicRegistryManager registryManager = world.getRegistryManager();
+                    ItemStack craftedStack = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map((campfireCookingRecipe) -> campfireCookingRecipe.craft(inventory, registryManager)).orElse(itemStack);
                     if (craftedStack != itemStack)
                     {
                         campfireAccess.getFinishedItems()[i] = true;

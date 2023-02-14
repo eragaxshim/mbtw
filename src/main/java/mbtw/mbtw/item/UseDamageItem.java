@@ -33,7 +33,7 @@ public class UseDamageItem extends Item {
     }
 
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        System.out.println("b" + stack.getDamage());
+        //System.out.println("b" + stack.getDamage());
 
         return this.targetItem;
     }

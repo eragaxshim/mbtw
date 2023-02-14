@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CountIngredient implements CustomIngredient {
-    public static final CustomIngredientSerializer<CountIngredient> SERIALIZER = new CountIngredient.Serializer();
+    public static final CustomIngredientSerializer<CountIngredient> SERIALIZER = new Serializer();
 
     private final Ingredient base;
     private final int count;

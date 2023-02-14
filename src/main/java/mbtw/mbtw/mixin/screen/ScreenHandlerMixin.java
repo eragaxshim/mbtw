@@ -83,9 +83,9 @@ public abstract class ScreenHandlerMixin implements ScreenHandlerMixinAccessor {
 
                 if (slotStack.isEmpty() && slot2.canInsert(stack) && slotStack.getCount() < slot2.getMaxItemCount()) {
                     if (stack.getCount() > slot2.getMaxItemCount()) {
-                        slot2.setStack(stack.split(slot2.getMaxItemCount()));
+                        slot2.setStackNoCallbacks(stack.split(slot2.getMaxItemCount()));
                     } else {
-                        slot2.setStack(stack.split(stack.getCount()));
+                        slot2.setStackNoCallbacks(stack.split(stack.getCount()));
                     }
 
                     slot2.markDirty();

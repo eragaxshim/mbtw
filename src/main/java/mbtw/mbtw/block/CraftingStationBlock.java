@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class CraftingStationBlock extends CraftingTableBlock {
     private static final Text SCREEN_TITLE = Text.translatable("container.mbtw.crafting_station");
 
-    public CraftingStationBlock(AbstractBlock.Settings settings) {
+    public CraftingStationBlock(Settings settings) {
         super(settings);
     }
 

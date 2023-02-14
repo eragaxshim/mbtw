@@ -145,8 +145,8 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!entity.isFireImmune() && state.get(LIT) && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entity)) {
-            entity.damage(DamageSource.IN_FIRE, (float)(this.fireDamage * state.get(FIRE_SIZE) / 2.0));
+        if (state.get(LIT) && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entity)) {
+            entity.damage(world.getDamageSources().inFire(), (float)(this.fireDamage * state.get(FIRE_SIZE) / 2.0));
         }
     }
 

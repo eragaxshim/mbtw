@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -70,14 +71,15 @@ public abstract class AbstractBlockProcessorEntity extends LockableContainerBloc
             PoweredRecipe recipe = processor.matchGetter.getFirstMatch(processor, world).orElse(null);
             if (recipe != null) {
                 int maxOutputSlotCount = Math.min(processor.getMaxCountOfSlot(0), processor.getMaxCountPerStack());
-                boolean canAcceptRecipe = AbstractBlockProcessorEntity.canAcceptRecipeOutput(recipe, processor.inventory, maxOutputSlotCount);
+                DynamicRegistryManager registryManager = world.getRegistryManager();
+                boolean canAcceptRecipe = AbstractBlockProcessorEntity.canAcceptRecipeOutput(registryManager, recipe, processor.inventory, maxOutputSlotCount);
                 if (canAcceptRecipe && processor.getAvailablePower() >= recipe.getRequiredPower()) {
                     processor.processingTime++;
                     processor.processingTimeTotal = recipe.getProcessingTime();
                     if (processor.processingTime > 0 && processor.processingTime == processor.processingTimeTotal) {
                         processor.processingTime = 0;
                         // Adds new item, decrements previous item
-                        AbstractBlockProcessorEntity.craftRecipe(recipe, processor.inventory);
+                        AbstractBlockProcessorEntity.craftRecipe(registryManager, recipe, processor.inventory);
                     }
                     doMarkDirty = true;
                 } else {
@@ -94,12 +96,12 @@ public abstract class AbstractBlockProcessorEntity extends LockableContainerBloc
 
     public abstract int getMaxCountOfSlot(int slotIndex);
 
-    private static boolean canAcceptRecipeOutput(PoweredRecipe recipe, DefaultedList<ItemStack> slots, int maxSlotCount) {
+    private static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, PoweredRecipe recipe, DefaultedList<ItemStack> slots, int maxSlotCount) {
         // if nothing in input, no
         if (getInputSlots(slots).stream().allMatch(ItemStack::isEmpty)) {
             return false;
         }
-        ItemStack recipeOutput = recipe.getOutput();
+        ItemStack recipeOutput = recipe.getOutput(registryManager);
         // if recipe is empty, false
         if (recipeOutput.isEmpty()) {
             return false;
@@ -136,9 +138,9 @@ public abstract class AbstractBlockProcessorEntity extends LockableContainerBloc
         slots.set(0, stack);
     }
 
-    public static void craftRecipe(PoweredRecipe recipe, DefaultedList<ItemStack> slots) {
+    public static void craftRecipe(DynamicRegistryManager registryManager, PoweredRecipe recipe, DefaultedList<ItemStack> slots) {
         DefaultedList<ItemStack> inputStacks = getInputSlots(slots);
-        ItemStack recipeOutput = recipe.getOutput();
+        ItemStack recipeOutput = recipe.getOutput(registryManager);
         ItemStack outputSlotStack = getOutputSlot(slots);
         // We have already checked if the output is at max count
         if (outputSlotStack.isEmpty()) {

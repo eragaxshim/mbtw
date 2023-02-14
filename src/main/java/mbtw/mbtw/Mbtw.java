@@ -69,6 +69,7 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
@@ -199,12 +200,12 @@ public class Mbtw implements ModInitializer {
 	public static RecipeSerializer<MillstoneRecipe> MILLING_SERIALIZER;
 	public static RecipeSerializer<CrucibleRecipe> CRUCIBLE_SERIALIZER;
 
-	public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new);
-	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new);
-	public static final ScreenHandlerType<CrucibleScreenHandler> CRUCIBLE_SCREEN_HANDLER = new ScreenHandlerType<>(CrucibleScreenHandler::new);
+	public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
+	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
+	public static final ScreenHandlerType<CrucibleScreenHandler> CRUCIBLE_SCREEN_HANDLER = new ScreenHandlerType<>(CrucibleScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
 
-	public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = new ScreenHandlerType<>(TrunkWorkbenchScreenHandler::new);
-	public static final ScreenHandlerType<CraftingScreenHandler> CRAFTING_STATION_SCREEN_HANDLER = new ScreenHandlerType<>(CraftingStationScreenHandler::new);
+	public static final ScreenHandlerType<CraftingScreenHandler> TRUNK_WORKBENCH_SCREEN_HANDLER = new ScreenHandlerType<>(TrunkWorkbenchScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
+	public static final ScreenHandlerType<CraftingScreenHandler> CRAFTING_STATION_SCREEN_HANDLER = new ScreenHandlerType<>(CraftingStationScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
 
 	//    public static final RuleTest RULE_HARD_STONE = new BlockMatchRuleTest(HARD_STONE);
 //    public static final RuleTest RULE_DEEP_STONE = new BlockMatchRuleTest(DEEP_STONE);
@@ -402,7 +403,7 @@ public class Mbtw implements ModInitializer {
 		MBTW_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "mbtw_group"))
 				.displayName(Text.literal("MBTW"))
 				.icon(() -> new ItemStack(LOOSE_STONE))
-				.entries((enabledFeatures, entries, operatorEnabled) -> {
+				.entries((enabledFeatures, entries) -> {
 					entries.add(LOOSE_STONE);
 					entries.add(IRON_ORE_PILE);
 					entries.add(IRON_ORE_CHUNK);

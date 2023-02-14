@@ -9,7 +9,6 @@
 		"render.entity.model.EntityModelMixin",
 		"render.entity.model.QuadrupedMixin",
 		"render.item.HeldItemMixin",
-		"render.item.ItemRendererMixin",
 		"world.ClientWorldMixin"
 	],
 	"injectors": {

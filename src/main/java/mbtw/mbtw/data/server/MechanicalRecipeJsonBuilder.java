@@ -65,7 +65,7 @@ public class MechanicalRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
         this.validate(recipeId);
         this.advancementBuilder.parent(ROOT).criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(CriterionMerger.OR);
-        exporter.accept(new MechanicalRecipeJsonBuilder.MechanicalRecipeJsonProvider(recipeId, this.group == null ? "" : this.group, this.input, this.inputCount, this.output, this.outputCount, this.processingTime, this.requiredPower, this.advancementBuilder, recipeId.withPrefixedPath("recipes/" + this.category.getName() + "/"), this.serializer));
+        exporter.accept(new MechanicalRecipeJsonProvider(recipeId, this.group == null ? "" : this.group, this.input, this.inputCount, this.output, this.outputCount, this.processingTime, this.requiredPower, this.advancementBuilder, recipeId.withPrefixedPath("recipes/" + this.category.getName() + "/"), this.serializer));
     }
 
     private void validate(Identifier recipeId) {

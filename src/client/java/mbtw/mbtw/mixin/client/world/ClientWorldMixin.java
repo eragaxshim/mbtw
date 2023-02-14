@@ -1,5 +1,7 @@
 package mbtw.mbtw.mixin.client.world;
 
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -17,14 +19,14 @@ import java.util.function.Supplier;
 @Mixin(ClientWorld.class)
 public abstract class ClientWorldMixin extends World {
 
-    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> dimensionType, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
+    protected ClientWorldMixin(ClientPlayNetworkHandler networkHandler, ClientWorld.Properties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> dimensionTypeEntry, int loadDistance, int simulationDistance, Supplier<Profiler> profiler, WorldRenderer worldRenderer, boolean debugWorld, long seed) {
+        super(properties, registryRef, networkHandler.getRegistryManager(), dimensionTypeEntry, profiler, true, debugWorld, seed, 1000000);
     }
 
     /**
      * Dark Nights
      */
-    @Inject(method = "getStarBrightness", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getSkyBrightness", at = @At("RETURN"), cancellable = true)
     protected void changeLightMethod(float tickDelta, CallbackInfoReturnable<Float> cir) {
         // baseValue is between 0.2 (at night) and 1 (height of day)
         double baseValue = cir.getReturnValue();
