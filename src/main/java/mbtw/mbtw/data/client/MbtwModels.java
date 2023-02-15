@@ -2,6 +2,7 @@ package mbtw.mbtw.data.client;
 
 import mbtw.mbtw.Mbtw;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.client.*;
 import net.minecraft.util.Identifier;
 
@@ -15,6 +16,7 @@ public class MbtwModels {
     public static final Model TEMPLATE_AXLE = MbtwModels.block("template_axle", TextureKey.SIDE, TextureKey.END);
     public static final Model TEMPLATE_GEARBOX = MbtwModels.block("template_gearbox", TextureKey.SIDE, INPUT, OUTPUT);
     public static final Model TEMPLATE_GEARBOX_OTHER = MbtwModels.block("template_gearbox_other", TextureKey.SIDE, INPUT, OUTPUT);
+    public static final Model TEMPLATE_VESSEL = MbtwModels.block("template_vessel", TextureKey.SIDE, TextureKey.INSIDE, TextureKey.BOTTOM, TextureKey.TOP, TextureKey.CONTENT);
 
     private static Model block(String parent, TextureKey ... requiredTextureKeys) {
         return new Model(Optional.of(new Identifier(Mbtw.MOD_ID, "block/" + parent)), Optional.empty(), requiredTextureKeys);
@@ -52,5 +54,9 @@ public class MbtwModels {
 
     public static TextureMap sideInputOutput(Block block) {
         return new TextureMap().put(INPUT, TextureMap.getSubId(block, "_input")).put(OUTPUT, TextureMap.getSubId(block, "_output")).put(TextureKey.SIDE, TextureMap.getSubId(block, "_side"));
+    }
+    
+    public static TextureMap vessel(Block block) {
+        return new TextureMap().put(TextureKey.SIDE, TextureMap.getSubId(block, "_side")).put(TextureKey.TOP, TextureMap.getSubId(block, "_top")).put(TextureKey.BOTTOM, TextureMap.getSubId(block, "_bottom")).put(TextureKey.INSIDE, TextureMap.getSubId(block, "_side")).put(TextureKey.CONTENT, TextureMap.getSubId(block, "_content"));
     }
 }

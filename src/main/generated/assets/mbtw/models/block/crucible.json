@@ -1,0 +1,10 @@
+{
+  "parent": "mbtw:block/template_vessel",
+  "textures": {
+    "bottom": "mbtw:block/crucible_bottom",
+    "content": "mbtw:block/crucible_content",
+    "inside": "mbtw:block/crucible_side",
+    "side": "mbtw:block/crucible_side",
+    "top": "mbtw:block/crucible_top"
+  }
+}

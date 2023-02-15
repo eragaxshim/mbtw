@@ -183,35 +183,18 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
 
     @Override
     public int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
-        if (blockEntity != null) {
-            return blockEntity.getSink(world, state, pos, blockEntity);
-        }
-        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
-            return mechanicalSinkBlockEntity.getSink(world, state, pos, mechanicalSinkBlockEntity);
-        }
-        return 0;
+        return MechanicalSinkBlockEntity.blockGetSink(world, pos, blockEntity);
     }
 
     @Override
     public boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
         if (blockEntity != null) {
-            return blockEntity.getAvailablePower(world, state, pos, blockEntity) > 0;
+            return blockEntity.getAvailablePower() > 0;
         }
         if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
-            return mechanicalSinkBlockEntity.getAvailablePower(world, state, pos, mechanicalSinkBlockEntity) > 0;
+            return mechanicalSinkBlockEntity.getAvailablePower() > 0;
         }
         return false;
-    }
-
-    @Override
-    public int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
-        if (blockEntity != null) {
-            return blockEntity.getAvailablePower(world, state, pos, blockEntity);
-        }
-        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
-            return mechanicalSinkBlockEntity.getAvailablePower(world, state, pos, mechanicalSinkBlockEntity);
-        }
-        return 0;
     }
 
     @Override

@@ -14,7 +14,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -29,15 +28,16 @@ public class GearboxBlockEntity extends BlockEntity implements MechanicalSinkBlo
 
     public static void serverTick(World world, BlockPos pos, BlockState state, GearboxBlockEntity gearbox) {
         MechanicalSinkBlockEntity.mechanicalTick(world, pos, state, gearbox);
-        gearbox.availablePower = gearbox.sink().getAvailablePower(world, state, pos, gearbox);
+        gearbox.availablePower = gearbox.sinkBlock().getAvailablePower(world, state, pos, gearbox);
         MechanicalSourceBlockEntity.mechanicalTick(world, pos, state, gearbox);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        this.sink = nbt.getShort("Sink");
+        this.availablePower = nbt.getShort("AvailablePower");
         this.bearingField = nbt.getShort("Bearing");
+        this.sink = nbt.getShort("Sink");
     }
 
     @Override
@@ -45,45 +45,32 @@ public class GearboxBlockEntity extends BlockEntity implements MechanicalSinkBlo
         super.writeNbt(nbt);
         nbt.putShort("Sink", (short)this.sink);
         nbt.putShort("Bearing", (short)this.bearingField);
+        nbt.putShort("AvailablePower", (short)this.availablePower);
     }
 
     @Override
-    public MechanicalSink sink() {
+    public MechanicalSink sinkBlock() {
         return (MechanicalSink) Mbtw.GEARBOX;
     }
 
     @Override
-    public int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+    public int getAvailablePower() {
         return availablePower;
     }
 
     @Override
-    public int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+    public int getSink() {
         return sink;
     }
 
     @Override
-    public void worldSetAvailablePower(World world, BlockPos sinkPos, BlockState sinkState, int availablePower) {
-        if (this.availablePower != availablePower) {
-            this.availablePower = availablePower;
-            if (this.availablePower > 0) {
-                this.sink = availablePower;
-            }
-            for (Direction direction : sink().getInputFaces(sinkState)) {
-                world.updateNeighbor(sinkPos.offset(direction), sinkState.getBlock(), sinkPos);
-            }
-        }
+    public void setAvailablePower(int availablePower) {
+        this.availablePower = availablePower;
     }
 
     @Override
-    public void worldSetSink(World world, BlockPos sinkPos, BlockState sinkState, int sink) {
-        if (this.sink != sink) {
-            this.sink = sink;
-            this.markDirty();
-            for (Direction direction : sink().getInputFaces(sinkState)) {
-                world.updateNeighbor(sinkPos.offset(direction), sinkState.getBlock(), sinkPos);
-            }
-        }
+    public void setSink(int sink) {
+        this.sink = sink;
     }
 
     @Override

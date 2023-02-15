@@ -1,6 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
 import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.*;
@@ -67,21 +68,6 @@ public class MillstoneBlock extends AbstractMechanicalBlock {
 
         return (world1, pos, state1, millstone) -> MillstoneBlockEntity.serverTick(world1, pos, state1, (MillstoneBlockEntity) millstone);
     }
-
-//    @Override
-//    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-//
-//        super.onStateReplaced(state, world, pos, newState, moved);
-//        if (world.isClient) {
-//            return;
-//        }
-//
-//        if (!state.isOf(newState.getBlock())) {
-//            for (Direction direction : VALID_INPUT_FACES) {
-//                world.updateNeighbor();
-//            }
-//        }
-//    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {

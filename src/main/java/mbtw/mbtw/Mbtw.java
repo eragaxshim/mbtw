@@ -15,6 +15,7 @@ import mbtw.mbtw.block.InfiniteCrankBlock;
 import mbtw.mbtw.block.InnerLogBlock;
 import mbtw.mbtw.block.InnerTrunkBlock;
 import mbtw.mbtw.block.MbtwApi;
+import mbtw.mbtw.block.MechanicalHopper;
 import mbtw.mbtw.block.MillstoneBlock;
 import mbtw.mbtw.block.StratifiedOreBlock;
 import mbtw.mbtw.block.StratifiedStoneBlock;
@@ -25,6 +26,7 @@ import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
 import mbtw.mbtw.block.entity.CrucibleBlockEntity;
 import mbtw.mbtw.block.entity.FiniteTorchBlockEntity;
 import mbtw.mbtw.block.entity.GearboxBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
 import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
@@ -193,6 +195,9 @@ public class Mbtw implements ModInitializer {
 
 	public static final Block CRUCIBLE = new CrucibleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static BlockEntityType<CrucibleBlockEntity> CRUCIBLE_ENTITY;
+
+	public static final Block MECHANICAL_HOPPER = new MechanicalHopper(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
+	public static BlockEntityType<MechanicalHopperBlockEntity> MECHANICAL_HOPPER_ENTITY;
 
 	public static ItemGroup MBTW_GROUP;
 
@@ -383,6 +388,10 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "crucible"), new BlockItem(CRUCIBLE, new FabricItemSettings()));
 		CRUCIBLE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "crucible"), FabricBlockEntityTypeBuilder.create(CrucibleBlockEntity::new, CRUCIBLE).build(null));
 
+		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "mechanical_hopper"), MECHANICAL_HOPPER);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "mechanical_hopper"), new BlockItem(MECHANICAL_HOPPER, new FabricItemSettings()));
+		MECHANICAL_HOPPER_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "mechanical_hopper"), FabricBlockEntityTypeBuilder.create(MechanicalHopperBlockEntity::new, MECHANICAL_HOPPER).build(null));
+
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
 
@@ -403,7 +412,7 @@ public class Mbtw implements ModInitializer {
 		MBTW_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "mbtw_group"))
 				.displayName(Text.literal("MBTW"))
 				.icon(() -> new ItemStack(LOOSE_STONE))
-				.entries((enabledFeatures, entries) -> {
+				.entries((context, entries) -> {
 					entries.add(LOOSE_STONE);
 					entries.add(IRON_ORE_PILE);
 					entries.add(IRON_ORE_CHUNK);

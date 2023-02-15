@@ -6,6 +6,7 @@ import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -15,6 +16,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +26,7 @@ public class CrucibleBlock extends Block implements BlockEntityProvider {
     public CrucibleBlock(Settings settings) {
         super(settings);
     }
+    public static final VoxelShape OUTLINE_SHAPE;
 
     @Nullable
     @Override
@@ -36,7 +41,7 @@ public class CrucibleBlock extends Block implements BlockEntityProvider {
             return null;
         }
 
-        return (world1, pos, state1, millstone) -> CrucibleBlockEntity.serverTick(world1, pos, state1, (CrucibleBlockEntity) millstone);
+        return (world1, pos, tickState, millstone) -> CrucibleBlockEntity.serverTick(world1, pos, tickState, (CrucibleBlockEntity) millstone);
     }
 
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
@@ -53,5 +58,13 @@ public class CrucibleBlock extends Block implements BlockEntityProvider {
         }
         this.openScreen(world, pos, player);
         return ActionResult.CONSUME;
+    }
+
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPE;
+    }
+
+    static {
+        OUTLINE_SHAPE = VoxelShapes.union(createCuboidShape(1.0, 0.0, 1.0, 15.0, 2.0, 15.0), createCuboidShape(0.0, 2.0, 0.0, 16.0, 14.0, 16.0), createCuboidShape(3.0, 14.0, 3.0, 13.0, 16.0, 13.0));
     }
 }

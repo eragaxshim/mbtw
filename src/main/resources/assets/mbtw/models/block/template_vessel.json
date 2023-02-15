@@ -1,0 +1,121 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "#side"
+  },
+  "elements": [
+    {
+      "__comment": "Base",
+      "from": [ 1, 0, 1 ],
+      "to": [ 15, 2, 15 ],
+      "faces": {
+        "north": { "texture": "#side" },
+        "east": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west": { "texture": "#side" },
+        "down": { "texture": "#bottom" },
+        "up": { "texture": "#top" }
+      }
+    },
+    {
+      "__comment": "Contents",
+      "from": [ 3, 4, 3 ],
+      "to": [ 13, 4, 13 ],
+      "faces": {
+        "up": { "texture": "#content" }
+      }
+    },
+    {
+      "__comment": "North side (bridge)",
+      "from": [ 3, 2, 0 ],
+      "to": [ 13, 14, 3 ],
+      "faces": {
+        "north": { "texture": "#side", "cullface": "north" },
+        "south": { "texture": "#inside" },
+        "up": { "texture": "#top" },
+        "down": { "texture": "#bottom" }
+      }
+    },
+    {
+      "__comment": "South side (bridge)",
+      "from": [ 3, 2, 13 ],
+      "to": [ 13, 14, 16 ],
+      "faces": {
+        "north": { "texture": "#inside" },
+        "south": { "texture": "#side", "cullface": "south" },
+        "up": { "texture": "#top" },
+        "down": { "texture": "#bottom" }
+      }
+    },
+    {
+      "__comment": "East side",
+      "from": [ 13, 2, 0 ],
+      "to": [ 16, 14, 16 ],
+      "faces": {
+        "north": { "texture": "#side", "cullface": "north" },
+        "south": { "texture": "#side", "cullface": "south" },
+        "east": { "texture": "#side", "cullface": "east" },
+        "west": { "texture": "#inside" },
+        "up": { "texture": "#top" },
+        "down": { "texture": "#bottom" }
+      }
+    },
+    {
+      "__comment": "West side",
+      "from": [ 0, 2, 0 ],
+      "to": [ 3, 14, 16 ],
+      "faces": {
+        "north": { "texture": "#side", "cullface": "north" },
+        "south": { "texture": "#side", "cullface": "south" },
+        "east": { "texture": "#inside" },
+        "west": { "texture": "#side", "cullface": "west" },
+        "up": { "texture": "#top" },
+        "down": { "texture": "#bottom" }
+      }
+    },
+    {
+      "__comment": "Upper ring North side (bridge)",
+      "from": [ 3, 14, 1 ],
+      "to": [ 13, 16, 3 ],
+      "faces": {
+        "north": { "texture": "#side" },
+        "south": { "texture": "#inside" },
+        "up": { "texture": "#top", "cullface": "top" }
+      }
+    },
+    {
+      "__comment": "Upper ring South side (bridge)",
+      "from": [ 3, 14, 13 ],
+      "to": [ 13, 16, 15 ],
+      "faces": {
+        "north": { "texture": "#inside" },
+        "south": { "texture": "#side" },
+        "up": { "texture": "#top", "cullface": "top" }
+      }
+    },
+    {
+      "__comment": "Upper ring East side",
+      "from": [ 13, 14, 1 ],
+      "to": [ 15, 16, 15 ],
+      "faces": {
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "east": { "texture": "#side" },
+        "west": { "texture": "#inside" },
+        "up": { "texture": "#top", "cullface": "top" }
+      }
+    },
+    {
+      "__comment": "Upper ring West side",
+      "from": [ 1, 12, 1 ],
+      "to": [ 3, 16, 15 ],
+      "faces": {
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "east": { "texture": "#inside" },
+        "west": { "texture": "#side" },
+        "up": { "texture": "#top", "cullface": "top" }
+      }
+    }
+  ]
+}

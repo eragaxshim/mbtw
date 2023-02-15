@@ -25,7 +25,7 @@ public class SinkUpdate {
 
     public SinkUpdate(World world, BlockPos sinkPos, BlockState sinkState, MechanicalSinkBlockEntity sinkEntity) {
         this.world = world;
-        this.sink = sinkEntity.sink();
+        this.sink = sinkEntity.sinkBlock();
         this.sinkEntity = sinkEntity;
         this.sinkPos = sinkPos;
         this.sinkState = sinkState;
@@ -69,7 +69,7 @@ public class SinkUpdate {
 
     public boolean updateSinkPower() {
         if (availablePower() != sink.getAvailablePower(world, sinkState, sinkPos, sinkEntity)) {
-            sinkEntity.worldSetAvailablePower(world, sinkPos, sinkState, availablePower());
+            sinkEntity.worldSetAvailablePower(world,  sinkState, sinkPos, availablePower());
             return true;
         }
         return false;
@@ -77,7 +77,7 @@ public class SinkUpdate {
 
     public boolean updateSink() {
         if (sink.getSink(world, sinkState, sinkPos, sinkEntity) != maxSource()) {
-            sinkEntity.worldSetSink(world, sinkPos, sinkState, maxSource());
+            sinkEntity.worldSetSink(world, sinkState, sinkPos, maxSource());
             return true;
         }
         return false;

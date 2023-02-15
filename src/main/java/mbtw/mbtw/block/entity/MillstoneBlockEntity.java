@@ -30,7 +30,7 @@ public class MillstoneBlockEntity extends AbstractBlockMechanicalProcessor {
     }
 
     @Override
-    public MechanicalSink sink() {
+    public MechanicalSink sinkBlock() {
         return (MechanicalSink) Mbtw.MILLSTONE;
     }
 }

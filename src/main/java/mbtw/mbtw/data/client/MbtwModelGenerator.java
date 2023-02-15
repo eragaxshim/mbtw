@@ -21,6 +21,30 @@ public class MbtwModelGenerator extends FabricModelProvider {
         super(generator);
     }
 
+    @Override
+    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        registerMillstone(blockStateModelGenerator);
+        registerAxle(blockStateModelGenerator);
+        registerGearbox(blockStateModelGenerator);
+        registerCrucible(blockStateModelGenerator);
+        blockStateModelGenerator.registerSimpleCubeAll(Mbtw.INFINITE_CRANK);
+        blockStateModelGenerator.registerSimpleCubeAll(Mbtw.MECHANICAL_HOPPER);
+    }
+
+    @Override
+    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+        itemModelGenerator.register(Mbtw.FLOUR, Models.GENERATED);
+        itemModelGenerator.register(Mbtw.SOUL_FLUX, Models.GENERATED);
+        itemModelGenerator.register(Mbtw.SOUL_URN, Models.GENERATED);
+        itemModelGenerator.register(Mbtw.SOULFORGED_GOLD, Models.GENERATED);
+    }
+
+    public void registerCrucible(BlockStateModelGenerator blockStateModelGenerator) {
+        TextureMap textureMap = MbtwModels.vessel(Mbtw.CRUCIBLE);
+        Identifier identifier = MbtwModels.TEMPLATE_VESSEL.upload(Mbtw.CRUCIBLE, textureMap, blockStateModelGenerator.modelCollector);
+
+        blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(Mbtw.CRUCIBLE, identifier));
+    }
 
     public void registerMillstone(BlockStateModelGenerator blockStateModelGenerator) {
         TextureMap textureMapOff = TextureMap.sideTopBottom(Mbtw.MILLSTONE);
@@ -108,22 +132,6 @@ public class MbtwModelGenerator extends FabricModelProvider {
         BlockStateVariantMap rotations = createSouthDefaultRelativeUpRotations();
         VariantsBlockStateSupplier supplier = VariantsBlockStateSupplier.create(Mbtw.GEARBOX).coordinate(BlockStateModelGenerator.createBooleanModelMap(GearboxBlock.MODE, identifierOther, identifier));
         blockStateModelGenerator.blockStateCollector.accept(supplier.coordinate(rotations));
-    }
-
-    @Override
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        registerMillstone(blockStateModelGenerator);
-        registerAxle(blockStateModelGenerator);
-        registerGearbox(blockStateModelGenerator);
-        blockStateModelGenerator.registerSimpleCubeAll(Mbtw.INFINITE_CRANK);
-    }
-
-    @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        itemModelGenerator.register(Mbtw.FLOUR, Models.GENERATED);
-        itemModelGenerator.register(Mbtw.SOUL_FLUX, Models.GENERATED);
-        itemModelGenerator.register(Mbtw.SOUL_URN, Models.GENERATED);
-        itemModelGenerator.register(Mbtw.SOULFORGED_GOLD, Models.GENERATED);
     }
 
     // Ensure variants and conditions are of same length

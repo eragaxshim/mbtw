@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "mbtw:block/mechanical_hopper"
+    }
+  }
+}

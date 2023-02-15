@@ -13,7 +13,9 @@ import java.util.List;
 public interface MechanicalSink {
     int getMaxSink(BlockState state);
 
-    // Request for mechanical power
+    /**
+     * Request for mechanical power. If sink is implemented with a BlockEntity, call MechanicalSinkBlockEntity.blockGetSink()
+     */
     int getSink(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity);
 
     boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity);

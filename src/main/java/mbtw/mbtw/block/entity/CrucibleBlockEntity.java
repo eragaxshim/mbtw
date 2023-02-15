@@ -36,8 +36,4 @@ public class CrucibleBlockEntity extends AbstractBlockProcessorEntity {
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
         return new CrucibleScreenHandler(syncId, playerInventory, this, propertyDelegate);
     }
-
-    protected int getAvailablePower() {
-        return 1;
-    }
 }

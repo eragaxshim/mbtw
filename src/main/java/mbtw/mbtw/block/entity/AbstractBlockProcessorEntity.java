@@ -18,12 +18,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class AbstractBlockProcessorEntity extends LockableContainerBlockEntity {
-    protected int availablePower;
     protected final int inventorySize;
 
-    protected DefaultedList<ItemStack> inventory;
+    // If set by NBT they don't need default values
+    protected int availablePower;
     int processingTime;
     int processingTimeTotal;
+
+    protected DefaultedList<ItemStack> inventory;
 
     private final RecipeManager.MatchGetter<Inventory, ? extends PoweredRecipe> matchGetter;
 
@@ -156,13 +158,15 @@ public abstract class AbstractBlockProcessorEntity extends LockableContainerBloc
         super.readNbt(nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
-        this.processingTime = nbt.getShort("ProcessingTime");
         this.processingTimeTotal = nbt.getShort("ProcessingTimeTotal");
+        this.processingTime = nbt.getShort("ProcessingTime");
+        this.availablePower = nbt.getShort("AvailablePower");
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        nbt.putShort("AvailablePower", (short)this.availablePower);
         nbt.putShort("ProcessingTime", (short)this.processingTime);
         nbt.putShort("ProcessingTimeTotal", (short)this.processingTimeTotal);
         Inventories.writeNbt(nbt, this.inventory);
