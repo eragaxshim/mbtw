@@ -13,17 +13,12 @@ public interface MechanicalSinkBlockEntity {
     MechanicalSink sinkBlock();
 
     static void mechanicalTick(World world, BlockPos sinkPos, BlockState sinkState, MechanicalSinkBlockEntity sinkEntity) {
-
         SinkUpdate update = new SinkUpdate(world, sinkPos, sinkState, sinkEntity);
         // This only looks at bearing load
         if (!update.updateSinkPower()) {
             // This will update
             boolean bl = update.updateSink();
-        };
-
-        // This now updates connectors with new sink
-
-
+        }
     }
 
     int getAvailablePower();

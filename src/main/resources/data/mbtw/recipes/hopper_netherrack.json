@@ -1,0 +1,10 @@
+{
+  "type": "mbtw:hopper_filtering",
+  "ingredient": {
+    "item": "minecraft:netherrack"
+  },
+  "conversion": "mbtw:hopper_conversion_planks",
+  "inputcount": 1,
+  "result": "mbtw:flour",
+  "explodes": true
+}

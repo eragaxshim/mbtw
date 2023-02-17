@@ -1,6 +1,7 @@
 package mbtw.mbtw.mixin.block.entity;
 
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +14,11 @@ public class BlockEntityMixin {
     @ModifyVariable(method = "<init>", at = @At(value = "LOAD"), argsOnly = true)
     protected BlockEntityType<?> changeType(BlockEntityType<?> type)
     {
+        // ignore warning
+        if (((Object)this) instanceof MechanicalHopperBlockEntity) {
+            return Mbtw.MECHANICAL_HOPPER_ENTITY;
+        }
+
         if (type == BlockEntityType.CAMPFIRE)
         {
             return Mbtw.VARIABLE_CAMPFIRE_ENTITY;

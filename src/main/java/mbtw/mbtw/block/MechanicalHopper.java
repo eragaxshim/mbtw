@@ -1,8 +1,15 @@
 package mbtw.mbtw.block;
 
+import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
+import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HopperBlock;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -15,6 +22,19 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
 
     public MechanicalHopper(Settings settings) {
         super(settings);
+    }
+
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (type != Mbtw.MECHANICAL_HOPPER_ENTITY || world.isClient) {
+            return null;
+        }
+
+        return (world1, pos, tickState, hopper) -> MechanicalHopperBlockEntity.serverTick(world1, pos, tickState, (MechanicalHopperBlockEntity) hopper);
+    }
+
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new MechanicalHopperBlockEntity(pos, state);
     }
 
     @Override

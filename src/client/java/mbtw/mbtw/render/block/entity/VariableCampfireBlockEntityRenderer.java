@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,7 +16,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 
 public class VariableCampfireBlockEntityRenderer implements BlockEntityRenderer<VariableCampfireBlockEntity> {
+    private final ItemRenderer itemRenderer;
+
     public VariableCampfireBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        this.itemRenderer = ctx.getItemRenderer();
     }
 
     public void render(VariableCampfireBlockEntity campfireBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
@@ -37,7 +41,7 @@ public class VariableCampfireBlockEntityRenderer implements BlockEntityRenderer<
                 matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(k*90.0F));
                 matrixStack.scale(0.375F, 0.375F, 0.375F);
                 // TODO check if seed is used correctly
-                MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformationMode.FIXED, i, j, matrixStack, vertexConsumerProvider, campfireBlockEntity.getWorld(), k + l);
+                this.itemRenderer.renderItem(itemStack, ModelTransformationMode.FIXED, i, j, matrixStack, vertexConsumerProvider, campfireBlockEntity.getWorld(), k + l);
                 matrixStack.pop();
             }
         }

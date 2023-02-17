@@ -37,8 +37,11 @@ import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
 import mbtw.mbtw.recipe.CountIngredient;
 import mbtw.mbtw.recipe.CrucibleRecipe;
+import mbtw.mbtw.recipe.HopperBlockConversionRecipe;
+import mbtw.mbtw.recipe.HopperRecipe;
 import mbtw.mbtw.recipe.MechanicalRecipeSerializer;
 import mbtw.mbtw.recipe.MillstoneRecipe;
+import mbtw.mbtw.recipe.SpecialRecipeSerializer;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import mbtw.mbtw.screen.CraftingStationScreenHandler;
 import mbtw.mbtw.screen.CrucibleScreenHandler;
@@ -59,6 +62,7 @@ import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -182,6 +186,8 @@ public class Mbtw implements ModInitializer {
 	public static RecipeType<BrickOvenRecipe> BRICK_SMELTING;
 	public static RecipeType<MillstoneRecipe> MILLING;
 	public static RecipeType<CrucibleRecipe> CRUCIBLE_SMELTING;
+	public static RecipeType<HopperRecipe> HOPPER_FILTERING;
+	public static RecipeType<HopperBlockConversionRecipe> HOPPER_BLOCK_FILTERING;
 
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
 	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
@@ -204,6 +210,8 @@ public class Mbtw implements ModInitializer {
 	public static RecipeSerializer<BrickOvenRecipe> BRICK_SMELTING_SERIALIZER;
 	public static RecipeSerializer<MillstoneRecipe> MILLING_SERIALIZER;
 	public static RecipeSerializer<CrucibleRecipe> CRUCIBLE_SERIALIZER;
+	public static RecipeSerializer<HopperRecipe> HOPPER_SERIALIZER;
+	public static RecipeSerializer<HopperBlockConversionRecipe> HOPPER_BLOCK_SERIALIZER;
 
 	public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
 	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
@@ -241,6 +249,20 @@ public class Mbtw implements ModInitializer {
 			@Override
 			public String toString() {
 				return "crucible_smelting";
+			}
+		});
+		HOPPER_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "hopper_filtering"), new HopperRecipe.Serializer());
+		HOPPER_FILTERING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "hopper_filtering"), new RecipeType<HopperRecipe>() {
+			@Override
+			public String toString() {
+				return "hopper_filtering";
+			}
+		});
+		HOPPER_BLOCK_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "hopper_block_filtering"), new SpecialRecipeSerializer<>(HopperBlockConversionRecipe::new));
+		HOPPER_BLOCK_FILTERING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "hopper_block_filtering"), new RecipeType<HopperBlockConversionRecipe>() {
+			@Override
+			public String toString() {
+				return "hopper_block_filtering";
 			}
 		});
 	}

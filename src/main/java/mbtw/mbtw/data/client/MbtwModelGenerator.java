@@ -5,7 +5,9 @@ import mbtw.mbtw.block.GearboxBlock;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.client.*;
+import net.minecraft.item.Items;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -27,8 +29,8 @@ public class MbtwModelGenerator extends FabricModelProvider {
         registerAxle(blockStateModelGenerator);
         registerGearbox(blockStateModelGenerator);
         registerCrucible(blockStateModelGenerator);
+        registerMechanicalHopper(blockStateModelGenerator);
         blockStateModelGenerator.registerSimpleCubeAll(Mbtw.INFINITE_CRANK);
-        blockStateModelGenerator.registerSimpleCubeAll(Mbtw.MECHANICAL_HOPPER);
     }
 
     @Override
@@ -37,6 +39,23 @@ public class MbtwModelGenerator extends FabricModelProvider {
         itemModelGenerator.register(Mbtw.SOUL_FLUX, Models.GENERATED);
         itemModelGenerator.register(Mbtw.SOUL_URN, Models.GENERATED);
         itemModelGenerator.register(Mbtw.SOULFORGED_GOLD, Models.GENERATED);
+    }
+
+    public void registerMechanicalHopper(BlockStateModelGenerator blockStateModelGenerator) {
+        TextureMap textureMap = MbtwModels.sideInsideTopSideParticle(Mbtw.MECHANICAL_HOPPER);
+        Identifier identifier = MbtwModels.HOPPER.upload(Mbtw.MECHANICAL_HOPPER, textureMap, blockStateModelGenerator.modelCollector);
+        Identifier identifierSide = MbtwModels.HOPPER_SIDE.upload(Mbtw.MECHANICAL_HOPPER, "_side", textureMap, blockStateModelGenerator.modelCollector);
+
+
+        blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(Mbtw.MECHANICAL_HOPPER).coordinate(
+            BlockStateVariantMap.create(Properties.HOPPER_FACING)
+                    .register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, identifier))
+                    .register(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, identifierSide))
+                    .register(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, identifierSide).put(VariantSettings.Y, VariantSettings.Rotation.R90))
+                    .register(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, identifierSide).put(VariantSettings.Y, VariantSettings.Rotation.R180))
+                    .register(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, identifierSide).put(VariantSettings.Y, VariantSettings.Rotation.R270))
+            )
+        );
     }
 
     public void registerCrucible(BlockStateModelGenerator blockStateModelGenerator) {

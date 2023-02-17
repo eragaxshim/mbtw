@@ -12,6 +12,9 @@ public class MbtwModels {
     public static final TextureKey INPUT = TextureKey.of("input", TextureKey.ALL);
     public static final TextureKey OUTPUT = TextureKey.of("output", TextureKey.ALL);
 
+    public static final Model HOPPER = vanillaBlock("hopper", TextureKey.SIDE, TextureKey.TOP, TextureKey.INSIDE, TextureKey.PARTICLE);
+    public static final Model HOPPER_SIDE = vanillaBlock("hopper_side", TextureKey.SIDE, TextureKey.TOP, TextureKey.INSIDE, TextureKey.PARTICLE);
+
     public static final Model TEMPLATE_MILLSTONE = MbtwModels.block("template_millstone", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
     public static final Model TEMPLATE_AXLE = MbtwModels.block("template_axle", TextureKey.SIDE, TextureKey.END);
     public static final Model TEMPLATE_GEARBOX = MbtwModels.block("template_gearbox", TextureKey.SIDE, INPUT, OUTPUT);
@@ -20,6 +23,10 @@ public class MbtwModels {
 
     private static Model block(String parent, TextureKey ... requiredTextureKeys) {
         return new Model(Optional.of(new Identifier(Mbtw.MOD_ID, "block/" + parent)), Optional.empty(), requiredTextureKeys);
+    }
+
+    private static Model vanillaBlock(String parent, TextureKey ... requiredTextureKeys) {
+        return new Model(Optional.of(new Identifier("minecraft", "block/" + parent)), Optional.empty(), requiredTextureKeys);
     }
 
     public static TextureMap addSuffixToCopy(TextureMap textureMap, String suffix) {
@@ -54,6 +61,10 @@ public class MbtwModels {
 
     public static TextureMap sideInputOutput(Block block) {
         return new TextureMap().put(INPUT, TextureMap.getSubId(block, "_input")).put(OUTPUT, TextureMap.getSubId(block, "_output")).put(TextureKey.SIDE, TextureMap.getSubId(block, "_side"));
+    }
+
+    public static TextureMap sideInsideTopSideParticle(Block block) {
+        return new TextureMap().put(TextureKey.PARTICLE, TextureMap.getSubId(block, "_side")).put(TextureKey.SIDE, TextureMap.getSubId(block, "_side")).put(TextureKey.INSIDE, TextureMap.getSubId(block, "_inside")).put(TextureKey.TOP, TextureMap.getSubId(block, "_top"));
     }
     
     public static TextureMap vessel(Block block) {

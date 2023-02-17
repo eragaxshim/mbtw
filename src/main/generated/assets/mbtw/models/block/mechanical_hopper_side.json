@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/hopper",
+  "parent": "minecraft:block/hopper_side",
   "textures": {
     "inside": "mbtw:block/mechanical_hopper_inside",
     "side": "mbtw:block/mechanical_hopper_side",

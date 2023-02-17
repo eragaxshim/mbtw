@@ -1,7 +1,22 @@
 {
   "variants": {
-    "": {
+    "facing=down": {
       "model": "mbtw:block/mechanical_hopper"
+    },
+    "facing=east": {
+      "model": "mbtw:block/mechanical_hopper_side",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mbtw:block/mechanical_hopper_side"
+    },
+    "facing=south": {
+      "model": "mbtw:block/mechanical_hopper_side",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mbtw:block/mechanical_hopper_side",
+      "y": 270
     }
   }
 }
