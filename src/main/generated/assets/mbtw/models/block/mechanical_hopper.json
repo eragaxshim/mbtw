@@ -2,6 +2,7 @@
   "parent": "minecraft:block/hopper",
   "textures": {
     "inside": "mbtw:block/mechanical_hopper_inside",
+    "particle": "mbtw:block/mechanical_hopper_side",
     "side": "mbtw:block/mechanical_hopper_side",
     "top": "mbtw:block/mechanical_hopper_top"
   }

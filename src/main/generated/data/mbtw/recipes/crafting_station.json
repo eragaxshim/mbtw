@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mbtw:crafting_station"
-  }
+  },
+  "show_notification": true
 }

@@ -11,13 +11,16 @@ import mbtw.mbtw.util.NbtUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SoulSandBlock;
 import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -148,6 +151,16 @@ public class MechanicalHopperBlockEntity extends HopperBlockEntity implements Me
         }
     }
 
+    public void setFilter() {
+        if (this.filter == null || this.filter == Blocks.AIR) {
+            this.filter = Blocks.SOUL_SAND;
+        } else {
+            this.filter = Blocks.AIR;
+        }
+
+        this.updateListeners();
+    }
+
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
@@ -188,9 +201,31 @@ public class MechanicalHopperBlockEntity extends HopperBlockEntity implements Me
 
     public BlockState getFilterModel() {
         if (filter == null) {
-            this.filter = Blocks.AIR;
-            this.markDirty();
+            return null;
         }
         return filter.getDefaultState();
+    }
+
+    // This is necessary to render the filter on game load
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    // We need to send the filter NBT to the client
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = new NbtCompound();
+        NbtUtil.writeBlockToNbt(nbt, "Filter", this.filter);
+        return nbt;
+    }
+
+    // Used to ensure proper update when changing filter
+    private void updateListeners() {
+        this.markDirty();
+        World world = this.getWorld();
+        if (world != null) {
+            world.updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
+        }
     }
 }

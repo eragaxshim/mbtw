@@ -10,6 +10,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.HopperBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -50,6 +55,26 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
     @Override
     public boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
         return false;
+    }
+
+    public static void changeFilter() {
+
+    }
+
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        } else {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof MechanicalHopperBlockEntity) {
+
+                player.openHandledScreen((MechanicalHopperBlockEntity)blockEntity);
+                player.incrementStat(Stats.INSPECT_HOPPER);
+            }
+
+            return ActionResult.CONSUME;
+        }
     }
 
     @Override

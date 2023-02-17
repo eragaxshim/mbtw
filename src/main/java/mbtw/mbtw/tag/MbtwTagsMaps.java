@@ -23,9 +23,11 @@ public class MbtwTagsMaps {
     public static final TagKey<Block> HAND_UNBREAKABLES = registerBlockTagKey("hand_unbreakables");
     public static final TagKey<Block> TOOL_REDUCED_EFFECTIVENESS = registerBlockTagKey("tool_reduced_effectiveness");
     public static final TagKey<Block> CHISEL_MINEABLE = registerBlockTagKey("mineable/chisel");
+    public static final TagKey<Block> SOUL_FILTERS_BLOCKS = registerBlockTagKey("soul_filters");
 
     public static final TagKey<Item> CHISELS = registerItemTagKey("chisels");
     public static final TagKey<Item> BARK = registerItemTagKey("bark");
+    public static final TagKey<Item> SOUL_FILTERS = registerItemTagKey("soul_filters");
 
     public static final ImmutableMap<Block, BlockState> INNER_LOG_MAP = ImmutableMap.<Block, BlockState>builder()
             .put(Blocks.OAK_LOG, Mbtw.OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))
