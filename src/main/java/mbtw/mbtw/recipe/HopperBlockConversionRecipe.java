@@ -3,7 +3,6 @@ package mbtw.mbtw.recipe;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.HopperConversionStore;
 import mbtw.mbtw.inventory.BlockStateInventory;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;

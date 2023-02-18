@@ -1,8 +1,6 @@
 package mbtw.mbtw.render.block.entity;
 
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
-import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
-import net.minecraft.block.Block;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,7 +9,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class MechanicalHopperBlockEntityRenderer implements BlockEntityRenderer<MechanicalHopperBlockEntity> {
+public class MechanicalHopperBlockEntityRenderer implements BlockEntityRenderer<MechanicalHopperBlockEntityOld> {
     private final BlockRenderManager renderManager;
 
 
@@ -20,7 +18,7 @@ public class MechanicalHopperBlockEntityRenderer implements BlockEntityRenderer<
     }
 
     @Override
-    public void render(MechanicalHopperBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(MechanicalHopperBlockEntityOld entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         BlockState block = entity.getFilterModel();
         if (block == null || block.isOf(Blocks.AIR)) {
             return;

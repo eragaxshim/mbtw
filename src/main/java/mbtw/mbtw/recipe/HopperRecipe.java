@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.inventory.BlockStateInventory;
+import mbtw.mbtw.inventory.FilterInventory;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
@@ -19,19 +21,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class HopperRecipe implements Recipe<BlockStateInventory> {
+public class HopperRecipe implements Recipe<FilterInventory> {
     protected final Identifier id;
     protected final String group;
     protected final Ingredient input;
+    protected final Block filter;
     protected final int inputCount;
     protected final ItemStack output;
     protected final Identifier conversionRecipeId;
     protected final boolean explodes;
 
-    public HopperRecipe(Identifier id, String group, Ingredient input, int inputCount, ItemStack output, @Nullable Identifier conversionRecipeId, boolean explodes) {
+    public HopperRecipe(Identifier id, String group, Ingredient input, Block filter, int inputCount, ItemStack output, @Nullable Identifier conversionRecipeId, boolean explodes) {
         this.id = id;
         this.group = group;
         this.input = input;
+        this.filter = filter;
         this.inputCount = inputCount;
         this.output = output;
         this.conversionRecipeId = conversionRecipeId;
@@ -39,8 +43,8 @@ public class HopperRecipe implements Recipe<BlockStateInventory> {
     }
 
     @Override
-    public boolean matches(BlockStateInventory inventory, World world) {
-        if (!inventory.containsAny(input) || inventory.getStack(0).getCount() < inputCount) {
+    public boolean matches(FilterInventory inventory, World world) {
+        if (inventory.getFilter() != filter || !inventory.containsAny(input) || inventory.getStack(0).getCount() < inputCount) {
             return false;
         }
 
@@ -48,7 +52,7 @@ public class HopperRecipe implements Recipe<BlockStateInventory> {
     }
 
     @Override
-    public ItemStack craft(BlockStateInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(FilterInventory inventory, DynamicRegistryManager registryManager) {
         return output.copy();
     }
 
@@ -112,6 +116,9 @@ public class HopperRecipe implements Recipe<BlockStateInventory> {
             } else {
                 conversionId = null;
             }
+            String filterString = JsonHelper.getString(jsonObject, "filter");
+            Identifier filterBlockId = new Identifier(filterString);
+            Block filterBlock = Registries.BLOCK.getOrEmpty(filterBlockId).orElseThrow(() -> new IllegalStateException("Block: " + filterString + " does not exist"));
 
             String resultString = JsonHelper.getString(jsonObject, "result");
             Identifier resultId = new Identifier(resultString);
@@ -122,22 +129,24 @@ public class HopperRecipe implements Recipe<BlockStateInventory> {
             } else {
                 explodes = false;
             }
-            return new HopperRecipe(identifier, group, ingredient, inputCount, outputStack, conversionId, explodes);
+            return new HopperRecipe(identifier, group, ingredient, filterBlock, inputCount, outputStack, conversionId, explodes);
         }
 
         public HopperRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
             String group = packetByteBuf.readString();
             Ingredient ingredient = Ingredient.fromPacket(packetByteBuf);
+            Block filter = packetByteBuf.readRegistryValue(Registries.BLOCK);
             int inputCount = packetByteBuf.readVarInt();
             ItemStack outputStack = packetByteBuf.readItemStack();
             boolean explodes = packetByteBuf.readBoolean();
             Identifier conversionId = packetByteBuf.readIdentifier();
-            return new HopperRecipe(identifier, group, ingredient, inputCount, outputStack, conversionId, explodes);
+            return new HopperRecipe(identifier, group, ingredient, filter, inputCount, outputStack, conversionId, explodes);
         }
 
         public void write(PacketByteBuf packetByteBuf, HopperRecipe recipe) {
             packetByteBuf.writeString(recipe.group);
             recipe.input.write(packetByteBuf);
+            packetByteBuf.writeRegistryValue(Registries.BLOCK, recipe.filter);
             packetByteBuf.writeVarInt(recipe.inputCount);
             packetByteBuf.writeItemStack(recipe.output);
             packetByteBuf.writeIdentifier(recipe.conversionRecipeId);

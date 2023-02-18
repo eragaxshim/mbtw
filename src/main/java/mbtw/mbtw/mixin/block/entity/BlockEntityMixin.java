@@ -1,7 +1,7 @@
 package mbtw.mbtw.mixin.block.entity;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ public class BlockEntityMixin {
     protected BlockEntityType<?> changeType(BlockEntityType<?> type)
     {
         // ignore warning
-        if (((Object)this) instanceof MechanicalHopperBlockEntity) {
+        if (((Object)this) instanceof MechanicalHopperBlockEntityOld) {
             return Mbtw.MECHANICAL_HOPPER_ENTITY;
         }
 

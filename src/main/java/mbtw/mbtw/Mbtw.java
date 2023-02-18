@@ -26,7 +26,7 @@ import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
 import mbtw.mbtw.block.entity.CrucibleBlockEntity;
 import mbtw.mbtw.block.entity.FiniteTorchBlockEntity;
 import mbtw.mbtw.block.entity.GearboxBlockEntity;
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
@@ -62,7 +62,6 @@ import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -203,7 +202,7 @@ public class Mbtw implements ModInitializer {
 	public static BlockEntityType<CrucibleBlockEntity> CRUCIBLE_ENTITY;
 
 	public static final Block MECHANICAL_HOPPER = new MechanicalHopper(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
-	public static BlockEntityType<MechanicalHopperBlockEntity> MECHANICAL_HOPPER_ENTITY;
+	public static BlockEntityType<MechanicalHopperBlockEntityOld> MECHANICAL_HOPPER_ENTITY;
 
 	public static ItemGroup MBTW_GROUP;
 
@@ -412,7 +411,7 @@ public class Mbtw implements ModInitializer {
 
 		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "mechanical_hopper"), MECHANICAL_HOPPER);
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "mechanical_hopper"), new BlockItem(MECHANICAL_HOPPER, new FabricItemSettings()));
-		MECHANICAL_HOPPER_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "mechanical_hopper"), FabricBlockEntityTypeBuilder.create(MechanicalHopperBlockEntity::new, MECHANICAL_HOPPER).build(null));
+		MECHANICAL_HOPPER_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "mechanical_hopper"), FabricBlockEntityTypeBuilder.create(MechanicalHopperBlockEntityOld::new, MECHANICAL_HOPPER).build(null));
 
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);

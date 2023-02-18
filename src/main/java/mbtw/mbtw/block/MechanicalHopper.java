@@ -1,15 +1,13 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
-import mbtw.mbtw.block.entity.MillstoneBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
@@ -35,11 +33,11 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
             return null;
         }
 
-        return (world1, pos, tickState, hopper) -> MechanicalHopperBlockEntity.serverTick(world1, pos, tickState, (MechanicalHopperBlockEntity) hopper);
+        return (world1, pos, tickState, hopper) -> MechanicalHopperBlockEntityOld.serverTick(world1, pos, tickState, (MechanicalHopperBlockEntityOld) hopper);
     }
 
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MechanicalHopperBlockEntity(pos, state);
+        return new MechanicalHopperBlockEntityOld(pos, state);
     }
 
     @Override
@@ -67,9 +65,9 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
             return ActionResult.SUCCESS;
         } else {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof MechanicalHopperBlockEntity) {
+            if (blockEntity instanceof MechanicalHopperBlockEntityOld) {
 
-                player.openHandledScreen((MechanicalHopperBlockEntity)blockEntity);
+                player.openHandledScreen((MechanicalHopperBlockEntityOld)blockEntity);
                 player.incrementStat(Stats.INSPECT_HOPPER);
             }
 

@@ -1,6 +1,6 @@
 package mbtw.mbtw.mixin.item;
 
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import mbtw.mbtw.tag.MbtwTagsMaps;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
@@ -20,7 +20,7 @@ public abstract class ItemMixin {
         }
 
         BlockEntity blockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
-        if (blockEntity instanceof MechanicalHopperBlockEntity hopper) {
+        if (blockEntity instanceof MechanicalHopperBlockEntityOld hopper) {
             hopper.setFilter();
             cir.setReturnValue(ActionResult.CONSUME);
         }

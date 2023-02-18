@@ -6,6 +6,7 @@ import mbtw.mbtw.block.HopperConversionStore;
 import mbtw.mbtw.block.MechanicalSink;
 import mbtw.mbtw.inventory.BlockStateInventory;
 import mbtw.mbtw.inventory.FilterInventory;
+import mbtw.mbtw.inventory.HopperInventory;
 import mbtw.mbtw.inventory.SingleFilterInventory;
 import mbtw.mbtw.recipe.HopperRecipe;
 import mbtw.mbtw.util.NbtUtil;
@@ -13,13 +14,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.HopperBlockEntity;
+import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeManager;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -28,18 +34,18 @@ import net.minecraft.world.World;
 
 import java.util.Map;
 
-public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements MechanicalSinkBlockEntity, HopperConversionStore {
+public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
+        implements MechanicalSinkBlockEntity, HopperConversionStore, HopperInventory {
     private int sink;
     private int availablePower;
-    private final FilterInventory recipeInventory;
+    private Block filter;
     private final Map<Identifier, Integer> conversionProgress = new Object2IntOpenHashMap<>();
 
     private final RecipeManager.MatchGetter<FilterInventory, ? extends HopperRecipe> matchGetter;
 
-    public MechanicalHopperBlockEntityOld(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public MechanicalHopperBlockEntity(BlockPos pos, BlockState state) {
+        super(Mbtw.MECHANICAL_HOPPER_ENTITY, pos, state);
         this.matchGetter = RecipeManager.createCachedMatchGetter(Mbtw.HOPPER_FILTERING);
-        this.recipeInventory = new SingleFilterInventory(1, Direction.DOWN);
     }
 
     @Override
@@ -49,21 +55,6 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
 
     public static int[] inventoryCounts(DefaultedList<ItemStack> inventory) {
         return inventory.stream().mapToInt(ItemStack::getCount).toArray();
-    }
-
-    public ItemStack findChangedStack(int[] previousCounts) {
-        DefaultedList<ItemStack> inventory = getInvStackList();
-        int[] newCounts = inventoryCounts(inventory);
-        for (int i = 0; i < previousCounts.length; i++) {
-            if (newCounts[i] > previousCounts[i]) {
-                ItemStack newStack = inventory.get(i);
-                ItemStack added = newStack.copyWithCount(newCounts[i] - previousCounts[i]);
-                recipeInventory.setStack(0, added);
-                return newStack;
-            }
-        }
-        recipeInventory.setStack(0, ItemStack.EMPTY);
-        return null;
     }
 
     private void spawnItem(World world, ItemStack stack, BlockPos pos) {
@@ -82,35 +73,27 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
 
 
 
-    public static void recipeTick(World world, BlockPos pos, BlockState state, int[] previousCounts, MechanicalHopperBlockEntityOld blockEntity) {
-        // FilterInventory is temporary inventory used for matching recipes, has only 1 slot
-        FilterInventory recipeInventory = blockEntity.recipeInventory;
-        // This updates recipeInventory
-        ItemStack stack = blockEntity.findChangedStack(previousCounts);
-        if (stack != null && !recipeInventory.getStack(0).isEmpty()) {
-            // Update states for use in recipe
-            BlockStateInventory.updateStates(world, pos, recipeInventory);
-            HopperRecipe recipe = blockEntity.matchGetter.getFirstMatch(recipeInventory, world).orElse(null);
-            if (recipe == null) {
-                recipeInventory.setStack(0, ItemStack.EMPTY);
-                return;
-            }
-            // Get output
-            int inputStackCount = recipeInventory.getStack(0).getCount();
-
-            int timesCraftable = recipe.timesCraftable(inputStackCount);
-            ItemStack output = recipe.craft(recipeInventory, world.getRegistryManager());
-
-            // For each time we craft we want to get the recipe output
-            output.setCount(output.getCount()*timesCraftable);
-            // We decrement the input stack
-            recipe.decrementInput(stack, timesCraftable);
-            // We spawn the output
-            blockEntity.spawnItem(world, output, pos);
-            recipeInventory.setStack(0, ItemStack.EMPTY);
-
-            recipe.conversionRecipe(world).convert(world, pos, blockEntity, recipeInventory);
+    public static void recipeTick(World world, BlockPos pos, BlockState state, ItemStack addedStack, MechanicalHopperBlockEntity hopperEntity) {
+        // Update states for use in recipe
+        BlockStateInventory.updateStates(world, pos, hopperEntity);
+        HopperRecipe recipe = hopperEntity.matchGetter.getFirstMatch((FilterInventory) hopperEntity, world).orElse(null);
+        if (recipe == null) {
+            return;
         }
+        // Get output
+        int inputStackCount = addedStack.getCount();
+
+        int timesCraftable = recipe.timesCraftable(inputStackCount);
+        ItemStack output = recipe.craft(recipeInventory, world.getRegistryManager());
+
+        // For each time we craft we want to get the recipe output
+        output.setCount(output.getCount()*timesCraftable);
+        // We decrement the input stack
+        recipe.decrementInput(addedStack, timesCraftable);
+        // We spawn the output
+        hopperEntity.spawnItem(world, output, pos);
+
+        recipe.conversionRecipe(world).convert(world, pos, hopperEntity, hopperEntity);
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, MechanicalHopperBlockEntityOld blockEntity) {
@@ -138,7 +121,7 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        this.recipeInventory.setFilter(NbtUtil.blockFromNbt(nbt, "Filter"));
+        this.filter = NbtUtil.blockFromNbt(nbt, "Filter");
         this.availablePower = nbt.getShort("AvailablePower");
         this.sink = nbt.getShort("Sink");
         NbtList nbtList = nbt.getList("ConversionProgress", NbtElement.COMPOUND_TYPE);
@@ -149,10 +132,10 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
     }
 
     public void setFilter() {
-        if (this.recipeInventory.getFilter() == null || this.recipeInventory.getFilter() == Blocks.AIR) {
-            this.recipeInventory.setFilter(Blocks.SOUL_SAND);
+        if (this.filter == null || this.filter == Blocks.AIR) {
+            this.filter = Blocks.SOUL_SAND;
         } else {
-            this.recipeInventory.setFilter(Blocks.AIR);
+            this.filter = Blocks.AIR;
         }
 
         this.updateListeners();
@@ -161,7 +144,7 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        NbtUtil.writeBlockToNbt(nbt, "Filter", this.recipeInventory.getFilter());
+        NbtUtil.writeBlockToNbt(nbt, "Filter", this.filter);
         nbt.putShort("Sink", (short)this.sink);
         nbt.putShort("AvailablePower", (short)this.availablePower);
         //nbt.putShort("ConversionProgress", (short)this.conversionProgress);
@@ -174,6 +157,16 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
         });
         nbt.put("ConversionProgress", nbtList);
 
+    }
+
+    @Override
+    protected Text getContainerName() {
+        return null;
+    }
+
+    @Override
+    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+        return null;
     }
 
     @Override
@@ -197,8 +190,7 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
     }
 
     public BlockState getFilterModel() {
-        Block filter;
-        if ((filter = this.recipeInventory.getFilter()) == null) {
+        if (filter == null) {
             return null;
         }
         return filter.getDefaultState();
@@ -214,7 +206,7 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbt = new NbtCompound();
-        NbtUtil.writeBlockToNbt(nbt, "Filter", this.recipeInventory.getFilter());
+        NbtUtil.writeBlockToNbt(nbt, "Filter", filter);
         return nbt;
     }
 
@@ -225,5 +217,75 @@ public class MechanicalHopperBlockEntityOld extends HopperBlockEntity implements
         if (world != null) {
             world.updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
         }
+    }
+
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    @Override
+    public BlockState getConnectedState(int index) {
+        return null;
+    }
+
+    @Override
+    public void setConnectedState(int index, BlockState state) {
+
+    }
+
+    @Override
+    public int connectedSize() {
+        return 0;
+    }
+
+    @Override
+    public Direction connectedDirection(int index) {
+        return null;
+    }
+
+    @Override
+    public Block getFilter() {
+        return null;
+    }
+
+    @Override
+    public void setFilter(Block filter) {
+
     }
 }
