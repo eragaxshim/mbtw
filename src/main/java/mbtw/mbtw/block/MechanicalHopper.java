@@ -1,6 +1,7 @@
 package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
+import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
 import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,8 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.HopperBlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
@@ -72,6 +75,13 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
             }
 
             return ActionResult.CONSUME;
+        }
+    }
+
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof MechanicalHopperBlockEntity mechanicalHopperBlockEntity) {
+            mechanicalHopperBlockEntity.onEntityCollided(world, pos, state, entity);
         }
     }
 

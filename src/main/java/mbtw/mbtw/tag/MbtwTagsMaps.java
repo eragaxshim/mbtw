@@ -28,6 +28,7 @@ public class MbtwTagsMaps {
     public static final TagKey<Item> CHISELS = registerItemTagKey("chisels");
     public static final TagKey<Item> BARK = registerItemTagKey("bark");
     public static final TagKey<Item> SOUL_FILTERS = registerItemTagKey("soul_filters");
+    public static final TagKey<Item> SOUL_FILTERABLE = registerItemTagKey("soul_filterable");
 
     public static final ImmutableMap<Block, BlockState> INNER_LOG_MAP = ImmutableMap.<Block, BlockState>builder()
             .put(Blocks.OAK_LOG, Mbtw.OAK_LOG_INNER.getDefaultState().with(InnerLogBlock.BREAK_LEVEL, 5))

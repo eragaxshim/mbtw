@@ -55,6 +55,11 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FallingBlock;
@@ -62,6 +67,7 @@ import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -415,6 +421,16 @@ public class Mbtw implements ModInitializer {
 
 		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
 		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
+
+		// We don't want Mechanical Hopper to not be insertable, so they can handle their own filter logic
+		ItemStorage.SIDED.registerForBlocks(((world, pos, state, blockEntity, direction) -> {
+			if (blockEntity instanceof Inventory inventory) {
+				Storage<ItemVariant> store = InventoryStorage.of(inventory, direction);
+				return FilteringStorage.extractOnlyOf(store);
+			}
+			return null;
+		}), Mbtw.MECHANICAL_HOPPER);
+		MbtwApi.HOPPER_FILTER_API.register((block -> (iv) -> iv.toStack().isIn(MbtwTagsMaps.SOUL_FILTERABLE)), Blocks.SOUL_SAND);
 
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "brick_oven"), BRICK_OVEN_SCREEN_HANDLER);
 		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "millstone"), MILLSTONE_SCREEN_HANDLER);
