@@ -2,14 +2,12 @@ package mbtw.mbtw.block;
 
 import mbtw.mbtw.Mbtw;
 import mbtw.mbtw.block.entity.MechanicalHopperBlockEntity;
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
 import mbtw.mbtw.block.entity.MechanicalSinkBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.stat.Stats;
@@ -36,11 +34,11 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
             return null;
         }
 
-        return (world1, pos, tickState, hopper) -> MechanicalHopperBlockEntityOld.serverTick(world1, pos, tickState, (MechanicalHopperBlockEntityOld) hopper);
+        return (world1, pos, tickState, hopper) -> MechanicalHopperBlockEntity.serverTick(world1, pos, tickState, (MechanicalHopperBlockEntity) hopper);
     }
 
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MechanicalHopperBlockEntityOld(pos, state);
+        return new MechanicalHopperBlockEntity(pos, state);
     }
 
     @Override
@@ -58,19 +56,14 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
         return false;
     }
 
-    public static void changeFilter() {
-
-    }
-
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 
         if (world.isClient) {
             return ActionResult.SUCCESS;
         } else {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof MechanicalHopperBlockEntityOld) {
-
-                player.openHandledScreen((MechanicalHopperBlockEntityOld)blockEntity);
+            if (blockEntity instanceof MechanicalHopperBlockEntity) {
+                player.openHandledScreen((MechanicalHopperBlockEntity)blockEntity);
                 player.incrementStat(Stats.INSPECT_HOPPER);
             }
 
@@ -79,6 +72,9 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (world.isClient) {
+            return;
+        }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof MechanicalHopperBlockEntity mechanicalHopperBlockEntity) {
             mechanicalHopperBlockEntity.onEntityCollided(world, pos, state, entity);

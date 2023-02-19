@@ -1,8 +1,5 @@
 package mbtw.mbtw.mixin.item;
 
-import mbtw.mbtw.block.entity.MechanicalHopperBlockEntityOld;
-import mbtw.mbtw.tag.MbtwTagsMaps;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
@@ -15,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ItemMixin {
     @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
     public void useOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        if (!context.getStack().isIn(MbtwTagsMaps.SOUL_FILTERS)) {
-            return;
-        }
-
-        BlockEntity blockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
-        if (blockEntity instanceof MechanicalHopperBlockEntityOld hopper) {
-            hopper.setFilter();
-            cir.setReturnValue(ActionResult.CONSUME);
-        }
+//        if (!context.getStack().isIn(MbtwTagsMaps.SOUL_FILTERS)) {
+//            return;
+//        }
+//
+//        BlockEntity blockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
+//        if (blockEntity instanceof MechanicalHopperBlockEntityOld hopper) {
+//            hopper.setFilter();
+//            cir.setReturnValue(ActionResult.CONSUME);
+//        }
     }
 }

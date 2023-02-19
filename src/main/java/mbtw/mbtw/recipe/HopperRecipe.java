@@ -44,7 +44,7 @@ public class HopperRecipe implements Recipe<FilterInventory> {
 
     @Override
     public boolean matches(FilterInventory inventory, World world) {
-        if (inventory.getFilter() != filter || !inventory.containsAny(input) || inventory.getStack(0).getCount() < inputCount) {
+        if (inventory.getFilter() != filter || !input.test(inventory.inFilter()) || inventory.inFilter().getCount() < inputCount) {
             return false;
         }
 

@@ -26,8 +26,6 @@ public class HopperBlockConversionRecipe implements Recipe<BlockStateInventory> 
 
     @Override
     public boolean matches(BlockStateInventory inventory, World world) {
-
-
         return inventory.getConnectedState(0).isOf(Blocks.OAK_PLANKS);
     }
 
@@ -61,12 +59,13 @@ public class HopperBlockConversionRecipe implements Recipe<BlockStateInventory> 
         return Mbtw.HOPPER_BLOCK_FILTERING;
     }
 
-    public void convert(World world, BlockPos hopperPos, HopperConversionStore store, BlockStateInventory blockStateInventory) {
+    public boolean convert(World world, BlockPos hopperPos, HopperConversionStore store, BlockStateInventory blockStateInventory, int count) {
         int conversionProgress = store.incrementConversionProgress(conversionType);
         if (conversionProgress >= countForConversion) {
             store.resetConversionProgress(conversionType);
             Direction toConnected = blockStateInventory.connectedDirection(0);
             world.setBlockState(hopperPos.offset(toConnected), Blocks.WARPED_STEM.getDefaultState());
         }
+        return true;
     }
 }

@@ -8,14 +8,12 @@ import mbtw.mbtw.block.MbtwApi;
 import mbtw.mbtw.block.MechanicalSink;
 import mbtw.mbtw.inventory.BlockStateInventory;
 import mbtw.mbtw.inventory.FilterInventory;
-import mbtw.mbtw.inventory.HopperInventory;
 import mbtw.mbtw.inventory.InventoryMover;
 import mbtw.mbtw.recipe.HopperRecipe;
 import mbtw.mbtw.util.NbtUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.Hopper;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.Entity;
@@ -47,13 +45,13 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
-        implements MechanicalSinkBlockEntity, HopperConversionStore, HopperInventory, Hopper, InventoryMover.Filter {
+        implements MechanicalSinkBlockEntity, HopperConversionStore, FilterInventory, Hopper, InventoryMover.Filter {
     private int sink;
     private int availablePower;
     private Block filter;
-    private DefaultedList<ItemStack> inventory;
+    private final DefaultedList<ItemStack> inventory;
     private int transferCooldown;
-    private DefaultedList<ItemStack> filterStacks;
+    private ItemStack inFilter = ItemStack.EMPTY;
     private HopperFilter filterPredicate = null;
     private InventoryMover extractSource = null;
     private InventoryMover insertTarget = null;
@@ -102,7 +100,7 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
 
     public boolean extract(World world, BlockPos pos, BlockState state) {
         if (extractSource == null) {
-            extractSource = new InventoryMover((ServerWorld) world, pos.offset(Direction.DOWN), Direction.DOWN);
+            extractSource = new InventoryMover((ServerWorld) world, pos.offset(Direction.UP), Direction.UP);
         }
         return extractSource.extractAndFilter(world, pos, state, this, this);
 
@@ -110,7 +108,7 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
 
     public boolean extract(World world, BlockPos pos, BlockState state, ItemEntity itemEntity) {
         if (extractSource == null) {
-            extractSource = new InventoryMover((ServerWorld) world, pos.offset(Direction.DOWN), Direction.DOWN);
+            extractSource = new InventoryMover((ServerWorld) world, pos.offset(Direction.UP), Direction.UP);
         }
         return extractSource.entityExtractAndFilter(world, pos, state, this, this, itemEntity);
     }
@@ -136,6 +134,7 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
         }
     }
 
+    // Ensure this is onl run on the server
     public void onEntityCollided(World world, BlockPos pos, BlockState state, Entity entity) {
         if (entity instanceof ItemEntity itemEntity && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), this.getInputAreaShape(), BooleanBiFunction.AND)) {
             if (transferCooldown <= 0 && this.extract(world, pos, state, itemEntity)) {
@@ -329,6 +328,21 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
     }
 
     @Override
+    public void putInFilter(ItemStack stack) {
+        this.inFilter = stack;
+    }
+
+    @Override
+    public ItemStack inFilter() {
+        return inFilter;
+    }
+
+    @Override
+    public void clearInFilter() {
+        inFilter = ItemStack.EMPTY;
+    }
+
+    @Override
     public Block getFilter() {
         return this.filter;
     }
@@ -366,7 +380,9 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
     public ItemStack doFilter(World world, BlockPos filterPos, BlockState state, ItemStack addedStack) {
         // Update states for use in recipe
         BlockStateInventory.updateStates(world, filterPos, this);
-        HopperRecipe recipe = matchGetter.getFirstMatch((FilterInventory) this, world).orElse(null);
+        putInFilter(addedStack);
+        HopperRecipe recipe = matchGetter.getFirstMatch(this, world).orElse(null);
+        clearInFilter();
         if (recipe == null) {
             return null;
         }
@@ -374,7 +390,7 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
         int inputStackCount = addedStack.getCount();
 
         int timesCraftable = recipe.timesCraftable(inputStackCount);
-        ItemStack output = recipe.craft((FilterInventory) this, world.getRegistryManager());
+        ItemStack output = recipe.craft(this, world.getRegistryManager());
 
         // For each time we craft we want to get the recipe output
         output.setCount(output.getCount()*timesCraftable);
@@ -384,12 +400,14 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
 
         recipe.decrementInput(returnedStack, timesCraftable);
 
-        // We spawn the output
-        spawnItem(world, output, filterPos);
+
 
         //TODO check hopper direction
 
-        recipe.conversionRecipe(world).convert(world, filterPos, this, this);
+        if (recipe.conversionRecipe(world).convert(world, filterPos, this, this, timesCraftable)) {
+            // We spawn the output
+            spawnItem(world, output, filterPos);
+        };
 
         return returnedStack;
     }
