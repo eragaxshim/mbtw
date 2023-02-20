@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mbtw:block/urn"
+      },
+      "when": {
+        "attached": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mbtw:block/urn_up"
+      },
+      "when": {
+        "attached": "true"
+      }
+    }
+  ]
+}

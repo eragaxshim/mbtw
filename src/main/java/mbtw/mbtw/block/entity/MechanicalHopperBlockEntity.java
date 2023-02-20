@@ -2,15 +2,17 @@ package mbtw.mbtw.block.entity;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import mbtw.mbtw.Mbtw;
-import mbtw.mbtw.block.HopperConversionStore;
+import mbtw.mbtw.block.HopperResidueStore;
 import mbtw.mbtw.block.HopperFilter;
 import mbtw.mbtw.block.MbtwApi;
 import mbtw.mbtw.block.MechanicalSink;
 import mbtw.mbtw.inventory.BlockStateInventory;
 import mbtw.mbtw.inventory.FilterInventory;
 import mbtw.mbtw.inventory.InventoryMover;
+import mbtw.mbtw.recipe.HopperBlockConversionRecipe;
 import mbtw.mbtw.recipe.HopperRecipe;
 import mbtw.mbtw.util.NbtUtil;
+import mbtw.mbtw.util.WorldUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -45,7 +47,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
-        implements MechanicalSinkBlockEntity, HopperConversionStore, FilterInventory, Hopper, InventoryMover.Filter {
+        implements MechanicalSinkBlockEntity, HopperResidueStore, FilterInventory, Hopper, InventoryMover.Filter {
     private int sink;
     private int availablePower;
     private Block filter;
@@ -57,7 +59,7 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
     private InventoryMover insertTarget = null;
     private BlockState connectedState = null;
 
-    private final Map<Identifier, Integer> conversionProgress = new Object2IntOpenHashMap<>();
+    private final Map<Identifier, Integer> conversionResidue = new Object2IntOpenHashMap<>();
 
     private final RecipeManager.MatchGetter<FilterInventory, ? extends HopperRecipe> matchGetter;
 
@@ -71,20 +73,6 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
     @Override
     public MechanicalSink sinkBlock() {
         return (MechanicalSink) Mbtw.MECHANICAL_HOPPER;
-    }
-
-    private void spawnItem(World world, ItemStack stack, BlockPos pos) {
-        double x = pos.getX() + world.random.nextTriangular(0.5, 0.03);
-        double y = pos.getY() + world.random.nextTriangular(0.8, 0.03);
-        double z = pos.getZ() + world.random.nextTriangular(0.5, 0.03);
-
-        ItemEntity itemEntity = new ItemEntity(world, x, y, z, stack);
-        itemEntity.setVelocity(
-                world.random.nextTriangular(0, 0.0172275),
-                world.random.nextTriangular(0.35, 0.0172275*3),
-                world.random.nextTriangular(0, 0.0172275)
-        );
-        world.spawnEntity(itemEntity);
     }
 
     public boolean insert(World world, BlockPos pos, BlockState state) {
@@ -166,10 +154,10 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
         this.filterPredicate = MbtwApi.HOPPER_FILTER_API.find(this.filter);
         this.availablePower = nbt.getShort("AvailablePower");
         this.sink = nbt.getShort("Sink");
-        NbtList nbtList = nbt.getList("ConversionProgress", NbtElement.COMPOUND_TYPE);
+        NbtList nbtList = nbt.getList("ConversionResidue", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < nbtList.size(); i++) {
-            NbtCompound conversionNbt = nbtList.getCompound(i);
-            conversionProgress.put(new Identifier(conversionNbt.getString("identifier")), conversionNbt.getInt("value"));
+            NbtCompound residueNbt = nbtList.getCompound(i);
+            conversionResidue.put(new Identifier(residueNbt.getString("identifier")), residueNbt.getInt("value"));
         }
         this.transferCooldown = nbt.getInt("TransferCooldown");
     }
@@ -180,15 +168,14 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
         NbtUtil.writeBlockToNbt(nbt, "Filter", this.filter);
         nbt.putShort("Sink", (short)this.sink);
         nbt.putShort("AvailablePower", (short)this.availablePower);
-        //nbt.putShort("ConversionProgress", (short)this.conversionProgress);
         NbtList nbtList = new NbtList();
-        conversionProgress.forEach((key, value) -> {
-            NbtCompound conversionNbt = new NbtCompound();
-            conversionNbt.putString("identifier", key.toString());
-            conversionNbt.putInt("value", value);
-            nbtList.add(conversionNbt);
+        conversionResidue.forEach((key, value) -> {
+            NbtCompound residueNbt = new NbtCompound();
+            residueNbt.putString("identifier", key.toString());
+            residueNbt.putInt("value", value);
+            nbtList.add(residueNbt);
         });
-        nbt.put("ConversionProgress", nbtList);
+        nbt.put("ConversionResidue", nbtList);
         nbt.putInt("TransferCooldown", this.transferCooldown);
     }
 
@@ -208,18 +195,23 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
     }
 
     @Override
-    public int incrementConversionProgress(Identifier conversionType) {
-        int current = conversionProgress.getOrDefault(conversionType, 0);
-        int newValue = current+1;
-        conversionProgress.put(conversionType, newValue);
+    public int increaseResidue(Identifier residueType, int amount) {
+        int current = conversionResidue.getOrDefault(residueType, 0);
+        int newValue = current+amount;
+        conversionResidue.put(residueType, newValue);
         this.markDirty();
         return newValue;
     }
 
     @Override
-    public void resetConversionProgress(Identifier conversionType) {
-        conversionProgress.put(conversionType, 0);
+    public void resetResidue(Identifier residueType) {
+        conversionResidue.put(residueType, 0);
         this.markDirty();
+    }
+
+    @Override
+    public boolean passingResidue() {
+        return availablePower > 0;
     }
 
     public BlockState getFilterModel() {
@@ -370,7 +362,7 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
     @Override
     public Predicate<ItemVariant> getFilterPredicate() {
         if (filterPredicate == null) {
-            return (iv) -> true;
+            return (iv) -> false;
         } else {
             return filterPredicate::test;
         }
@@ -400,14 +392,11 @@ public class MechanicalHopperBlockEntity extends LockableContainerBlockEntity
 
         recipe.decrementInput(returnedStack, timesCraftable);
 
-
-
         //TODO check hopper direction
 
         if (recipe.conversionRecipe(world).convert(world, filterPos, this, this, timesCraftable)) {
-            // We spawn the output
-            spawnItem(world, output, filterPos);
-        };
+            WorldUtil.spawnItem(world, output, filterPos, 0.8);
+        }
 
         return returnedStack;
     }

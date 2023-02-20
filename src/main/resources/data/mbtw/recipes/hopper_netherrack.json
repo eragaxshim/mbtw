@@ -6,6 +6,5 @@
   "filter": "minecraft:soul_sand",
   "conversion": "mbtw:hopper_conversion_planks",
   "inputcount": 1,
-  "result": "mbtw:flour",
-  "explodes": true
+  "result": "mbtw:flour"
 }

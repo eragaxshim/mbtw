@@ -1,0 +1,66 @@
+{
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "#side"
+  },
+  "elements": [
+    {   "__comment": "Lower ring",
+      "from": [ 6, 0, 6 ],
+      "to": [ 10, 1, 10 ],
+      "faces": {
+        "down":  { "texture": "#side" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side"  },
+        "east":  { "texture": "#side" }
+      }
+    },
+    {   "__comment": "Main base",
+      "from": [ 5, 1, 5 ],
+      "to": [ 11, 7, 11 ],
+      "faces": {
+        "down":  { "texture": "#side" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side"  },
+        "east":  { "texture": "#side" },
+        "up":  { "texture": "#side" }
+      }
+    },
+    {   "__comment": "Neck",
+      "from": [ 6, 7, 6 ],
+      "to": [ 10, 8, 10 ],
+      "faces": {
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side"  },
+        "east":  { "texture": "#side" }
+      }
+    },
+    {   "__comment": "Lid ring",
+      "from": [ 5, 8, 5 ],
+      "to": [ 11, 9, 11 ],
+      "faces": {
+        "down":  { "texture": "#side" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side"  },
+        "east":  { "texture": "#side" },
+        "up":  { "texture": "#side" }
+      }
+    },
+    {   "__comment": "Lid top",
+      "from": [ 6, 9, 6 ],
+      "to": [ 10, 10, 10 ],
+      "faces": {
+        "down":  { "texture": "#side" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west":  { "texture": "#side"  },
+        "east":  { "texture": "#side" },
+        "up":  { "texture": "#side" }
+      }
+    }
+  ]
+}

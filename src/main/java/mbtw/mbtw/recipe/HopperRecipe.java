@@ -29,9 +29,8 @@ public class HopperRecipe implements Recipe<FilterInventory> {
     protected final int inputCount;
     protected final ItemStack output;
     protected final Identifier conversionRecipeId;
-    protected final boolean explodes;
 
-    public HopperRecipe(Identifier id, String group, Ingredient input, Block filter, int inputCount, ItemStack output, @Nullable Identifier conversionRecipeId, boolean explodes) {
+    public HopperRecipe(Identifier id, String group, Ingredient input, Block filter, int inputCount, ItemStack output, @Nullable Identifier conversionRecipeId) {
         this.id = id;
         this.group = group;
         this.input = input;
@@ -39,16 +38,11 @@ public class HopperRecipe implements Recipe<FilterInventory> {
         this.inputCount = inputCount;
         this.output = output;
         this.conversionRecipeId = conversionRecipeId;
-        this.explodes = explodes;
     }
 
     @Override
     public boolean matches(FilterInventory inventory, World world) {
-        if (inventory.getFilter() != filter || !input.test(inventory.inFilter()) || inventory.inFilter().getCount() < inputCount) {
-            return false;
-        }
-
-        return conversionRecipe(world).matches(inventory, world);
+        return inventory.getFilter() == filter && input.test(inventory.inFilter()) && inventory.inFilter().getCount() >= inputCount;
     }
 
     @Override
@@ -72,10 +66,6 @@ public class HopperRecipe implements Recipe<FilterInventory> {
 
     public void decrementInput(ItemStack input, int timesCrafted) {
         input.decrement(inputCount*timesCrafted);
-    }
-
-    public boolean doesExplode() {
-        return explodes;
     }
 
     public HopperBlockConversionRecipe conversionRecipe(World world) {
@@ -123,13 +113,7 @@ public class HopperRecipe implements Recipe<FilterInventory> {
             String resultString = JsonHelper.getString(jsonObject, "result");
             Identifier resultId = new Identifier(resultString);
             ItemStack outputStack = new ItemStack(Registries.ITEM.getOrEmpty(resultId).orElseThrow(() -> new IllegalStateException("Item: " + resultString + " does not exist")));
-            boolean explodes;
-            if (jsonObject.has("explodes")) {
-                explodes =  JsonHelper.getBoolean(jsonObject, "explodes");
-            } else {
-                explodes = false;
-            }
-            return new HopperRecipe(identifier, group, ingredient, filterBlock, inputCount, outputStack, conversionId, explodes);
+            return new HopperRecipe(identifier, group, ingredient, filterBlock, inputCount, outputStack, conversionId);
         }
 
         public HopperRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
@@ -138,9 +122,8 @@ public class HopperRecipe implements Recipe<FilterInventory> {
             Block filter = packetByteBuf.readRegistryValue(Registries.BLOCK);
             int inputCount = packetByteBuf.readVarInt();
             ItemStack outputStack = packetByteBuf.readItemStack();
-            boolean explodes = packetByteBuf.readBoolean();
             Identifier conversionId = packetByteBuf.readIdentifier();
-            return new HopperRecipe(identifier, group, ingredient, filter, inputCount, outputStack, conversionId, explodes);
+            return new HopperRecipe(identifier, group, ingredient, filter, inputCount, outputStack, conversionId);
         }
 
         public void write(PacketByteBuf packetByteBuf, HopperRecipe recipe) {
@@ -150,7 +133,6 @@ public class HopperRecipe implements Recipe<FilterInventory> {
             packetByteBuf.writeVarInt(recipe.inputCount);
             packetByteBuf.writeItemStack(recipe.output);
             packetByteBuf.writeIdentifier(recipe.conversionRecipeId);
-            packetByteBuf.writeBoolean(recipe.explodes);
         }
     }
 }

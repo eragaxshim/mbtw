@@ -137,27 +137,6 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
         return 0;
     }
 
-//    @Override
-//    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-//        Block block = state.getBlock();
-//        if (!oldState.isOf(state.getBlock()) && !world.isClient && block instanceof DynamicMechanicalSource source) {
-//            BlockState updatedState = this.update(world, pos, state, source);
-//            if (updatedState != state && world.getBlockState(pos) == state) {
-//                world.setBlockState(pos, updatedState, Block.NOTIFY_ALL);
-//            }
-//
-//            for (Direction direction : source.getOutputFaces(state)) {
-//                world.updateNeighborsAlways(pos.offset(direction), this);
-//            }
-//        }
-//    }
-
-//    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-//        if (!world.isClient && state.getBlock() instanceof DynamicMechanicalSource source) {
-//
-//        }
-//    }
-
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         super.appendProperties(stateManager);
         stateManager.add(FACING);
@@ -187,14 +166,13 @@ public class GearboxBlock extends Block implements DynamicMechanicalSource, Mech
     }
 
     @Override
+    public int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        return MechanicalSinkBlockEntity.blockGetAvailablePower(world, pos, blockEntity);
+    }
+
+    @Override
     public boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
-        if (blockEntity != null) {
-            return blockEntity.getAvailablePower() > 0;
-        }
-        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
-            return mechanicalSinkBlockEntity.getAvailablePower() > 0;
-        }
-        return false;
+        return MechanicalSinkBlockEntity.blockGetAvailablePower(world, pos, blockEntity) > 0;
     }
 
     @Override

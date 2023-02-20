@@ -34,7 +34,7 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
             return null;
         }
 
-        return (world1, pos, tickState, hopper) -> MechanicalHopperBlockEntity.serverTick(world1, pos, tickState, (MechanicalHopperBlockEntity) hopper);
+        return (tickWorld, pos, tickState, hopper) -> MechanicalHopperBlockEntity.serverTick(tickWorld, pos, tickState, (MechanicalHopperBlockEntity) hopper);
     }
 
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
@@ -52,8 +52,13 @@ public class MechanicalHopper extends HopperBlock implements MechanicalSink {
     }
 
     @Override
+    public int getAvailablePower(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        return MechanicalSinkBlockEntity.blockGetAvailablePower(world, pos, blockEntity);
+    }
+
+    @Override
     public boolean isPowered(World world, BlockState state, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
-        return false;
+        return MechanicalSinkBlockEntity.blockGetAvailablePower(world, pos, blockEntity) > 0;
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {

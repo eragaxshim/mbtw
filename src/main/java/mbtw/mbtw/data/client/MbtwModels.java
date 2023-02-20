@@ -20,6 +20,8 @@ public class MbtwModels {
     public static final Model TEMPLATE_GEARBOX = MbtwModels.block("template_gearbox", TextureKey.SIDE, INPUT, OUTPUT);
     public static final Model TEMPLATE_GEARBOX_OTHER = MbtwModels.block("template_gearbox_other", TextureKey.SIDE, INPUT, OUTPUT);
     public static final Model TEMPLATE_VESSEL = MbtwModels.block("template_vessel", TextureKey.SIDE, TextureKey.INSIDE, TextureKey.BOTTOM, TextureKey.TOP, TextureKey.CONTENT);
+    public static final Model TEMPLATE_URN = MbtwModels.block("template_urn", TextureKey.SIDE);
+    public static final Model TEMPLATE_URN_UP = MbtwModels.block("template_urn_up", TextureKey.SIDE);
 
     private static Model block(String parent, TextureKey ... requiredTextureKeys) {
         return new Model(Optional.of(new Identifier(Mbtw.MOD_ID, "block/" + parent)), Optional.empty(), requiredTextureKeys);
@@ -45,6 +47,10 @@ public class MbtwModels {
         ((TextureMapMixinAccessor) newTextureMap).setInherited(newInherited);
         ((TextureMapMixinAccessor) newTextureMap).setEntries(newEntries);
         return newTextureMap;
+    }
+
+    public static TextureMap sideMain(Block block) {
+        return new TextureMap().put(TextureKey.SIDE, TextureMap.getId(block));
     }
 
     public static TextureMap sideEnd(Block block) {

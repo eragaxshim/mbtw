@@ -20,6 +20,7 @@ import mbtw.mbtw.block.MillstoneBlock;
 import mbtw.mbtw.block.StratifiedOreBlock;
 import mbtw.mbtw.block.StratifiedStoneBlock;
 import mbtw.mbtw.block.TrunkBlock;
+import mbtw.mbtw.block.UrnBlock;
 import mbtw.mbtw.block.VariableCampfireBlock;
 import mbtw.mbtw.block.entity.BrickOvenBlockEntity;
 import mbtw.mbtw.block.entity.ClayBrickBlockEntity;
@@ -32,6 +33,8 @@ import mbtw.mbtw.block.entity.VariableCampfireBlockEntity;
 import mbtw.mbtw.item.ChiselItem;
 import mbtw.mbtw.item.FiniteTorchItem;
 import mbtw.mbtw.item.FireStarterItem;
+import mbtw.mbtw.item.SoulUrnItem;
+import mbtw.mbtw.item.SoulforgedGoldItem;
 import mbtw.mbtw.loot.MbtwLootModifier;
 import mbtw.mbtw.mixin.block.LitStateInvoker;
 import mbtw.mbtw.recipe.BrickOvenRecipe;
@@ -150,9 +153,9 @@ public class Mbtw implements ModInitializer {
 	public static final Item FIRE_PLOUGH = new FireStarterItem(new FabricItemSettings(), 700, ItemStack.EMPTY, 600);
 
 	public static final Item FLOUR = new Item(new FabricItemSettings());
-	public static final Item SOUL_URN = new Item(new FabricItemSettings());
+	public static final Item SOUL_URN = new SoulUrnItem(new FabricItemSettings().maxCount(16));
 	public static final Item SOUL_FLUX = new Item(new FabricItemSettings());
-	public static final Item SOULFORGED_GOLD = new Item(new FabricItemSettings());
+	public static final Item SOULFORGED_GOLD = new SoulforgedGoldItem(new FabricItemSettings());
 
 	public static final Block OAK_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
 	public static final Block SPRUCE_TRUNK_INNER = new InnerTrunkBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(5.0F).requiresTool());
@@ -198,7 +201,7 @@ public class Mbtw implements ModInitializer {
 	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
 	public static final Block INFINITE_CRANK = new InfiniteCrankBlock(FabricBlockSettings.of(Material.WOOD));
 
-	public static final Block AXLE = new AxleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
+	public static final Block AXLE = new AxleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).nonOpaque());
 	public static final Block GEARBOX = new GearboxBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static BlockEntityType<GearboxBlockEntity> GEARBOX_ENTITY;
 
@@ -207,8 +210,10 @@ public class Mbtw implements ModInitializer {
 	public static final Block CRUCIBLE = new CrucibleBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
 	public static BlockEntityType<CrucibleBlockEntity> CRUCIBLE_ENTITY;
 
-	public static final Block MECHANICAL_HOPPER = new MechanicalHopper(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD));
+	public static final Block MECHANICAL_HOPPER = new MechanicalHopper(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).nonOpaque());
 	public static BlockEntityType<MechanicalHopperBlockEntity> MECHANICAL_HOPPER_ENTITY;
+
+	public static final Block URN = new UrnBlock(FabricBlockSettings.of(Material.DECORATION).breakInstantly().nonOpaque());
 
 	public static ItemGroup MBTW_GROUP;
 
@@ -419,8 +424,8 @@ public class Mbtw implements ModInitializer {
 		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "mechanical_hopper"), new BlockItem(MECHANICAL_HOPPER, new FabricItemSettings()));
 		MECHANICAL_HOPPER_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MOD_ID, "mechanical_hopper"), FabricBlockEntityTypeBuilder.create(MechanicalHopperBlockEntity::new, MECHANICAL_HOPPER).build(null));
 
-		MbtwApi.SOURCE_API.registerForBlocks(MbtwApi::findSource, GEARBOX);
-		MbtwApi.SINK_API.registerForBlocks(MbtwApi::findSink, MILLSTONE);
+		Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "urn"), URN);
+		Registry.register(Registries.ITEM, new Identifier(MOD_ID, "urn"), new BlockItem(URN, new FabricItemSettings()));
 
 		// We don't want Mechanical Hopper to not be insertable, so they can handle their own filter logic
 		ItemStorage.SIDED.registerForBlocks(((world, pos, state, blockEntity, direction) -> {

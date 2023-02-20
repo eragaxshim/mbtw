@@ -210,6 +210,9 @@ public class InventoryMover {
     }
 
     public interface Filter {
+        /**
+         * Returning true indicates it is filtered OUT, i.e. it is not let through and something happens with it.
+         */
         Predicate<ItemVariant> getFilterPredicate();
 
         /**

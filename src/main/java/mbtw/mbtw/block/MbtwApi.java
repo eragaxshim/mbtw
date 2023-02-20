@@ -16,14 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class MbtwApi {
-    public static final BlockApiLookup<MechanicalSource, Void> SOURCE_API = BlockApiLookup.get(
-            new Identifier(Mbtw.MOD_ID, "source_api"), MechanicalSource.class, Void.class
-    );
-
-    public static final BlockApiLookup<MechanicalSink, Void> SINK_API = BlockApiLookup.get(
-            new Identifier(Mbtw.MOD_ID, "sink_api"), MechanicalSink.class, Void.class
-    );
-
 //    public static final BlockApiLookup<Predicate<ItemVariant>, Void> INSERT_API = BlockApiLookup.get(
 //            new Identifier(Mbtw.MOD_ID, "insert_api"), filterPredicateClass(), Void.class
 //    );

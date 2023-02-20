@@ -3,6 +3,7 @@ package mbtw.mbtw.block;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -62,9 +63,8 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         return Direction.from(state.get(PillarBlock.AXIS), getAxisDirection(state));
     }
 
-    public static boolean inputOrOutput(BlockState state, Direction direction) {
-        Direction inputFace = getInputFace(state);
-        return inputFace == direction || inputFace.getOpposite() == direction;
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
     }
 
     @Override
@@ -129,11 +129,6 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
         }
     }
 
-//    @Override
-//    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-//
-//    }
-
     // This assumes the neighbor is in the axis of the axle
     public static MechanicalUpdate getMechanicalUpdate(World world, BlockState state, BlockState neighborState, BlockPos neighborPos, Direction toNeighbor) {
         Block neighbor = neighborState.getBlock();
@@ -159,21 +154,6 @@ public class AxleBlock extends PillarBlock implements MechanicalConnector {
             return new MechanicalUpdate(state).withState(state);
         }
     }
-
-//    @Override
-//    public BlockState getStateForNeighborUpdate(BlockState state, Direction incomingFace, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-//        if (inputOrOutput(state, incomingFace)) {
-//            MechanicalUpdate update = getMechanicalUpdate(state, neighborState, incomingFace);
-//            if (!world.isClient()) {
-//                System.out.println("");
-//            }
-//
-//
-//            return update.getNewState();
-//        }
-//
-//        return state;
-//    }
 
     static {
         Double[] coordsB1 = {6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D};

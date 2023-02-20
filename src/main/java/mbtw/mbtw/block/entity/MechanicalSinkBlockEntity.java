@@ -26,6 +26,19 @@ public interface MechanicalSinkBlockEntity {
     /**
      * Used to supply the value of getSink() for MechanicalSink
      */
+    static int blockGetAvailablePower(World world, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
+        if (blockEntity != null) {
+            return blockEntity.getAvailablePower();
+        }
+        if (world.getBlockEntity(pos) instanceof MechanicalSinkBlockEntity mechanicalSinkBlockEntity) {
+            return mechanicalSinkBlockEntity.getAvailablePower();
+        }
+        return 0;
+    }
+
+    /**
+     * Used to supply the value of getSink() for MechanicalSink
+     */
     static int blockGetSink(World world, BlockPos pos, @Nullable MechanicalSinkBlockEntity blockEntity) {
         if (blockEntity != null) {
             return blockEntity.getSink();

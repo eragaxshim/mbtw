@@ -5,6 +5,7 @@ import mbtw.mbtw.block.GearboxBlock;
 import mbtw.mbtw.state.property.MbtwProperties;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Items;
@@ -30,6 +31,7 @@ public class MbtwModelGenerator extends FabricModelProvider {
         registerGearbox(blockStateModelGenerator);
         registerCrucible(blockStateModelGenerator);
         registerMechanicalHopper(blockStateModelGenerator);
+        registerUrn(blockStateModelGenerator);
         blockStateModelGenerator.registerSimpleCubeAll(Mbtw.INFINITE_CRANK);
     }
 
@@ -41,11 +43,22 @@ public class MbtwModelGenerator extends FabricModelProvider {
         itemModelGenerator.register(Mbtw.SOULFORGED_GOLD, Models.GENERATED);
     }
 
+    public void registerUrn(BlockStateModelGenerator blockStateModelGenerator) {
+        TextureMap textureMap = MbtwModels.sideMain(Mbtw.URN);
+        Identifier identifier = MbtwModels.TEMPLATE_URN.upload(Mbtw.URN, textureMap, blockStateModelGenerator.modelCollector);
+        Identifier identifierUp = MbtwModels.TEMPLATE_URN_UP.upload(Mbtw.URN, "_up", textureMap, blockStateModelGenerator.modelCollector);
+
+        blockStateModelGenerator.blockStateCollector.accept(MultipartBlockStateSupplier.create(Mbtw.URN)
+                .with(When.create().set(MbtwProperties.ATTACHED, false),
+                        BlockStateVariant.create().put(VariantSettings.MODEL, identifier))
+                .with(When.create().set(MbtwProperties.ATTACHED, true),
+                        BlockStateVariant.create().put(VariantSettings.MODEL, identifierUp)));
+    }
+
     public void registerMechanicalHopper(BlockStateModelGenerator blockStateModelGenerator) {
         TextureMap textureMap = MbtwModels.sideInsideTopSideParticle(Mbtw.MECHANICAL_HOPPER);
         Identifier identifier = MbtwModels.HOPPER.upload(Mbtw.MECHANICAL_HOPPER, textureMap, blockStateModelGenerator.modelCollector);
         Identifier identifierSide = MbtwModels.HOPPER_SIDE.upload(Mbtw.MECHANICAL_HOPPER, "_side", textureMap, blockStateModelGenerator.modelCollector);
-
 
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(Mbtw.MECHANICAL_HOPPER).coordinate(
             BlockStateVariantMap.create(Properties.HOPPER_FACING)

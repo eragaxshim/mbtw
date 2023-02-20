@@ -1,0 +1,6 @@
+{
+  "parent": "mbtw:block/template_urn",
+  "textures": {
+    "side": "mbtw:block/urn"
+  }
+}

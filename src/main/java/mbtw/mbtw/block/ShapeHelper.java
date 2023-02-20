@@ -14,4 +14,8 @@ public class ShapeHelper {
         return new Double[]{coords[rotation % 3], coords[(rotation+1) % 3], coords[(rotation+2) % 3],
                 coords[rotation%3 + 3], coords[(rotation+1)%3 + 3], coords[(rotation+2)%3 + 3]};
     }
+
+    public static Double[] translateCuboidCoords(Double[] coords, double x, double y, double z) {
+        return new Double[]{coords[0]+x, coords[1]+y, coords[2]+z, coords[3]+x, coords[4]+y, coords[5]+z};
+    }
 }
