@@ -1,4 +1,4 @@
-// 23w07a	2023-02-20T10:00:51.6556532	mbtw/Model Definitions
+// 23w07a	2023-02-22T12:01:43.0932791	mbtw/Model Definitions
 8e7f633a8d9c2ac1fed85d5a2be33f92323e652a assets\mbtw\models\item\mechanical_hopper.json
 f144d517e17c7ddf7d7cdf873a334b71fa4c99a4 assets\mbtw\models\block\urn_up.json
 09d65c5300ed9af196ea3a1bd48891a980427645 assets\mbtw\models\block\urn.json
@@ -8,8 +8,8 @@ df22b9a4e3076728cbdadb1e0720f90fc6ae6002 assets\mbtw\models\item\infinite_crank.
 bf735d9955168f4ec2fe39d204b4928824f8ccc7 assets\mbtw\models\item\soul_flux.json
 b73a963b50133573698d8a08055b4652e54a64f8 assets\mbtw\blockstates\urn.json
 a372dbd064f910c86aede0f6ea07d11821fb2293 assets\mbtw\models\item\gearbox.json
-48504d2c7e743e80901a199cf329229b8fc3c46b assets\mbtw\models\item\crucible.json
 2af931a5379d8caac6661fe6e22e0ca63d321ff1 assets\mbtw\models\item\soulforged_gold.json
+48504d2c7e743e80901a199cf329229b8fc3c46b assets\mbtw\models\item\crucible.json
 47d6c9d59a5b9880ef92e2518b9cd0fc7fe5b7bb assets\mbtw\blockstates\crucible.json
 cabfe878bbcfbadde0fd28dc07344557897e824d assets\mbtw\blockstates\infinite_crank.json
 a98e3db0a8a1b513e913a6e901841cafde1ce551 assets\mbtw\models\item\soul_urn.json

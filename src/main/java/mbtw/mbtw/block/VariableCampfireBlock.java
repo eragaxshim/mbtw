@@ -116,7 +116,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
         WorldAccess worldAccess = ctx.getWorld();
         BlockPos blockPos = ctx.getBlockPos();
         boolean bl = worldAccess.getFluidState(blockPos).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, bl).with(SIGNAL_FIRE, ((CampfireBlockMixinAccessor)this).invokeIsSignalFireBaseBlock(worldAccess.getBlockState(blockPos.down()))).with(FACING, ctx.getPlayerFacing());
+        return this.getDefaultState().with(WATERLOGGED, bl).with(SIGNAL_FIRE, ((CampfireBlockMixinAccessor)this).invokeIsSignalFireBaseBlock(worldAccess.getBlockState(blockPos.down()))).with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     @Override

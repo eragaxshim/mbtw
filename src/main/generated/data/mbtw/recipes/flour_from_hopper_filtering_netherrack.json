@@ -1,10 +1,10 @@
 {
   "type": "mbtw:hopper_filtering",
+  "conversion": "mbtw:hopper_conversion_urn",
+  "filter": "minecraft:soul_sand",
   "ingredient": {
     "item": "minecraft:netherrack"
   },
-  "filter": "minecraft:soul_sand",
-  "conversion": "mbtw:hopper_conversion_planks",
   "inputcount": 1,
   "result": "mbtw:flour"
 }

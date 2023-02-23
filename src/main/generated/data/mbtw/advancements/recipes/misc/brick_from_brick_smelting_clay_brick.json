@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:brick_from_brick_smelting_clay_brick"
+        "recipe": "mbtw:brick_from_brick_smelting_clay_brick"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:brick_from_brick_smelting_clay_brick"
+      "mbtw:brick_from_brick_smelting_clay_brick"
     ]
   }
 }

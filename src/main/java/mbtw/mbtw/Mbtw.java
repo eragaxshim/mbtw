@@ -44,6 +44,7 @@ import mbtw.mbtw.recipe.HopperBlockConversionRecipe;
 import mbtw.mbtw.recipe.HopperRecipe;
 import mbtw.mbtw.recipe.MechanicalRecipeSerializer;
 import mbtw.mbtw.recipe.MillstoneRecipe;
+import mbtw.mbtw.recipe.SoulforgedRecipe;
 import mbtw.mbtw.recipe.SpecialRecipeSerializer;
 import mbtw.mbtw.screen.BrickOvenScreenHandler;
 import mbtw.mbtw.screen.CraftingStationScreenHandler;
@@ -196,6 +197,7 @@ public class Mbtw implements ModInitializer {
 	public static RecipeType<CrucibleRecipe> CRUCIBLE_SMELTING;
 	public static RecipeType<HopperRecipe> HOPPER_FILTERING;
 	public static RecipeType<HopperBlockConversionRecipe> HOPPER_BLOCK_FILTERING;
+	public static RecipeType<SoulforgedRecipe> SOULFORGED_CRAFTING;
 
 	public static final Block MILLSTONE = new MillstoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 8.0F));
 	public static BlockEntityType<MillstoneBlockEntity> MILLSTONE_ENTITY;
@@ -222,6 +224,7 @@ public class Mbtw implements ModInitializer {
 	public static RecipeSerializer<CrucibleRecipe> CRUCIBLE_SERIALIZER;
 	public static RecipeSerializer<HopperRecipe> HOPPER_SERIALIZER;
 	public static RecipeSerializer<HopperBlockConversionRecipe> HOPPER_BLOCK_SERIALIZER;
+	public static RecipeSerializer<SoulforgedRecipe> SOULFORGED_CRAFTING_SERIALIZER;
 
 	public static final ScreenHandlerType<BrickOvenScreenHandler> BRICK_OVEN_SCREEN_HANDLER = new ScreenHandlerType<>(BrickOvenScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
 	public static final ScreenHandlerType<MillstoneScreenHandler> MILLSTONE_SCREEN_HANDLER = new ScreenHandlerType<>(MillstoneScreenHandler::new, FeatureFlags.VANILLA_FEATURES);
@@ -270,6 +273,13 @@ public class Mbtw implements ModInitializer {
 		});
 		HOPPER_BLOCK_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "hopper_block_filtering"), new SpecialRecipeSerializer<>(HopperBlockConversionRecipe::new));
 		HOPPER_BLOCK_FILTERING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "hopper_block_filtering"), new RecipeType<HopperBlockConversionRecipe>() {
+			@Override
+			public String toString() {
+				return "hopper_block_filtering";
+			}
+		});
+		SOULFORGED_CRAFTING_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(MOD_ID, "soulforged_crafting"), new SoulforgedRecipe.Serializer());
+		SOULFORGED_CRAFTING = Registry.register(Registries.RECIPE_TYPE, new Identifier(MOD_ID, "soulforged_crafting"), new RecipeType<SoulforgedRecipe>() {
 			@Override
 			public String toString() {
 				return "hopper_block_filtering";

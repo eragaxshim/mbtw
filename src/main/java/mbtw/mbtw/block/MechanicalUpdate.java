@@ -75,6 +75,7 @@ public class MechanicalUpdate {
         return mergedState;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Comparable<T>> BlockState mergeProperty(BlockState firstState, BlockState otherState, Property<?> property, Class<T> expectedType, boolean addRequired, boolean onlyIfDifferent) {
         if (property.getType() == expectedType) {
             Property<T> propertyT = (Property<T>) property;

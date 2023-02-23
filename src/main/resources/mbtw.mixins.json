@@ -44,6 +44,7 @@
     "loot.ExplosionDecayMixin",
     "loot.SurvivesExplosionMixin",
     "recipe.SerializerMixin",
+    "recipe.ShapedRecipeAccessor",
     "recipe.ShapelessRecipeMixin",
     "screen.CraftingContextAccessor",
     "screen.CraftingScreenHandlerAccessor",
