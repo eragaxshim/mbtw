@@ -23,7 +23,7 @@ public class SpecialRecipeJsonBuilder {
 
     public Identifier offerTo(Consumer<RecipeJsonProvider> exporter, final String recipeId) {
         Identifier recipeIdentifier = new Identifier(Mbtw.MOD_ID, recipeId);
-        exporter.accept(new SpecialRecipeJsonBuilder.SpecialRecipeJsonProvider() {
+        exporter.accept(new SpecialRecipeJsonProvider() {
             public RecipeSerializer<?> getSerializer() {
                 return SpecialRecipeJsonBuilder.this.serializer;
             }

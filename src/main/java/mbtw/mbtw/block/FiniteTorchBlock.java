@@ -130,6 +130,6 @@ public class FiniteTorchBlock extends BlockWithEntity implements BlockEntityProv
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, Mbtw.FINITE_TORCH_BLOCK_ENTITY, FiniteTorchBlockEntity::tick);
+        return validateTicker(type, Mbtw.FINITE_TORCH_BLOCK_ENTITY, FiniteTorchBlockEntity::tick);
     }
 }

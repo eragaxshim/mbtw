@@ -78,7 +78,7 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
             Optional<CampfireCookingRecipe> optional = campfireBlockEntity.getRecipeFor(itemStack);
             int fuelTime;
             if (optional.isPresent()) {
-                if (!world.isClient && campfireBlockEntity.addItem(player, player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                if (!world.isClient && campfireBlockEntity.addItem(player, player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookingTime())) {
                     player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
                     return ActionResult.SUCCESS;
                 }
@@ -195,10 +195,10 @@ public class VariableCampfireBlock extends CampfireBlock implements Ignitable, I
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient) {
             if (state.get(LIT)) {
-                return VariableCampfireBlock.checkType(type, Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntity::clientTick);
+                return VariableCampfireBlock.validateTicker(type, Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntity::clientTick);
             }
         } else {
-            return VariableCampfireBlock.checkType(type, Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntity::serverTick);
+            return VariableCampfireBlock.validateTicker(type, Mbtw.VARIABLE_CAMPFIRE_ENTITY, VariableCampfireBlockEntity::serverTick);
         }
         return null;
     }

@@ -56,7 +56,7 @@ public class HopperRecipe implements Recipe<FilterInventory> {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return output;
     }
 

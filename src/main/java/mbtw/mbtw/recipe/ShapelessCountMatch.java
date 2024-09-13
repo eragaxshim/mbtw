@@ -44,7 +44,7 @@ public class ShapelessCountMatch {
             if (containsEmpty && stack.isEmpty()) return;
 
             for (ItemStack existingStack : stackList) {
-                if (ItemStack.canCombine(existingStack, stack)) {
+                if (ItemStack.areItemsAndComponentsEqual(existingStack, stack)) {
                     existingStack.increment(stack.getCount());
                     return;
                 }

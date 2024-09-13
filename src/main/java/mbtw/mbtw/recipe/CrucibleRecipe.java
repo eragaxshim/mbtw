@@ -71,7 +71,7 @@ public class CrucibleRecipe implements PoweredRecipe {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return this.output;
     }
 
@@ -107,7 +107,7 @@ public class CrucibleRecipe implements PoweredRecipe {
             ItemStack stackTypeToDecrement = combinedStacks.get(match[i]);
             // Sort in ascending order all satisfying stacks that we could decrement
             List<ItemStack> stacksToDecrement = inputStacks.stream()
-                    .filter(stack -> ItemStack.canCombine(stackTypeToDecrement, stack))
+                    .filter(stack -> ItemStack.areItemsAndComponentsEqual(stackTypeToDecrement, stack))
                     .sorted(Comparator.comparing(ItemStack::getCount)).toList();
             // We decrement, starting from low count stacks all stacks until we have exhausted the decrement
             for (ItemStack stackToDecrement : stacksToDecrement) {

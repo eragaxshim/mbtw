@@ -103,7 +103,7 @@ public abstract class AbstractBlockProcessorEntity extends LockableContainerBloc
         if (getInputSlots(slots).stream().allMatch(ItemStack::isEmpty)) {
             return false;
         }
-        ItemStack recipeOutput = recipe.getOutput(registryManager);
+        ItemStack recipeOutput = recipe.getResult(registryManager);
         // if recipe is empty, false
         if (recipeOutput.isEmpty()) {
             return false;
@@ -142,7 +142,7 @@ public abstract class AbstractBlockProcessorEntity extends LockableContainerBloc
 
     public static void craftRecipe(DynamicRegistryManager registryManager, PoweredRecipe recipe, DefaultedList<ItemStack> slots) {
         DefaultedList<ItemStack> inputStacks = getInputSlots(slots);
-        ItemStack recipeOutput = recipe.getOutput(registryManager);
+        ItemStack recipeOutput = recipe.getResult(registryManager);
         ItemStack outputSlotStack = getOutputSlot(slots);
         // We have already checked if the output is at max count
         if (outputSlotStack.isEmpty()) {

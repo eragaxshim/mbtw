@@ -45,7 +45,7 @@ public class HopperBlockConversionRecipe implements Recipe<BlockStateInventory> 
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return null;
     }
 

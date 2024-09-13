@@ -34,7 +34,7 @@ public class BrickOvenBlock extends AbstractFurnaceBlock {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return BrickOvenBlock.checkType(world, type, Mbtw.BRICK_OVEN_ENTITY);
+        return BrickOvenBlock.validateTicker(world, type, Mbtw.BRICK_OVEN_ENTITY);
     }
 
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {

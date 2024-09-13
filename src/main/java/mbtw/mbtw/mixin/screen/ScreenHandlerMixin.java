@@ -39,7 +39,7 @@ public abstract class ScreenHandlerMixin implements ScreenHandlerMixinAccessor {
                 slot2 = (Slot)this.slots.get(i);
                 slotStack = slot2.getStack();
 
-                if (!slotStack.isEmpty() && ItemStack.canCombine(stack, slotStack) && slotStack.getCount() < slot2.getMaxItemCount()) {
+                if (!slotStack.isEmpty() && ItemStack.areItemsAndComponentsEqual(stack, slotStack) && slotStack.getCount() < slot2.getMaxItemCount()) {
                     int j = slotStack.getCount() + stack.getCount();
                     int maxSlotCount = Math.min(stack.getMaxCount(), slot2.getMaxItemCount());
                     if (j <= maxSlotCount) {

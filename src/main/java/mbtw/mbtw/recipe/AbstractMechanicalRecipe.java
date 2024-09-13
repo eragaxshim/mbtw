@@ -55,7 +55,7 @@ public abstract class AbstractMechanicalRecipe implements PoweredRecipe {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return this.output;
     }
 
