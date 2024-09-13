@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "workbench=false": { "model": "mbtw:block/jungle_trunk" },
-    "workbench=true": { "model": "mbtw:block/jungle_workbench" }
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "side": "mbtw:block/crimson_trunk",
-    "end": "mbtw:block/crimson_trunk_top"
-  }
-}

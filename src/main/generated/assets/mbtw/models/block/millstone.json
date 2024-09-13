@@ -1,8 +1,0 @@
-{
-  "parent": "mbtw:block/template_millstone",
-  "textures": {
-    "bottom": "mbtw:block/millstone_bottom",
-    "side": "mbtw:block/millstone_side",
-    "top": "mbtw:block/millstone_top"
-  }
-}
