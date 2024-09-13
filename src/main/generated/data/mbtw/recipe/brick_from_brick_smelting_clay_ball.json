@@ -1,0 +1,13 @@
+{
+  "type": "mbtw:brick_smelting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.0,
+  "group": "brick",
+  "ingredient": {
+    "item": "minecraft:clay_ball"
+  },
+  "result": {
+    "id": "minecraft:brick"
+  }
+}

@@ -1,0 +1,3 @@
+accessWidener v2 named
+
+accessible    method    net/minecraft/data/server/recipe/CookingRecipeJsonBuilder    <init>    (Lnet/minecraft/recipe/book/RecipeCategory;Lnet/minecraft/recipe/book/CookingRecipeCategory;Lnet/minecraft/item/ItemConvertible;Lnet/minecraft/recipe/Ingredient;FILnet/minecraft/recipe/AbstractCookingRecipe$RecipeFactory;)V
