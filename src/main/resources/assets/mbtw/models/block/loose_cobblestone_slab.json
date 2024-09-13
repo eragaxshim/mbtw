@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "mbtw:block/loose_cobblestone",
-    "top": "mbtw:block/loose_cobblestone",
-    "side": "mbtw:block/loose_cobblestone"
-  }
-}

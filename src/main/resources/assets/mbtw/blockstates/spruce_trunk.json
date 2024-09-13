@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "workbench=false": { "model": "mbtw:block/spruce_trunk" },
-    "workbench=true": { "model": "mbtw:block/spruce_workbench" }
-  }
-}

@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "mbtw:block/damaged_cobweb_b3"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "parent": "mbtw:block/brick",
-  "textures": {
-    "side_long": "minecraft:block/terracotta",
-    "top": "minecraft:block/terracotta",
-    "side": "minecraft:block/terracotta"
-  }
-}

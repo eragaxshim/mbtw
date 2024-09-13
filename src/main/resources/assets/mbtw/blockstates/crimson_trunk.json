@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "workbench=false": { "model": "mbtw:block/crimson_trunk" },
-    "workbench=true": { "model": "mbtw:block/crimson_workbench" }
-  }
-}

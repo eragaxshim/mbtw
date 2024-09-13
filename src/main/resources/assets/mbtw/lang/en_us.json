@@ -55,5 +55,6 @@
   "item.mbtw.fire_striker": "Fire Striker",
   "item.mbtw.ash_pile": "Pile of Ash",
   "item.mbtw.finite_torch": "Crude Torch",
-  "item.mbtw.flour": "Flour"
+  "item.mbtw.flour": "Flour",
+  "itemGroup.mbtw": "MBTW"
 }
